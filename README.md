@@ -5,9 +5,9 @@ Online JavaScript game store; a Django application.
 
 ## Collaborators
 
-Juho Jokela - 718554
-Touko Hallasmaa - foo
-Hien Cao - bar
+* Juho Jokela - 718554
+* Touko Hallasmaa - foo
+* Hien Cao - bar
 
 ## Project description
 
