@@ -1,16 +1,16 @@
 from django.db import models
 
-from .Developer import Developer
-from .GameCategory import GameCategory
-from .PlayDetails import PlayDetails
+from . import GameCategory, PlayDetails
 
 class Game(models.Model):
     name = models.CharField(max_length=128, unique=True)
     url = models.URLField(unique=True)
     price = models.FloatField()
     developer = models.ForeignKey(
-        Developer,
-        on_delete=models.CASCADE
+        'Developer',
+        on_delete=models.CASCADE,
+        related_name='games',
+        null=True
     )
 
     def __str__(self):

@@ -1,0 +1,49 @@
+GET http://localhost:8000/api/game/
+content-type: application/json
+
+{
+  "id": 1
+}
+
+### Without Developer
+
+PUT http://localhost:8000/api/game/
+content-type: application/json
+
+{
+  "name": "A Game",
+  "url": "https://google.com",
+  "price": 4.99
+}
+
+### With Developer
+
+PUT http://localhost:8000/api/game/
+content-type: application/json
+
+{
+  "name": "A Game",
+  "url": "https://google.com",
+  "price": 4.99
+}
+
+###
+
+POST http://localhost:8000/api/game/
+content-type: application/json
+
+{
+  "id": 1,
+  "name": "B Game",
+  "url": "https://duckduckgo.com",
+  "price": 0.99
+}
+
+###
+
+DELETE http://localhost:8000/api/game/
+content-type: application/json
+
+{
+  "id": 3
+}

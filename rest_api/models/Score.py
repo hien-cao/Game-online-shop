@@ -1,10 +1,8 @@
 from django.db import models
 
-from .Player import Player
-
 class Score(models.Model):
     player = models.OneToOneField(
-        Player,
+        'Player',
         on_delete=models.CASCADE
     )
     points = models.IntegerField()
@@ -13,4 +11,7 @@ class Score(models.Model):
         on_delete=models.CASCADE,
         related_name='scores'
     )
+
+    def __str__(self):
+        return self.points
 

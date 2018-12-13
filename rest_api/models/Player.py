@@ -1,7 +1,5 @@
 from django.db import models
-
-from .Game import Game
-from .User import User
+from django.contrib.auth.models import User
 
 class Player(models.Model):
     user = models.OneToOneField(
@@ -10,6 +8,7 @@ class Player(models.Model):
         primary_key=True
     )
     games = models.ManyToManyField(
-        Game,
+        'Game',
         through='PlayDetails'
     )
+    is_player = models.BooleanField(default=True)
