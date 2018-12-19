@@ -9,3 +9,6 @@ class Developer(models.Model):
         primary_key=True
     )
     is_developer = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.user.username

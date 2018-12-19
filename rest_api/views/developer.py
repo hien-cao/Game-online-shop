@@ -9,6 +9,15 @@ from django.views.decorators.csrf import csrf_exempt
 
 from ..models import Developer
 
+@csrf_exempt
+def create_developer(u):
+    try:
+        d = Developer(user=u)
+        d.save()
+        return HttpResponse(d)
+    except:
+        return HttpResponse('500')
+
 class DeveloperView(View):
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):

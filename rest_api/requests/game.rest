@@ -1,0 +1,40 @@
+@hostname = localhost
+@port = 8000
+@host = {{hostname}}:{{port}}
+@scheme = http
+@rootUrl = {{scheme}}://{{host}}
+@gameUrl = {{rootUrl}}/api/game
+
+@id = 1
+
+### GET DETAILS
+
+GET {{gameUrl}}/{{id}}/
+content-type: application/json
+
+### ADD
+
+POST {{gameUrl}}/add/
+content-type: application/json
+
+{
+  "name": "A Game",
+  "url": "https://google.com",
+  "price": 4.99
+}
+
+### UPDATE
+
+POST {{gameUrl}}/{{id}}/
+content-type: application/json
+
+{
+  "name": "B Game",
+  "url": "https://duckduckgo.com",
+  "price": 0.99
+}
+
+### DELETE
+
+POST {{gameUrl}}/{{id}}/delete/
+content-type: application/json

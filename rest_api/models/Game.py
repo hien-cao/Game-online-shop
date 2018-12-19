@@ -6,6 +6,7 @@ class Game(models.Model):
     name = models.CharField(max_length=128, unique=True)
     url = models.URLField(unique=True)
     price = models.FloatField()
+    # createdAt
     developer = models.ForeignKey(
         'Developer',
         on_delete=models.CASCADE,
