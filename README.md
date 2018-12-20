@@ -26,6 +26,7 @@ Online JavaScript game store; a Django application.
       - [Saving/Loading](#savingloading)
       - [Third-Party Login / Logout](#third-party-login--logout)
     - [Extra](#extra)
+      - [Tests](#tests)
       - [Reviews](#reviews)
       - [REST API](#rest-api)
       - [Highscores](#highscores)
@@ -141,6 +142,10 @@ Users do not have to "register" when an user tries to login and if a user with t
 ### Extra
 
 List of the extra features we plan on implementing (if we have extra time).
+
+#### Tests
+
+We will do Unit tests for any non-Safe methods, any method that modifies data on the server. If there is time to spare we might implement more tests, than just the crucial ones.
 
 #### Reviews
 
