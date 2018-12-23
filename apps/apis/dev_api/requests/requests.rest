@@ -1,0 +1,11 @@
+@hostname = localhost
+@port = 8000
+@host = {{hostname}}:{{port}}
+@scheme = http
+@rootUrl = {{scheme}}://{{host}}
+@version = 1
+@apiUrl = {{rootUrl}}/api/v{{version}}
+
+GET {{apiUrl}}/dev/
+content-type: application/json
+Accept: application/json
