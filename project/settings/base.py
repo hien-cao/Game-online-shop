@@ -72,6 +72,7 @@ TEMPLATES = [
         'DIRS': [
             os.path.join(BASE_DIR, 'apps.core.templates'), # Core
             os.path.join(BASE_DIR, 'apps.user.templates'), # User
+            os.path.join(BASE_DIR, 'apps.game.templates'), # Game
         ],
         'APP_DIRS': True,
         'OPTIONS': {

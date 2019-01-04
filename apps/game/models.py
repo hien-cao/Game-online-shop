@@ -13,14 +13,17 @@ class Game(models.Model):
     description = models.TextField()
     url = models.URLField(unique=True)
     price = models.DecimalField(default=0, max_digits=6, decimal_places=2)
-    created_at = models.DateField()
+    created_at = models.DateField(
+        auto_now_add=True
+    )
     created_by = models.ForeignKey(
         Profile,
         on_delete=models.CASCADE
     )
     tags = models.ManyToManyField(
         'Tag',
-        related_name='tags'
+        related_name='tags',
+        blank=True
     )
 
     def __str__(self):
