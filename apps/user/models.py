@@ -14,3 +14,6 @@ class Profile(models.Model):
         through='game.Purchase',
         blank=True
     )
+
+    def __str__(self):
+        return self.user.username
