@@ -6,8 +6,8 @@ There are four (4) types of branches to be used in this project.
 
 1. master
 2. development
-3. feature/[nameOfBranch]
-4. hotfix/[nameOfBranch]
+3. feature/[name-of-branch]
+4. hotfix/[name-of-branch]
 
 ### 1. Branch master
 
@@ -25,12 +25,12 @@ Merging `development` to `master` is done when all authors of the group unanimou
 
 ### 3. & 4. Branches of type /feature and /hotfix
 
-The naming convention used in both `feature/` and `hotfix/` type branches is camel-casing eg. `feature/addReadmeToProject`.
+The naming convention used in both `feature/` and `hotfix/` type branches is camel-casing eg. `feature/add-readme-to-project`.
 
 #### 3. feature/
 
-Any branches that is not meant for fixing something that is currently broken should be named `feature/nameOfFeature`.
+Any branches that is not meant for fixing something that is currently broken should be named `feature/name-of-feature`.
 
 #### 4. hotfix/
 
-Any branches that aim to fix something that is currently broken should be named `hotfix/nameOfBrokenFeature`.
+Any branches that aim to fix something that is currently broken should be named `hotfix/name-of-broken-feature`.
