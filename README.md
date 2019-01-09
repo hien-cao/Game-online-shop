@@ -318,7 +318,7 @@ We set out the deadlines for each task to be somewhat reasonable, so that the co
 | Core templates                          | 31.1.2019 | Hien     | x    | -      |
 | [Saving/Loading](#Saving/Loading)       | 7.2.2019  | Touko    | x    | -      |
 | [Statistics](#Statistics)               | 10.2.2019 | Juho     | x    | -      |
-| [Reviews](#Reviews)                     | 16.2.2019 | -        | -    | -      |
-| [REST API](#REST-API)                   | 16.2.2019 | -        | -    | -      |
-| [Highscores](#Highscores)               | 16.2.2019 | -        | -    | -      |
+| [Reviews](#Reviews)                     | 16.2.2019 | Juho     | -    | -      |
+| [REST API](#REST-API)                   | 16.2.2019 | Hien     | -    | -      |
+| [Highscores](#Highscores)               | 16.2.2019 | Juho     | -    | -      |
 | Custom JavaScript game                  | 24.2.2019 | Touko    | -    | -      |
