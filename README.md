@@ -322,3 +322,4 @@ We set out the deadlines for each task to be somewhat reasonable, so that the co
 | [REST API](#REST-API)                   | 16.2.2019 | Hien     | -    | -      |
 | [Highscores](#Highscores)               | 16.2.2019 | Juho     | -    | -      |
 | Custom JavaScript game                  | 24.2.2019 | Touko    | -    | -      |
+| Polishing                               | 24.2.2019 | -        | -    | -      |
