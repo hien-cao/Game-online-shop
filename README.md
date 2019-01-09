@@ -247,7 +247,7 @@ Contains the review information
     MinValueValidator(0),
     MaxValueValidator(5)
   ])
-  content = TextField(...)  
+  content = TextField(...)
 ```
 
 #### Tag
@@ -306,18 +306,18 @@ At this point we have done the initial planning and design work and will start f
 
 We set out the deadlines for each task to be somewhat reasonable, so that the core application (fullfilling all required features) is developed first, and only after that the additional features will be implemented. We are planning to use Trello cards to track each issue more subtly.
 
-| features                                | deadline  | assignee | core |
-| --------------------------------------- | --------- | -------- | ---- |
-| [Authentication](#Authentication)       | 16.1.2019 | -        | x    |
-| [Third-Party Login](#Third-Party-Login) | 16.1.2019 | -        | x    |
-| [Adding Game](#Adding-Game)             | 22.1.2019 | -        | x    |
-| [Purchasing Games](#Purchasing-Games)   | 24.1.2019 | -        | x    |
-| [Playing Games](#Playing-Games)         | 31.1.2019 | -        | x    |
-| [Searching Games](#Searching-Games)     | 31.1.2019 | -        | x    |
-| [Updating Game](#Updading-a-game)       | 31.1.2019 | -        | x    |
-| [Saving/Loading](#Saving/Loading)       | 7.2.2019  | -        | x    |
-| [Statistics](#Statistics)               | 10.2.2019 | -        | x    |
-| [Reviews](#Reviews)                     | 16.2.2019 | -        | -    |
-| [REST API](#REST-API)                   | 16.2.2019 | -        | -    |
-| [Highscores](#Highscores)               | 16.2.2019 | -        | -    |
-| Custom JavaScript game                  | 24.2.2019 | Touko    | -    |
+| features                                | deadline  | assignee | core | Status |
+| --------------------------------------- | --------- | -------- | ---- | ------ |
+| [Authentication](#Authentication)       | 16.1.2019 | Juho     | x    | ok     |
+| [Third-Party Login](#Third-Party-Login) | 16.1.2019 | Juho     | x    | ok     |
+| [Adding Game](#Adding-Game)             | 22.1.2019 | Juho     | x    | -      |
+| [Purchasing Games](#Purchasing-Games)   | 24.1.2019 | Touko    | x    | -      |
+| [Playing Games](#Playing-Games)         | 31.1.2019 | -        | x    | -      |
+| [Searching Games](#Searching-Games)     | 31.1.2019 | -        | x    | -      |
+| [Updating Game](#Updading-a-game)       | 31.1.2019 | -        | x    | -      |
+| [Saving/Loading](#Saving/Loading)       | 7.2.2019  | Touko    | x    | -      |
+| [Statistics](#Statistics)               | 10.2.2019 | -        | x    | -      |
+| [Reviews](#Reviews)                     | 16.2.2019 | -        | -    | -      |
+| [REST API](#REST-API)                   | 16.2.2019 | -        | -    | -      |
+| [Highscores](#Highscores)               | 16.2.2019 | -        | -    | -      |
+| Custom JavaScript game                  | 24.2.2019 | Touko    | -    | -      |
