@@ -312,12 +312,15 @@ We set out the deadlines for each task to be somewhat reasonable, so that the co
 | [Third-Party Login](#Third-Party-Login) | 16.1.2019 | Juho     | x    | ok     |
 | [Adding Game](#Adding-Game)             | 22.1.2019 | Juho     | x    | -      |
 | [Purchasing Games](#Purchasing-Games)   | 24.1.2019 | Touko    | x    | -      |
-| [Playing Games](#Playing-Games)         | 31.1.2019 | -        | x    | -      |
-| [Searching Games](#Searching-Games)     | 31.1.2019 | -        | x    | -      |
-| [Updating Game](#Updading-a-game)       | 31.1.2019 | -        | x    | -      |
+| [Playing Games](#Playing-Games)         | 31.1.2019 | Juho     | x    | -      |
+| [Searching Games](#Searching-Games)     | 31.1.2019 | Hien     | x    | -      |
+| [Updating Game](#Updading-a-game)       | 31.1.2019 | Juho     | x    | -      |
+| Core templates                          | 31.1.2019 | Hien     | x    | -      |
 | [Saving/Loading](#Saving/Loading)       | 7.2.2019  | Touko    | x    | -      |
-| [Statistics](#Statistics)               | 10.2.2019 | -        | x    | -      |
-| [Reviews](#Reviews)                     | 16.2.2019 | -        | -    | -      |
-| [REST API](#REST-API)                   | 16.2.2019 | -        | -    | -      |
-| [Highscores](#Highscores)               | 16.2.2019 | -        | -    | -      |
+| [Statistics](#Statistics)               | 10.2.2019 | Juho     | x    | -      |
+| [Reviews](#Reviews)                     | 16.2.2019 | Juho     | -    | -      |
+| [REST API](#REST-API)                   | 16.2.2019 | Hien     | -    | -      |
+| [Highscores](#Highscores)               | 16.2.2019 | Juho     | -    | -      |
 | Custom JavaScript game                  | 24.2.2019 | Touko    | -    | -      |
+| Social media sharing                    | 24.2.2019 | -        | -    | -      |
+| Polishing                               | 24.2.2019 | -        | -    | -      |
