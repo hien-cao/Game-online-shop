@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 
 from ..user.utils.validators import is_developer
@@ -46,6 +46,15 @@ def games(request, *args, **kwargs):
         return render(request, 'games.html', { 'latest': latest_games })
     if (request.method == 'POST'):
         return add_game(request, *args, **kwargs)
+
+# GET: Display single game view
+# POST: Add game
+def single_game(request, game_id):
+    if (request.method == 'GET'):
+        game = get_object_or_404(Game, pk=game_id)
+        # TODO Render
+        print(game)
+        return render(request, 'game.html', { 'game': game })
 
 # GET: Display games purchased
 @login_required
