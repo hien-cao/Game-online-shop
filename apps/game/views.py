@@ -4,7 +4,6 @@ from django.http import HttpResponse, HttpResponseRedirect
 
 from ..user.utils.validators import is_developer
 from .forms.add_game import AddGameForm
-import os
 
 from .models import Game
 from .models import Purchase
@@ -52,12 +51,11 @@ def games(request, *args, **kwargs):
 # GET: Display single game view
 # POST: Add game
 def game(request, game_id):
-    print(os.environ['SELLER_ID'])
     if request.method == 'GET':
         game = get_object_or_404(Game, pk=game_id)
         purchased = len(Purchase.objects.filter(game=game_id, created_by=request.user.id)) > 0
         if request.user.is_authenticated:
-            if game.created_by == request.user.id:
+            if game.created_by.user.id == request.user.id:
                 # TODO Render (and return) developer view
                 pass
         return render(request, 'game_details.html', { 'game': game, 'purchased': purchased })
