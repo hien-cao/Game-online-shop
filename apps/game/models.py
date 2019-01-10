@@ -18,6 +18,7 @@ class Game(models.Model):
     )
     created_by = models.ForeignKey(
         Profile,
+        null=True,
         on_delete=models.SET_NULL
     )
     tags = models.ManyToManyField(

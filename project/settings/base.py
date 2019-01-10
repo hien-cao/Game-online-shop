@@ -128,6 +128,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # AUTH_USER_MODEL = 'auth.User'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 SOCIAL_AUTH_USER_MODEL = 'auth.User'
 
 SOCIAL_AUTH_PIPELINE = (
