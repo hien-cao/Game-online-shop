@@ -1,11 +1,13 @@
 from django.urls import path, re_path, include
 from django.contrib.auth import views as auth_views
 
+from .forms import LoginForm
 from .views import welcome, account_activation_sent, activate, register
 
 urlpatterns = [
     path('register/', register, name='register'),
     path('login/', auth_views.LoginView.as_view(
+        authentication_form=LoginForm,
         redirect_authenticated_user=True,
         template_name='login.html'
     ), name='login'),

@@ -10,12 +10,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse
 
-from .forms import SignUpForm
+from .forms import RegisterForm
 from .utils.tokens import account_activation_token
 
 def register(request):
     if request.method == 'POST':
-        form = SignUpForm(request.POST)
+        form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
             user.is_active = False
@@ -29,16 +29,8 @@ def register(request):
             })
             user.email_user(subject, message)
             return redirect('account_activation_sent')
-
-            # user.refresh_from_db()
-            # user.profile.is_developer = form.cleaned_data('is_developer')
-            # user.save()
-            # raw_password = form.cleaned_data.get('password1')
-            # user = authenticate(username=user.username, password=raw_password)
-            # login(request, user)
-            # return redirect('games')
     else:
-        form = SignUpForm()
+        form = RegisterForm()
     return render(request, 'register.html', { 'form': form })
 
 @login_required(login_url='/login/')
