@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div>
+  <h2>{{ game.name }}</h2>
+  <p>{{ game.description }}</p>
+  <div>
+    {% if purchased %}
+      <a href="/games/{{game.id}}/play">Play game</a>
+    {% else %}
+      <form method="POST">
+        <button type="submit">Purchase game for {{game.price}}</a>
+      </form>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock content %}

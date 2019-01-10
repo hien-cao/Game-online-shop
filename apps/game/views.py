@@ -4,8 +4,10 @@ from django.http import HttpResponse, HttpResponseRedirect
 
 from ..user.utils.validators import is_developer
 from .forms.add_game import AddGameForm
+import os
 
 from .models import Game
+from .models import Purchase
 
 # Add game
 # TODO Change redirection to profile/settings?
@@ -49,12 +51,18 @@ def games(request, *args, **kwargs):
 
 # GET: Display single game view
 # POST: Add game
-def single_game(request, game_id):
-    if (request.method == 'GET'):
+def game(request, game_id):
+    print(os.environ['SELLER_ID'])
+    if request.method == 'GET':
         game = get_object_or_404(Game, pk=game_id)
-        # TODO Render
-        print(game)
-        return render(request, 'game.html', { 'game': game })
+        purchased = len(Purchase.objects.filter(game=game_id, created_by=request.user.id)) > 0
+        if request.user.is_authenticated:
+            if game.created_by == request.user.id:
+                # TODO Render (and return) developer view
+                pass
+        return render(request, 'game_details.html', { 'game': game, 'purchased': purchased })
+    elif request.method == 'post':
+        pass
 
 # GET: Display games purchased
 @login_required
