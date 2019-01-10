@@ -164,9 +164,6 @@ SOCIAL_AUTH_PIPELINE = (
     # Create a user account if we haven't found one yet.
     'social_core.pipeline.user.create_user',
 
-    # Create a profile.
-    'apps.user.utils.models.save_profile',
-
     # Create the record that associates the social account with the user.
     'social_core.pipeline.social_auth.associate_user',
 
