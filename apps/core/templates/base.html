@@ -1,10 +1,24 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
-<head>
-    <title>WSD - project</title>
-</head>
-<body>
-    {% block content %}
-    {% endblock content %}
-</body>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>WSD - project</title>
+        <link rel="stylesheet" href="{% static 'styles/app.css' %}">
+        <link rel="stylesheet" href="{% static 'libs/foundation/css/foundation.min.css' %}">
+        <link rel="stylesheet" href="{% static 'libs/foundation/css/app.css' %}">
+        <script src="{% static 'libs/foundation/js/vendor/jquery.js' %}"></script>
+        <script src="{% static 'libs/foundation/js/vendor/foundation.min.js' %}"></script>
+    </head>
+    <body>
+        <div class="view">
+            {% include 'navigation/navigation.html' %}
+            {% block content %}
+            {% endblock content %}
+            {% include 'footer/footer.html' %}
+        </div>
+        <script src="{% static 'libs/foundation/js/app.js' %}"></script>
+    </body>
 </html>
