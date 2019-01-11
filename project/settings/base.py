@@ -95,7 +95,7 @@ AUTHENTICATION_BACKENDS = (
 
 WSGI_APPLICATION = 'project.wsgi.application'
 
-LOGIN_URL = '/login'
+LOGIN_URL = '/signin'
 LOGIN_REDIRECT_URL = '/games'
 
 # Database

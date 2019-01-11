@@ -5,18 +5,18 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 
 from django.contrib import messages
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse
 
-from .forms import RegisterForm
+from .forms import SignUpForm
 from .utils.tokens import account_activation_token
 
-def register(request):
+def signup(request):
     if request.method == 'POST':
-        form = RegisterForm(request.POST)
+        form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
             user.is_active = False
@@ -31,10 +31,14 @@ def register(request):
             user.email_user(subject, message)
             return redirect('account_activation_sent')
     else:
-        form = RegisterForm()
-    return render(request, 'register.html', { 'form': form })
+        form = SignUpForm()
+    return render(request, 'signup.html', { 'form': form })
 
-@login_required(login_url='/login/')
+def signout(request):
+    logout(request)
+    return redirect('home')
+
+# @login_required(login_url='/signin/')
 def welcome(request):
     return HttpResponse('Welcome!')
 
@@ -43,7 +47,7 @@ def account_activation_sent(request):
         request,
         'We have sent you a verification link. Please check your email.'
     )
-    return redirect('login')
+    return redirect('signin')
 
 def activate(request, uidb64, token, backend='django.contrib.auth.backends.ModelBackend'):
     try:
