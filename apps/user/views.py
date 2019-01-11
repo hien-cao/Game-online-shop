@@ -4,6 +4,7 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 
+from django.contrib import messages
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -38,7 +39,11 @@ def welcome(request):
     return HttpResponse('Welcome!')
 
 def account_activation_sent(request):
-    return render(request, 'account_activation_sent.html')
+    messages.info(
+        request,
+        'We have sent you a verification link. Please check your email.'
+    )
+    return redirect('login')
 
 def activate(request, uidb64, token, backend='django.contrib.auth.backends.ModelBackend'):
     try:
