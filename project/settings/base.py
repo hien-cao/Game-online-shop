@@ -95,7 +95,7 @@ AUTHENTICATION_BACKENDS = (
 
 WSGI_APPLICATION = 'project.wsgi.application'
 
-LOGIN_URL = '/login'
+LOGIN_URL = '/signin'
 LOGIN_REDIRECT_URL = '/games'
 
 # Database
@@ -128,6 +128,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # AUTH_USER_MODEL = 'auth.User'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 SOCIAL_AUTH_USER_MODEL = 'auth.User'
 
 SOCIAL_AUTH_PIPELINE = (
