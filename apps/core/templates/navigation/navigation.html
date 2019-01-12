@@ -6,7 +6,7 @@
 <div class="top-bar" id="main-navigation">
     <div class="top-bar-left">
         <ul class="vertical medium-horizontal menu">
-            <li class="menu-text">Site Title</li>
+            <li><a href="{% url 'home' %}"><i class="icon-app-logo"></i></a></li>
             <li><a href="{% url 'games' %}">Browse</a></li>
             {% if user.is_authenticated %}
                 {% include 'navigation/signed_in_left.html' %}
