@@ -1,0 +1,25 @@
+<div class="title-bar" data-responsive-toggle="main-navigation" data-hide-for="medium">
+    <button class="menu-icon" type="button" data-toggle="main-navigation"></button>
+    <div class="title-bar-title"></div>
+</div>
+      
+<div class="top-bar" id="main-navigation">
+    <div class="top-bar-left">
+        <ul class="vertical medium-horizontal menu">
+            <li class="menu-text">Site Title</li>
+            <li><a href="{% url 'games' %}">Browse</a></li>
+            {% if user.is_authenticated %}
+                {% include 'navigation/signed_in_left.html' %}
+            {% endif %}
+        </ul>
+    </div>
+    <div class="top-bar-right">
+        <ul class="menu">
+            {% if user.is_authenticated %}
+                {% include 'navigation/signed_in_right.html' %}
+            {% else %}
+                {% include 'navigation/signed_out_right.html' %}
+            {% endif %}
+        </ul>
+    </div>
+</div>
