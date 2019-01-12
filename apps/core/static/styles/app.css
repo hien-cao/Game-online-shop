@@ -42,15 +42,18 @@
 */
 
 .view {
-    padding-right: 15px;
-    padding-left: 15px;
+    padding-right: 0px;
+    padding-left: 0px;
     margin-right: auto;
     margin-left: auto;
 }
 
-/* Small devices (landscape phones, 576px and up) */
-@media (min-width: 576px) {
-    
+/* Small devices (landscape phones, 640px and up) */
+@media (min-width: 640px) {
+    .view {
+        padding-right: 15px;
+        padding-left: 15px;
+    }
 }
 
 /* Medium devices (tablets, 768px and up) */
