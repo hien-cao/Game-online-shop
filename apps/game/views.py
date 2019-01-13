@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from ..user.utils.validators import is_developer
 from .forms.add_game import AddGameForm
 
-from .models import Game
+from .models import Game, Purchase
 
 # Add game
 # TODO Change redirection to profile/settings?
@@ -76,5 +76,38 @@ def my(request, *args, **kwargs):
 
 def play(request, game_id):
     game = get_object_or_404(Game, pk=game_id)
-    print(game)
-    return HttpResponse('Hello from game play view!')
+    profile = request.user.profile
+    if profile.games and Purchase.objects.filter(created_by=profile, game=game).count() > 0:
+        print('User has purchased the game')
+        play_game_context = {
+            'crumbs': [
+                {
+                    'label': 'Home',
+                    'url': 'home'
+                },
+                {
+                    'label': 'Browse',
+                    'url': 'games'
+                },
+                {
+                    'label': game,
+                    'url': 'play',
+                    'args': [
+                        {
+                            'game_id': game_id
+                        }
+                    ]
+                },
+            ]
+        }
+        context = {
+            'game': game,
+            'profile': profile,
+            **play_game_context
+        }
+        print(context)
+        return render(request, 'play_game.html', context)
+
+    print('User has not purchased the game.')
+    # TODO Redirect to purchase.
+    return HttpResponseRedirect('games')
