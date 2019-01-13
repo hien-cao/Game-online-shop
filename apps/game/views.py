@@ -92,11 +92,8 @@ def play(request, game_id):
                 {
                     'label': game,
                     'url': 'play',
-                    'args': [
-                        {
-                            'game_id': game_id
-                        }
-                    ]
+                    'is_game_url': True,
+                    'game_id': game_id
                 },
             ]
         }
