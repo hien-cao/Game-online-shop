@@ -43,7 +43,11 @@ def games(request, *args, **kwargs):
         latest_games = Game.objects.order_by('created_at')[:5]
         print(latest_games)
         # TODO Render
-        return render(request, 'games.html', { 'latest': latest_games })
+        context = {
+            'latest': latest_games,
+            'games': 'is-active',
+        }
+        return render(request, 'games.html', context)
     if (request.method == 'POST'):
         return add_game(request, *args, **kwargs)
 
@@ -53,6 +57,9 @@ def library(request, *args, **kwargs):
     profile = request.user.profile
     games = profile.games
     print(games)
+    context = {
+        'library': 'is-active',
+    }
     return HttpResponse('List games I have purchased!')
 
 # GET: Display games uploaded
@@ -62,5 +69,7 @@ def my(request, *args, **kwargs):
     profile = request.user.profile
     games = Game.objects.filter(created_by=request.user.profile)
     print(games)
-
+    context = {
+        'my': 'is-active',
+    }
     return HttpResponse('List games uploaded by me!')
