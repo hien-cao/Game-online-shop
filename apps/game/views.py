@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 
 from ..user.utils.validators import is_developer
@@ -73,3 +73,8 @@ def my(request, *args, **kwargs):
         'my': 'is-active',
     }
     return HttpResponse('List games uploaded by me!')
+
+def play(request, game_id):
+    game = get_object_or_404(Game, pk=game_id)
+    print(game)
+    return HttpResponse('Hello from game play view!')
