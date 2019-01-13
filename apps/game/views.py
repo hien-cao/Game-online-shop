@@ -6,6 +6,11 @@ from ..user.utils.validators import is_developer
 from .forms.add_game import AddGameForm
 
 from .models import Game, Purchase
+from .contexts import (
+    games_context,
+    library_context,
+    my_context
+)
 
 # Add game
 # TODO Change redirection to profile/settings?
@@ -45,7 +50,7 @@ def games(request, *args, **kwargs):
         # TODO Render
         context = {
             'latest': latest_games,
-            'games': 'is-active',
+            **games_context,
         }
         return render(request, 'games.html', context)
     if (request.method == 'POST'):
@@ -58,7 +63,7 @@ def library(request, *args, **kwargs):
     games = profile.games
     print(games)
     context = {
-        'library': 'is-active',
+        **library_context,
     }
     return HttpResponse('List games I have purchased!')
 
@@ -70,7 +75,7 @@ def my(request, *args, **kwargs):
     games = Game.objects.filter(created_by=request.user.profile)
     print(games)
     context = {
-        'my': 'is-active',
+        **my_context,
     }
     return HttpResponse('List games uploaded by me!')
 
