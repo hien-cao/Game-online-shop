@@ -1,0 +1,11 @@
+
+{% if crumbs %}
+    <nav aria-label="You are here:" role="navigation">
+        <ul class="breadcrumbs">
+            {% for crumb in crumbs %}
+                <li><a href="{% url crumb.url %}">{{ crumb.label }}</a></li>
+            {% endfor %}
+        </ul>
+    </nav>
+{% endif %}
+    
