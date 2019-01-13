@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% if game and profile %}
+        <h1>{{ game.name }}</h1>
+        <h2>{{ profile }}</h2>
+    {% endif %}
+{% endblock content %}
+    
