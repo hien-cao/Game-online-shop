@@ -1,11 +1,13 @@
+import json
+
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 
 from ..user.utils.validators import is_developer
 from .forms.add_game import AddGameForm
 
-from .models import Game, Purchase
+from .models import Game, Purchase, Highscore
 from .contexts import (
     games_context,
     library_context,
@@ -79,6 +81,8 @@ def my(request, *args, **kwargs):
     }
     return HttpResponse('List games uploaded by me!')
 
+# GET: Display games uploaded
+@login_required
 def play(request, game_id):
     game = get_object_or_404(Game, pk=game_id)
     profile = request.user.profile
@@ -113,3 +117,21 @@ def play(request, game_id):
     print('User has not purchased the game.')
     # TODO Redirect to purchase.
     return HttpResponseRedirect('games')
+
+# GET: Display games uploaded
+@login_required
+def save_score(request, game_id):
+    if (request.method == 'POST'):
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        score = body['score']
+        game = get_object_or_404(Game, pk=game_id)
+        highscore = Highscore(
+            score=score,
+            game=game,
+            created_by=request.user.profile
+        )
+        highscore.save()
+        return JsonResponse({"message": "score saved!"})
+    return JsonResponse({"message": "invalid request!"})
+

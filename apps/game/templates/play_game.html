@@ -1,9 +1,32 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
     {% if game and profile %}
-        <h1>{{ game.name }}</h1>
-        <h2>{{ profile }}</h2>
+    <div>
+        <div>
+            <h1>{{ game.name }}</h1>
+            <h2>{{ profile }}</h2>
+        </div>
+        <div id="game" class="responsive-embed widescreen game-container">
+            <iframe src="{{ game.url }}" frameborder="0" allowfullscreen></iframe>
+        </div>
+    </div>
     {% endif %}
 {% endblock content %}
-    
+
+{% if game %}
+    {% block customjs %}
+        <!-- Pass Django variables to JS (global scope). -->
+        <script>
+            "use strict";
+            const raw_game_url = "{{ game.url }}";
+            const game_id = "{{ game.id }}";
+            const game_url = new URL(raw_game_url);
+            // const csrf_token = "{{ csrf_token }}";
+        </script>
+        
+        <script src="{% static 'js/play/message_validation.js' %}"></script>
+        <script src="{% static 'js/play/play.js' %}"></script>
+    {% endblock customjs %}
+{% endif %}
