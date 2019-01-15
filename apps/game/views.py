@@ -145,4 +145,3 @@ def save_score(request, game_id):
         save_response = highscore.save()
         return JsonResponse(save_response)
     return JsonResponse({"message": "invalid request!"})
-
