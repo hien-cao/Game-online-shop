@@ -51,16 +51,22 @@ def games(request, *args, **kwargs):
 # GET: Display single game view
 # POST: Add game
 def game(request, game_id):
+    game = get_object_or_404(Game, pk=game_id)
     if request.method == 'GET':
-        game = get_object_or_404(Game, pk=game_id)
         purchased = len(Purchase.objects.filter(game=game_id, created_by=request.user.id)) > 0
         if request.user.is_authenticated:
             if game.created_by.user.id == request.user.id:
                 # TODO Render (and return) developer view
                 pass
         return render(request, 'game_details.html', { 'game': game, 'purchased': purchased })
-    elif request.method == 'post':
-        pass
+    elif request.method == 'POST':
+        purchase = Purchase(
+            game=game,
+            created_by=request.user.profile,
+        )
+        purchase.save()
+        print(purchase)
+        return HttpResponseRedirect('/games/{}'.format(game_id))
 
 # GET: Display games purchased
 @login_required
