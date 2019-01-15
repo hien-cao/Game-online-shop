@@ -34,7 +34,7 @@ def add_game(request, *args, **kwargs):
             )
             game.save()
             # redirect to a games uploaded by user:
-            return HttpResponseRedirect('/games/my/')
+            return HttpResponseRedirect('/games/uploads/')
 
     # if a GET (or any other method), form instance is blank
     else:

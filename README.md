@@ -281,7 +281,7 @@ List of model attributes
 
 * {{ base_url }}/games/ – Browse all games / create a new game (POST - Developer)
 * {{ base_url }}/games/libary – Browse games user has purchased
-* {{ base_url }}/games/my - Browse games user has uploaded
+* {{ base_url }}/games/uploads - Browse games user has uploaded
 * {{ base_url }}/games/:id – View / Update / Delete a game
 
 #### Review view and paths
