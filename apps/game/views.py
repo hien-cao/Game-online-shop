@@ -24,7 +24,6 @@ def add_game(request, *args, **kwargs):
         form = AddGameForm(request.POST)
         # is form valid:
         if form.is_valid():
-            # TODO Store to DB.
             data = form.cleaned_data
             game = Game(
                 name=data['name'],
@@ -49,7 +48,6 @@ def games(request, *args, **kwargs):
     if (request.method == 'GET'):
         latest_games = Game.objects.order_by('created_at')[:5]
         print(latest_games)
-        # TODO Render
         context = {
             'latest': latest_games,
             **games_context,
@@ -118,9 +116,17 @@ def play(request, game_id):
     # TODO Redirect to purchase.
     return HttpResponseRedirect('games')
 
-# GET: Display games uploaded
+# POST: Store a highscore
 @login_required
 def save_score(request, game_id):
+    """
+    NOTE: It is not possible to make a cheatproof highscore storage
+    as the game state is maintained in the client and not on the server.
+
+    Hence, there is no "secret keys" or any other redurdant variables
+    that would try to abstract the storing of scores in such way that
+    an adversary (client) could not find a way to store whatever scores they wished.
+    """
     if (request.method == 'POST'):
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
@@ -131,7 +137,7 @@ def save_score(request, game_id):
             game=game,
             created_by=request.user.profile
         )
-        highscore.save()
-        return JsonResponse({"message": "score saved!"})
+        save_response = highscore.save()
+        return JsonResponse(save_response)
     return JsonResponse({"message": "invalid request!"})
 

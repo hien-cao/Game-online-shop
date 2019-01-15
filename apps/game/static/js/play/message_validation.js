@@ -26,7 +26,6 @@ const validateMessage = data => {
         if (!Object.prototype.hasOwnProperty.call(data, "messageType")) {
             throw new Error("Invalid messageType.");
         }
-        console.log("data:", data)
         for (const validator of messageValidators[data.messageType]) {
             if (!validator(data)) {
                 throw new Error(`Validator ${validator} failed for ${data}.`);

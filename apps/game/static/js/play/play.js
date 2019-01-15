@@ -35,7 +35,9 @@ const attachMessageListener = () => {
                     postData(
                         "save-score",
                         payload
-                    ).then(data => { console.log(data) });
+                    ).then(data => {
+                        console.log(data);
+                    });
                     break;
                 case "SAVE":
                     console.log("Save score somewhere");
@@ -55,7 +57,6 @@ const attachMessageListener = () => {
  * Attach listeners when DOM fully loaded.
  */
 const onLoad = () => {
-    console.log("page fully loaded");
     attachMessageListener();
 };
 
