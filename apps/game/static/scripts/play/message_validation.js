@@ -6,7 +6,7 @@
  * Validators for different message types incoming from child.
  */
 const messageValidators = {
-	SCORE: [
+    SCORE: [
  		data => data.hasOwnProperty("score"),
     ],
     SAVE: [
