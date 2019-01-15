@@ -1,6 +1,5 @@
-from ..models import Profile
+from ...game.models import Purchase
 
 def is_developer(user):
-    profile = Profile.objects.get(user=user)
-    print(profile, profile.is_developer)
+    profile = user.profile
     return profile.is_developer
