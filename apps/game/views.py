@@ -11,7 +11,8 @@ from .models import Game, Purchase, Highscore
 from .contexts import (
     games_context,
     library_context,
-    my_context
+    my_context,
+    get_play_game_context
 )
 
 # Add game
@@ -108,28 +109,10 @@ def play(request, game_id):
     profile = request.user.profile
     if profile.games and Purchase.objects.filter(created_by=profile, game=game).count() > 0:
         print('User has purchased the game')
-        play_game_context = {
-            'crumbs': [
-                {
-                    'label': 'Home',
-                    'url': 'home'
-                },
-                {
-                    'label': 'Browse',
-                    'url': 'games'
-                },
-                {
-                    'label': game,
-                    'url': 'play',
-                    'is_game_url': True,
-                    'game_id': game_id
-                },
-            ]
-        }
         context = {
             'game': game,
             'profile': profile,
-            **play_game_context
+            **get_play_game_context(game=game, game_id=game_id)
         }
         print(context)
         return render(request, 'play_game.html', context)

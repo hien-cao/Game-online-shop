@@ -39,3 +39,22 @@ my_context = {
         }
     ]
 }
+
+def get_play_game_context(**game_args):
+    return {
+        'crumbs': [
+            {
+                'label': 'Home',
+                'url': 'home'
+            },
+            {
+                'label': 'Browse',
+                'url': 'games'
+            },
+            {
+                'url': 'play',
+                'is_game_url': True,
+                **game_args
+            },
+        ]
+    }
