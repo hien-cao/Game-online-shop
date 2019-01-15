@@ -63,21 +63,49 @@ def games(request, *args, **kwargs):
 def game_details(request, game_id):
     game = get_object_or_404(Game, pk=game_id)
     if request.method == 'GET':
-        purchased = bool(Purchase.objects.filter(game=game_id, created_by=request.user.id))
+        purchased = bool(Purchase.objects.filter(game=game_id, created_by=request.user.id, purchased_at__isnull=False))
         if request.user.is_authenticated:
             if game.created_by.user.id == request.user.id:
                 # TODO Render (and return) developer view
                 pass
         return render(request, 'game_details.html', {'game': game, 'purchased': purchased})
-    if request.method == 'POST':
-        purchase = Purchase(
-            game=game,
-            created_by=request.user.profile,
-        )
-        purchase.save()
-        print(purchase)
+
+    return HttpResponse(status=404) # other methods not supported
+
+
+@login_required
+def purchase_game(request, game_id):
+    if request.method != 'GET': # Only supports get -method
+        return HttpResponse(status=404)
+    # Should redirect to game page if already purchased
+    if bool(Purchase.objects.filter(game=game_id, created_by=request.user.id, purchased_at__isnull=False)):
         return HttpResponseRedirect('/games/{}'.format(game_id))
-    return HttpResponse(status=404)
+
+    # Handles the activation of purchase here
+    if request.GET.get('result') == 'success':
+        Purchase.activate(request.GET)
+        return HttpResponseRedirect('/games/{}'.format(game_id))
+    if request.GET.get('result') == 'cancel':
+        return HttpResponseRedirect('/games/{}'.format(game_id))
+    # Were not raising errors at this point (if they can be even happen).
+    # Invalid payment information gives an error message when accessing the payment platform
+
+    game = get_object_or_404(Game, pk=game_id)
+
+    purchase = Purchase(
+        game=game,
+        created_by=request.user.profile,
+    )
+    purchase.save()
+
+    return render(request, 'purchase.html', {
+        **purchase.get_payment_context(),
+        'purchase': purchase,
+        'success_url': '{}?purchase_id={}'.format(request.build_absolute_uri('?'), purchase.id),
+        'error_url': '{}?purchase_id={}'.format(request.build_absolute_uri('?'), purchase.id),
+        'cancel_url': '{}?purchase_id={}'.format(request.build_absolute_uri('?'), purchase.id),
+    })
+
 
 # GET: Display games purchased
 @login_required
@@ -111,7 +139,7 @@ def play(request, game_id):
         print('User has purchased the game')
         context = {
             'profile': profile,
-            **get_play_game_context(game=game, game_id=game_id)
+            **get_play_game_context(game)
         }
         print(context)
         return render(request, 'play_game.html', context)
