@@ -1,11 +1,16 @@
 import json
 
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import (
+    HttpResponse,
+    HttpResponseForbidden,
+    Http404,
+    JsonResponse
+)
 
 from ..user.utils.validators import is_developer
-from .forms.add_game import AddGameForm
+from .forms.game_form import GameForm
 
 from .models import Game, Purchase, Highscore
 from .contexts import (
@@ -14,36 +19,38 @@ from .contexts import (
     my_context
 )
 
-# Add game
+
+# Add/Edit game
 # TODO Change redirection to profile/settings?
 @login_required
 @user_passes_test(is_developer, login_url='/games/library/')
-def add_game(request, *args, **kwargs):
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = AddGameForm(request.POST)
-        # is form valid:
-        if form.is_valid():
-            data = form.cleaned_data
-            game = Game(
-                name=data['name'],
-                description=data['description'],
-                url=data['url'],
-                price=data['price'],
-                created_by=request.user.profile
-            )
-            game.save()
-            # redirect to a games uploaded by user:
-            return HttpResponseRedirect('/games/my/')
-
-    # if a GET (or any other method), form instance is blank
+def manage_game(request, game_id=None, template_name='upsert_game.html'):
+    if game_id:
+        title = 'Edit game'
+        game = get_object_or_404(Game, pk=game_id)
+        if game.created_by != request.user.profile:
+            return HttpResponseForbidden()
     else:
-        form = AddGameForm()
+        title = 'Add game'
+        game = Game(created_by=request.user.profile)
 
-    return render(request, 'add_game.html', { 'form': form })
+    form = GameForm(request.POST or None, instance=game)
+    if request.POST and form.is_valid():
+        form.save()
+
+        return redirect('my')
+
+    return render(
+        request,
+        template_name,
+        {
+            'form': form,
+            'title': title
+        },
+    )
+
 
 # GET: Display games view
-# POST: Add game
 def games(request, *args, **kwargs):
     if (request.method == 'GET'):
         latest_games = Game.objects.order_by('created_at')[:5]
@@ -53,8 +60,8 @@ def games(request, *args, **kwargs):
             **games_context,
         }
         return render(request, 'games.html', context)
-    if (request.method == 'POST'):
-        return add_game(request, *args, **kwargs)
+    return Http404('Invalid request')
+
 
 # GET: Display games purchased
 @login_required
@@ -67,6 +74,7 @@ def library(request, *args, **kwargs):
     }
     return HttpResponse('List games I have purchased!')
 
+
 # GET: Display games uploaded
 @login_required
 @user_passes_test(is_developer, login_url='/games/library')
@@ -78,6 +86,7 @@ def my(request, *args, **kwargs):
         **my_context,
     }
     return HttpResponse('List games uploaded by me!')
+
 
 # GET: Display games uploaded
 @login_required
@@ -114,7 +123,8 @@ def play(request, game_id):
 
     print('User has not purchased the game.')
     # TODO Redirect to purchase.
-    return HttpResponseRedirect('games')
+    return redirect('games')
+
 
 # POST: Store a highscore
 @login_required
@@ -140,4 +150,3 @@ def save_score(request, game_id):
         save_response = highscore.save()
         return JsonResponse(save_response)
     return JsonResponse({"message": "invalid request!"})
-
