@@ -110,7 +110,6 @@ def play(request, game_id):
     if profile.games and Purchase.objects.filter(created_by=profile, game=game).count() > 0:
         print('User has purchased the game')
         context = {
-            'game': game,
             'profile': profile,
             **get_play_game_context(game=game, game_id=game_id)
         }

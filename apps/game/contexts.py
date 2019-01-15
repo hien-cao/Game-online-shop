@@ -27,7 +27,7 @@ library_context = {
 }
 
 my_context = {
-    'my': 'is-active',
+    'uploads': 'is-active',
     'crumbs': [
         {
             'label': 'Home',
@@ -35,13 +35,14 @@ my_context = {
         },
         {
             'label': 'Uploads',
-            'url': 'my'
+            'url': 'uploads'
         }
     ]
 }
 
-def get_play_game_context(**game_args):
+def get_play_game_context(game):
     return {
+        'game': game,
         'crumbs': [
             {
                 'label': 'Home',
@@ -54,7 +55,7 @@ def get_play_game_context(**game_args):
             {
                 'url': 'play',
                 'is_game_url': True,
-                **game_args
+                'game': game
             },
         ]
     }
