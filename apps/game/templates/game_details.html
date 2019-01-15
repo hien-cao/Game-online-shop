@@ -7,12 +7,12 @@
   <p>{{ game.description }}</p>
   <div>
     {% if purchased %}
-      <a href="/games/{{game.id}}/play">Play game</a>
+    <a href="/games/{{game.id}}/play">Play game</a>
     {% else %}
-      <form method="POST">
-        {% csrf_token %}
-        <button type="submit">Purchase game for {{game.price}}</a>
-      </form>
+    <form method="POST">
+      {% csrf_token %}
+      <button type="submit">Purchase game for {{game.price}}</a>
+    </form>
     {% endif %}
   </div>
 </div>

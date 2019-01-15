@@ -1,15 +1,16 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div>
-        {% include 'messages.html' %}
-        <form method="POST">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Sign in</button>
-        </form>
-        <a href="{% url 'signup' %}">Not yet a member, click here to sign up!</a>
-        <hr></hr>
-        <a href="{% url 'social:begin' 'github' %}">Sign in with GitHub</a>
-    </div>
+<div>
+  {% include 'messages.html' %}
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Sign in</button>
+  </form>
+  <a href="{% url 'signup' %}">Not yet a member, click here to sign up!</a>
+  <hr>
+  </hr>
+  <a href="{% url 'social:begin' 'github' %}">Sign in with GitHub</a>
+</div>
 {% endblock %}
