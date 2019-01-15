@@ -48,6 +48,10 @@
     margin-left: auto;
 }
 
+.game-container {
+    border: 1px solid #7a7a7a;
+}
+
 /* Small devices (landscape phones, 640px and up) */
 @media (min-width: 640px) {
     .view {
