@@ -11,6 +11,7 @@ class Profile(models.Model):
         primary_key=True
     )
     is_developer = models.BooleanField(default=False)
+    email_confirmed = models.BooleanField(default=False)
     games = models.ManyToManyField(
         'game.Game',
         through='game.Purchase',
@@ -21,10 +22,10 @@ class Profile(models.Model):
         return self.user.username
 
     @receiver(post_save, sender=User)
-    def update_user_profile(sender, instance, created, **kwargs):
+    def create_user_profile(sender, instance, created, **kwargs):
         if created:
-            profile = Profile.objects.create(user=instance)
-            profile.save()
+            Profile.objects.create(user=instance)
 
-            instance.profile = profile
-            instance.save()
+    @receiver(post_save, sender=User)
+    def save_user_profile(sender, instance, **kwargs):
+        instance.profile.save()

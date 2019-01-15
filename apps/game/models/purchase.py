@@ -4,10 +4,11 @@ import uuid
 from django.db import models
 
 from ...user.models import Profile
+from ...game.models import Game
 
-assert(os.environ['PAYMENT_API_URI'] is not None)
-assert(os.environ['PAYMENT_API_SELLER_ID'] is not None)
-assert(os.environ['PAYMENT_API_KEY'] is not None)
+assert os.environ['PAYMENT_API_URI'] is not None
+assert os.environ['PAYMENT_API_SELLER_ID'] is not None
+assert os.environ['PAYMENT_API_KEY'] is not None
 
 class Purchase(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -15,7 +16,7 @@ class Purchase(models.Model):
     # set separate price field for purchases (as it may depending if there is an active discount)
     price = models.DecimalField(default=0, max_digits=6, decimal_places=2)
     game = models.ForeignKey(
-        'Game',
+        Game,
         on_delete=models.CASCADE
     )
     created_by = models.ForeignKey(
