@@ -2,7 +2,7 @@
 /**
  * JS for `games/:id/play`
  * Global variables in this view:
- * @var {Object} game; A game object.
+ * @var {String} raw_game_url; The full URL of the game.
  * @var {URL} game_url; URL object that may be parsed.
  */
 
