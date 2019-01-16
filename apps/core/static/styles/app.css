@@ -41,6 +41,10 @@
 * Containers
 */
 
+footer {
+    border-top: 1px #0a0a0a solid;
+}
+
 .view {
     padding-right: 0px;
     padding-left: 0px;
@@ -79,4 +83,12 @@
     .view {
         width: 1170px;
     }
+}
+
+/*
+* Typography
+*/
+
+.footnote {
+    font-size: 13px;
 }

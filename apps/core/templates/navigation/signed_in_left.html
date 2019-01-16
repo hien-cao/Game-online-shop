@@ -1,7 +1,7 @@
 <li class="{{ library }}">
-    <a href="{% url 'library' %}">Library</a>
+    <a title="Games you have purchased" href="{% url 'library' %}">Library</a>
 </li>
 
 {% if user.profile.is_developer %}
-    <li class="{{ my }}"><a href="{% url 'my' %}">Uploads</a></li>
+    <li title="Games you have uploaded" class="{{ my }}"><a href="{% url 'my' %}">Uploads</a></li>
 {% endif %}
