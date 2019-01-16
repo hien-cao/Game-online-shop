@@ -24,7 +24,7 @@ from .contexts import (
 # TODO Change redirection to profile/settings?
 @login_required
 @user_passes_test(is_developer, login_url='/games/library/')
-def manage_game(request, game_id=None, template_name='upsert_game.html'):
+def manage_game(request, game_id=None):
     if game_id:
         title = 'Edit game'
         game = get_object_or_404(Game, pk=game_id)
@@ -42,7 +42,7 @@ def manage_game(request, game_id=None, template_name='upsert_game.html'):
 
     return render(
         request,
-        template_name,
+        'upsert_game.html',
         {
             'form': form,
             'title': title
