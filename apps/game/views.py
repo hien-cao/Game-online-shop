@@ -16,7 +16,8 @@ from .models import Game, Purchase, Highscore
 from .contexts import (
     games_context,
     library_context,
-    my_context
+    my_context,
+    get_play_game_context
 )
 
 
@@ -52,7 +53,7 @@ def manage_game(request, game_id=None):
 
 # GET: Display games view
 def games(request, *args, **kwargs):
-    if (request.method == 'GET'):
+    if request.method == 'GET':
         latest_games = Game.objects.order_by('created_at')[:5]
         print(latest_games)
         context = {
@@ -60,14 +61,63 @@ def games(request, *args, **kwargs):
             **games_context,
         }
         return render(request, 'games.html', context)
-    return Http404('Invalid request')
+    return HttpResponse(status=404)
+
+# GET: Display single game view
+# POST: Add game
+def game_details(request, game_id):
+    game = get_object_or_404(Game, pk=game_id)
+    if request.method == 'GET':
+        purchased = bool(Purchase.objects.filter(game=game_id, created_by=request.user.id, purchased_at__isnull=False))
+        if request.user.is_authenticated:
+            if game.created_by.user.id == request.user.id:
+                # TODO Render (and return) developer view
+                pass
+        return render(request, 'game_details.html', {'game': game, 'purchased': purchased})
+
+    return HttpResponse(status=404) # other methods not supported
+
+
+@login_required
+def purchase_game(request, game_id):
+    if request.method != 'GET': # Only supports get -method
+        return HttpResponse(status=404)
+    # Should redirect to game page if already purchased
+    if bool(Purchase.objects.filter(game=game_id, created_by=request.user.id, purchased_at__isnull=False)):
+        return HttpResponseRedirect('/games/{}'.format(game_id))
+
+    # Handles the activation of purchase here
+    if request.GET.get('result') == 'success':
+        Purchase.activate(request.GET)
+        return HttpResponseRedirect('/games/{}'.format(game_id))
+    if request.GET.get('result') == 'cancel':
+        return HttpResponseRedirect('/games/{}'.format(game_id))
+    # Were not raising errors at this point (if they can be even happen).
+    # Invalid payment information gives an error message when accessing the payment platform
+
+    game = get_object_or_404(Game, pk=game_id)
+
+    # Create purchase that is not yet activated. It will be activated when the payment has been processed successfully
+    purchase = Purchase(
+        game=game,
+        created_by=request.user.profile,
+    )
+    purchase.save()
+
+    return render(request, 'purchase.html', {
+        **purchase.get_payment_context(),
+        'purchase': purchase,
+        'success_url': '{}?purchase_id={}'.format(request.build_absolute_uri('?'), purchase.id),
+        'error_url': '{}?purchase_id={}'.format(request.build_absolute_uri('?'), purchase.id),
+        'cancel_url': '{}?purchase_id={}'.format(request.build_absolute_uri('?'), purchase.id),
+    })
 
 
 # GET: Display games purchased
 @login_required
 def library(request, *args, **kwargs):
     profile = request.user.profile
-    games = profile.games
+    purchases = profile.games
     print(games)
     context = {
         **library_context,
@@ -78,7 +128,7 @@ def library(request, *args, **kwargs):
 # GET: Display games uploaded
 @login_required
 @user_passes_test(is_developer, login_url='/games/library')
-def my(request, *args, **kwargs):
+def uploads(request, *args, **kwargs):
     profile = request.user.profile
     games = Game.objects.filter(created_by=request.user.profile)
     print(games)
@@ -95,28 +145,9 @@ def play(request, game_id):
     profile = request.user.profile
     if profile.games and Purchase.objects.filter(created_by=profile, game=game).count() > 0:
         print('User has purchased the game')
-        play_game_context = {
-            'crumbs': [
-                {
-                    'label': 'Home',
-                    'url': 'home'
-                },
-                {
-                    'label': 'Browse',
-                    'url': 'games'
-                },
-                {
-                    'label': game,
-                    'url': 'play',
-                    'is_game_url': True,
-                    'game_id': game_id
-                },
-            ]
-        }
         context = {
-            'game': game,
             'profile': profile,
-            **play_game_context
+            **get_play_game_context(game)
         }
         print(context)
         return render(request, 'play_game.html', context)
@@ -137,7 +168,7 @@ def save_score(request, game_id):
     that would try to abstract the storing of scores in such way that
     an adversary (client) could not find a way to store whatever scores they wished.
     """
-    if (request.method == 'POST'):
+    if request.method == 'POST':
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
         score = body['score']

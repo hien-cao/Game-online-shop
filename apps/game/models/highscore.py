@@ -27,5 +27,3 @@ class Highscore(models.Model):
             return {"message": "score saved!"}
         except ObjectDoesNotExist:
             return {"message": "invalid request!"}
-
-

@@ -2,29 +2,26 @@
 {% load static %}
 
 {% block content %}
-    {% if game and profile %}
-    <div>
-        <div>
-            <h1>{{ game.name }}</h1>
-            <h2>{{ profile }}</h2>
-        </div>
-        <div id="game" class="responsive-embed widescreen game-container">
-            <iframe src="{{ game.url }}" frameborder="0" allowfullscreen></iframe>
-        </div>
-    </div>
-    {% endif %}
+{% if game %}
+<div>
+  <h1>{{ game.name }}</h1>
+  <div id="game" class="responsive-embed widescreen game-container">
+    <iframe src="{{ game.url }}" frameborder="0" allowfullscreen></iframe>
+  </div>
+</div>
+{% endif %}
 {% endblock content %}
 
 {% if game %}
-    {% block customjs %}
-        <!-- Pass Django variables to JS (global scope). -->
-        <script>
-            "use strict";
-            const raw_game_url = "{{ game.url }}";
-            const game_url = new URL(raw_game_url);
-        </script>
-        
-        <script src="{% static 'scripts/play/message_validation.js' %}"></script>
-        <script src="{% static 'scripts/play/play.js' %}"></script>
-    {% endblock customjs %}
+{% block customjs %}
+<!-- Pass Django variables to JS (global scope). -->
+<script>
+  "use strict";
+  const raw_game_url = "{{ game.url }}";
+  const game_url = new URL(raw_game_url);
+</script>
+
+<script src="{% static 'scripts/play/message_validation.js' %}"></script>
+<script src="{% static 'scripts/play/play.js' %}"></script>
+{% endblock customjs %}
 {% endif %}

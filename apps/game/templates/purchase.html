@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div>
+  <p>
+    After you have placed your payment of {{purchase.price}} for {{purchase.game.name}}, you will be redirected back
+    to the site. You will be able to play the game after we have proceeded and confirmed your payment.
+  </p>
+  <div>
+    <form method="POST" action="{{uri}}">
+      <input type="hidden" name="pid" value="{{pid}}">
+      <input type="hidden" name="sid" value="{{sid}}">
+      <input type="hidden" name="amount" value="{{amount}}">
+      <input type="hidden" name="checksum" value="{{checksum}}">
+      <input type="hidden" name="success_url" value="{{success_url}}">
+      <input type="hidden" name="cancel_url" value="{{cancel_url}}">
+      <input type="hidden" name="error_url" value="{{error_url}}">
+      <button type="submit">Continue to payment</button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
