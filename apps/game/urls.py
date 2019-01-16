@@ -14,7 +14,7 @@ from .views import (
 urlpatterns = [
     path('', games, name='games'),
     path('<int:game_id>/', game_details, name='game_details'),
-    path('<int:game_id>/purchase', purchase_game, name='purchase_game'),
+    path('<int:game_id>/purchase/', purchase_game, name='purchase_game'),
     path('add/', manage_game, name='add_game'),
     path('uploads/', uploads, name='uploads'),
     path('<int:game_id>/play/', play, name='play'),

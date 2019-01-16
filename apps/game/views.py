@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import (
     HttpResponse,
+    HttpResponseRedirect,
     HttpResponseForbidden,
     Http404,
     JsonResponse
@@ -39,7 +40,7 @@ def manage_game(request, game_id=None):
     if request.POST and form.is_valid():
         form.save()
 
-        return redirect('my')
+        return redirect('uploads')
 
     return render(
         request,
@@ -74,7 +75,6 @@ def game_details(request, game_id):
                 # TODO Render (and return) developer view
                 pass
         return render(request, 'game_details.html', {'game': game, 'purchased': purchased})
-
     return HttpResponse(status=404) # other methods not supported
 
 
