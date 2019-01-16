@@ -92,6 +92,7 @@ def purchase_game(request, game_id):
 
     game = get_object_or_404(Game, pk=game_id)
 
+    # Create purchase that is not yet activated. It will be activated when the payment has been processed successfully
     purchase = Purchase(
         game=game,
         created_by=request.user.profile,

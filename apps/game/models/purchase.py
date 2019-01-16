@@ -26,12 +26,22 @@ class Purchase(models.Model):
         on_delete=models.CASCADE
     )
 
+    class Meta:
+        unique_together = ('game', 'created_by')
+
     # helper property for payment id, since the payment api does not accept special characters (including '-')
     @property
     def pid(self):
         return str(self.id).replace('-', '')
 
     def save(self):
+        # Delete previously failed (and not accepted) purchases for given user and game
+        purchased = Purchase.objects.filter(
+            game=self.game,
+            created_by=self.created_by,
+            purchased_at__isnull=True
+        ).exclude(pk=self.pk).delete()
+
         if self.price is None:
             self.price = self.game.price
         super(Purchase, self).save()
