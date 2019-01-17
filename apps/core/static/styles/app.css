@@ -37,14 +37,6 @@
   content: "\e900";
 }
 
-.capitalized {
-  text-transform: capitalize;
-}
-
-.f_tiny {
-  font-size: 12px;
-}
-
 /*
 * Containers
 */
@@ -128,6 +120,10 @@ footer {
 * Typography
 */
 
-.footnote {
-    font-size: 13px;
+.capitalized {
+  text-transform: capitalize;
+}
+
+.f_tiny {
+  font-size: 12px;
 }
