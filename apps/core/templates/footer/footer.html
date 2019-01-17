@@ -1,15 +1,27 @@
-<footer>
-  <div class="grid-x grid-padding-x">
-    <div class="cell medium-6 large-4">
-      <h3>Navigation:</h3>
-      <ul class="menu">
-        <li><a href="#">Some link</a></li>
-      </ul>
+<footer class="grid-y grid-padding-y">
+  <div class="cell small-12">
+    <div class="grid-x grid-padding-x">
+      <div class="cell medium-6 large-4">
+        <h5>Navigation:</h5>
+        <ul class="no-bullet">
+          <li><a title="Home" href="{% url 'home' %}">Home</a></li>
+          <li><a title="Browse games" href="{% url 'games' %}">Browse</a></li>
+          {% if user.is_authenticated %}
+          {% include 'navigation/signed_in_left.html' %}
+          {% endif %}
+        </ul>
+      </div>
+      <div class="cell small-12">
+        <p class="footnote text-right">
+          Logo author: <a href="https://dribbble.com/medwep" target="_blank">Mohamed Wadih</a>
+        </p>
+      </div>
     </div>
-    <div class="cell small-12">
-      <p>
-        Logo author: <a href="https://dribbble.com/medwep" target="_blank">Mohamed Wadih</a>
-      </p>
-    </div>
+  </div>
+  <div class="cell small-12">
+    <p>
+      Logo author: <a href="https://dribbble.com/medwep" target="_blank">Mohamed Wadih</a>
+    </p>
+  </div>
   </div>
 </footer>
