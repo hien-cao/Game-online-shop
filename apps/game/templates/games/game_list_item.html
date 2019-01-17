@@ -1,7 +1,7 @@
 {% if game %}
-<li class="grid-x">
-  <div class="cell large-auto">
-    <p>
+<li class="grid-x grid-padding-y">
+  <div class="cell medium-auto">
+    <p class="small-no-margin-bottom">
       <a href="#">{{game.name}}</a>
       {# % if game.has_categories % #}
       <br>
@@ -11,11 +11,11 @@
       {# % endif % #}
     </p>
   </div>
-  <p class="cell large-shrink">
+  <p class="cell medium-shrink text-right">
       {# % if game.has_label % #}
       <span class="label">Some label</span>
       {# % endif % #}
-      {% include 'review_circles.html' with size="small" %}
+      {% include 'review_circles.html' with classes="small small-offset-1 medium-offset-2" %}
   </p>
 </li>
 {% endif %}

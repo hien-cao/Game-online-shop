@@ -60,11 +60,19 @@
   border: 1px solid #7a7a7a;
 }
 
+.small-no-margin-bottom, .medium-no-margin-bottom, .large-no-margin-bottom {
+  margin-bottom: 0;
+}
+
 /* Small devices (landscape phones, 640px and up) */
 @media (min-width: 640px) {
   .view {
     padding-right: 15px;
     padding-left: 15px;
+  }
+
+  p.small-no-margin-bottom {
+    margin-bottom: 1rem;
   }
 }
 
@@ -73,12 +81,20 @@
   .view {
     width: 750px;
   }
+
+  p.medium-no-margin-bottom {
+    margin-bottom: 1rem;
+  }
 }
 
 /* Large devices (desktops, 992px and up) */
 @media (min-width: 992px) {
   .view {
     width: 970px;
+  }
+
+  p.large-no-margin-bottom {
+    margin-bottom: 1rem;
   }
 }
 
@@ -91,6 +107,10 @@
 
 .game_list {
   padding: 1em 0;
+}
+
+.review_circles {
+  white-space: nowrap;
 }
 
 .review_circles.small > .circle {
