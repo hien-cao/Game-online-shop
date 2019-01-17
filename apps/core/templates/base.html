@@ -25,15 +25,11 @@
 <body>
   <div class="view">
     {% include 'navigation/navigation.html' %}
-    <div class="grid-y grid-padding-y">
-      <div class="cell small-12">
-        <div class="grid-x grid-padding-x">
-          <div class="cell small-12">
-            {% include 'breadcrumbs.html' %}
-            {% block content %}
-            {% endblock content %}
-          </div>
-        </div>
+    <div class="grid-x grid-padding-y grid-padding-x">
+      <div class="cell medium-10 medium-offset-1">
+        {% include 'breadcrumbs.html' %}
+        {% block content %}
+        {% endblock content %}
       </div>
     </div>
     {% include 'footer/footer.html' %}
