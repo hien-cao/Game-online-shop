@@ -61,7 +61,7 @@ def games(request, *args, **kwargs):
             'latest': latest_games,
             **games_context,
         }
-        return render(request, 'games.html', context)
+        return render(request, 'games/games.html', context)
     return HttpResponse(status=404)
 
 # GET: Display single game view
