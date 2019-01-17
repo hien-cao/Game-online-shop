@@ -51,7 +51,7 @@ Online JavaScript game store; a Django application.
 
 ## Project description
 
-This repository contains the source-code for an online JavaScript game store. The project is developed during the span of Web Software Development (CS-C3170) -course and the project instruction can be found from https://plus.cs.hut.fi/wsd/2018.
+This repository contains the source-code for an online JavaScript game store. The project is developed during the span of Web Software Development (CS-C3170) -course and the project instruction can be found from [here](https://plus.cs.hut.fi/wsd/2018-2019/project/project/).
 
 A rough mockup of the visuals of the web application can be seen [here](https://app.moqups.com/juho.i.jokela@gmail.com/XX8tNXjSen/view).
 
@@ -310,11 +310,11 @@ We set out the deadlines for each task to be somewhat reasonable, so that the co
 | --------------------------------------- | --------- | -------- | ---- | ------ |
 | [Authentication](#Authentication)       | 16.1.2019 | Juho     | x    | ok     |
 | [Third-Party Login](#Third-Party-Login) | 16.1.2019 | Juho     | x    | ok     |
-| [Adding Game](#Adding-Game)             | 22.1.2019 | Juho     | x    | -      |
-| [Purchasing Games](#Purchasing-Games)   | 24.1.2019 | Touko    | x    | -      |
-| [Playing Games](#Playing-Games)         | 31.1.2019 | Juho     | x    | -      |
+| [Adding Game](#Adding-Game)             | 22.1.2019 | Juho     | x    | ok     |
+| [Purchasing Games](#Purchasing-Games)   | 24.1.2019 | Touko    | x    | ok     |
+| [Playing Games](#Playing-Games)         | 31.1.2019 | Juho     | x    | ok     |
 | [Searching Games](#Searching-Games)     | 31.1.2019 | Hien     | x    | -      |
-| [Updating Game](#Updading-a-game)       | 31.1.2019 | Juho     | x    | -      |
+| [Updating Game](#Updading-a-game)       | 31.1.2019 | Juho     | x    | ok     |
 | Core templates                          | 31.1.2019 | Hien     | x    | -      |
 | [Saving/Loading](#Saving/Loading)       | 7.2.2019  | Touko    | x    | -      |
 | [Statistics](#Statistics)               | 10.2.2019 | Juho     | x    | -      |
