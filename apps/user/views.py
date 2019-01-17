@@ -68,6 +68,7 @@ def account_activation_sent(request):
     )
     return redirect('signin')
 
+
 def activate(request, uidb64, token, backend='django.contrib.auth.backends.ModelBackend'):
     """Activate the user, confirm that the email is verified."""
     try:
