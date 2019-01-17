@@ -1,17 +1,15 @@
-
 {% if crumbs %}
-    <nav aria-label="You are here:" role="navigation">
-        <ul class="breadcrumbs">
-            {% for crumb in crumbs %}
-                <li>
-                    {% if crumb.is_game_url %}
-                        <a href="{% url crumb.url game_id=crumb.game_id %}">{{ crumb.label }}</a>
-                    {% else %}
-                        <a href="{% url crumb.url %}">{{ crumb.label }}</a>
-                    {% endif %}
-                </li>
-            {% endfor %}
-        </ul>
-    </nav>
+<nav aria-label="You are here:" role="navigation">
+  <ul class="breadcrumbs">
+    {% for crumb in crumbs %}
+    <li>
+      {% if crumb.is_game_url %}
+      <a href="{% url crumb.url game_id=crumb.game.id %}">{{ crumb.label }}</a>
+      {% else %}
+      <a href="{% url crumb.url %}">{{ crumb.label }}</a>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+</nav>
 {% endif %}
-    

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div>
+  {% if latest %}
+  <ul>
+    <h2>Latest</h2>
+    {% for game in latest %}
+    <li>{{game.name}}</li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>Someone has to upload some games first!</p>
+  {% endif %}
+</div>
+
+{% endblock content %}

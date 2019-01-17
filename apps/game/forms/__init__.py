@@ -1,1 +1,1 @@
-from .add_game import AddGameForm
+from .game_form import GameForm
