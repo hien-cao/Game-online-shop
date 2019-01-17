@@ -3,5 +3,5 @@
 </li>
 
 {% if user.profile.is_developer %}
-    <li title="Games you have uploaded" class="{{ my }}"><a href="{% url 'my' %}">Uploads</a></li>
+    <li title="Games you have uploaded" class="{{ uploads }}"><a href="{% url 'uploads' %}">Uploads</a></li>
 {% endif %}
