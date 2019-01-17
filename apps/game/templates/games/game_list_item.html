@@ -1,0 +1,11 @@
+{% if game %}
+<li class="grid-x">
+    <p class="small-12 medium-7 large-9"><a href="#">{{game.name}}</a></p>
+    <p class="small-12 medium-5 large-3 text-right">
+        {# % if game.has_label % #}
+        <span class="label">Some label</span>
+        {# % endif % #}
+        {% include 'review_circles.html' with size="small" %}
+    </p>
+</li>
+{% endif %}

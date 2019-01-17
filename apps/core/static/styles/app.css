@@ -80,3 +80,10 @@
         width: 1170px;
     }
 }
+
+.review_circles.small > .circle {
+    display: inline-block;
+    background-color: #cccccc;
+    padding: 5px;
+    border-radius: 50%;
+}

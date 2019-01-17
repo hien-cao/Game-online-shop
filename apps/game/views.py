@@ -52,7 +52,7 @@ def games(request, *args, **kwargs):
             'latest': latest_games,
             **games_context,
         }
-        return render(request, 'games.html', context)
+        return render(request, 'games/games.html', context)
     if (request.method == 'POST'):
         return add_game(request, *args, **kwargs)
 

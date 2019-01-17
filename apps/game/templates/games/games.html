@@ -4,10 +4,10 @@
 
 <div>
     {% if latest %}
-        <ul>
-            <h2>Latest</h2>
+        <h2>Latest</h2>
+        <ul class="no-bullet">
             {% for game in latest %}
-                <li>{{game.name}}</li>
+            {% include 'games/game_list_item.html' %}
             {% endfor %}
         </ul>
     {% else %}
