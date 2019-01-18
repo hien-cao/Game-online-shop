@@ -1,0 +1,23 @@
+[
+  {
+    "model": "game.tag",
+    "pk": 1,
+    "fields": {
+      "name": "adventure"
+    }
+  },
+  {
+    "model": "game.tag",
+    "pk": 2,
+    "fields": {
+      "name": "action"
+    }
+  },
+  {
+    "model": "game.tag",
+    "pk": 3,
+    "fields": {
+      "name": "strategy"
+    }
+  }
+]
