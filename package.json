@@ -3,11 +3,21 @@
   "version": "0.0.0",
   "description": "A game implemented for CS-C3170 course",
   "main": "src/index.ts",
+  "scripts": {
+    "serve": "parcel index.html",
+    "build": "parcel build index.html",
+    "lint": "tslint -c tslint.json './src/**/*.ts'"
+  },
   "repository": {
     "type": "git",
     "url": "git@version.aalto.fi:hallast1/invaders.git"
   },
   "author": "Touko Hallasmaa",
   "license": "MIT",
-  "private": false
+  "private": false,
+  "devDependencies": {
+    "parcel-bundler": "^1.11.0",
+    "tslint": "^5.12.1",
+    "typescript": "^3.2.4"
+  }
 }
