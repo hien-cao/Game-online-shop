@@ -116,6 +116,18 @@ footer {
     border-radius: 50%;
 }
 
+.breadcrumbs_container {
+  padding: 1rem 0 2rem 0;
+}
+
+.top-bar, .top-bar ul {
+  background-color: transparent;
+}
+
+.top-bar {
+  border-bottom: 1px solid #0a0a0a;
+}
+
 /*
 * Typography
 */
