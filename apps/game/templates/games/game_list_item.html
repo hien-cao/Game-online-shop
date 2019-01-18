@@ -3,12 +3,10 @@
   <div class="cell medium-auto">
     <p class="small-no-margin-bottom">
       <a href="{% url 'game_details' game_id=game.id %}">{{game.name}}</a>
-      {# % if game.has_categories % #}
+      {% if game.tags.all %}
       <br>
-      {% with "list test" as categories_list %}
-        {% include 'games/game_categories.html' with categories=categories_list.split class="f_tiny" %}
-      {% endwith %}
-      {# % endif % #}
+      {% include 'games/game_tags.html' with tags=game.tags class="f_tiny" %}
+      {% endif %}
     </p>
   </div>
   <p class="cell medium-shrink text-right">
