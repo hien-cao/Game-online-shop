@@ -16,8 +16,8 @@ export default class Game {
 
     element.appendChild(this.canvas);
 
-    window.setInterval(this.render, 1000 / 60); // render loop
-    window.setInterval(this.update, 30); // update loop
+    this.renderLoop = window.setInterval(this.render(), 1000 / 60); // render loop
+    this.updateLoop = window.setInterval(this.update, 30); // update loop
   }
 
   public unmount = () => {
@@ -29,8 +29,8 @@ export default class Game {
     window.clearInterval(this.updateLoop); // clear update loop
   }
 
-  public render = () => {
-
+  public render = (ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D) => () => {
+    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); // clear canvas before re-render
   }
 
   public update = () => {
