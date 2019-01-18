@@ -1,7 +1,13 @@
+import GameObject from "./entities/GameObject";
+
+import Ship from "./entities/Ship";
+
 export default class Game {
   public canvas: HTMLCanvasElement;
   public renderLoop?: number;
   public updateLoop?: number;
+
+  public gameObjects: GameObject[] = [new Ship()];
 
   constructor() {
     this.canvas = document.createElement("canvas");
@@ -31,9 +37,15 @@ export default class Game {
 
   public render = (ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D) => () => {
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); // clear canvas before re-render
+
+    for (const obj of this.gameObjects) {
+      obj.render(ctx);
+    }
   }
 
   public update = () => {
-
+    for (const obj of this.gameObjects) {
+      obj.update();
+    }
   }
 }
