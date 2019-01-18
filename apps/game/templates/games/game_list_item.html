@@ -1,0 +1,21 @@
+{% if game %}
+<li class="grid-x grid-padding-y">
+  <div class="cell medium-auto">
+    <p class="small-no-margin-bottom">
+      <a href="{% url 'game_details' game_id=game.id %}">{{game.name}}</a>
+      {# % if game.has_categories % #}
+      <br>
+      {% with "list test" as categories_list %}
+        {% include 'games/game_categories.html' with categories=categories_list.split class="f_tiny" %}
+      {% endwith %}
+      {# % endif % #}
+    </p>
+  </div>
+  <p class="cell medium-shrink text-right">
+      {# % if game.has_label % #}
+      <span class="label">Some label</span>
+      {# % endif % #}
+      {% include 'review_circles.html' with classes="small small-offset-1 medium-offset-2" %}
+  </p>
+</li>
+{% endif %}
