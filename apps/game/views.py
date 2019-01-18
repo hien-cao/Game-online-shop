@@ -1,4 +1,5 @@
 import json
+import re
 
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect, get_object_or_404
@@ -13,7 +14,7 @@ from django.http import (
 from ..user.utils.validators import is_developer
 from .forms.game_form import GameForm
 
-from .models import Game, Purchase, Highscore
+from .models import Game, Purchase, Highscore, Tag
 from .contexts import (
     games_context,
     library_context,
@@ -21,6 +22,21 @@ from .contexts import (
     get_play_game_context
 )
 
+
+def parse_tags(description):
+    regex = re.compile(r'\B#\w+')
+    return regex.findall(description)
+
+
+# Create new tags from game's description
+def create_tags(description):
+    parsed_tags = parse_tags(description)
+    tags = []
+    if parsed_tags != []:
+        for tag_name in parsed_tags:
+            obj, _ = Tag.objects.get_or_create(name=tag_name.lower())
+            tags.append(obj)
+    return tags
 
 # Add/Edit game
 # TODO Change redirection to profile/settings?
@@ -38,7 +54,13 @@ def manage_game(request, game_id=None):
 
     form = GameForm(request.POST or None, instance=game)
     if request.POST and form.is_valid():
-        form.save()
+        game = form.save()
+
+        # Create and attach new tags to game.
+        tags = create_tags(game.description)
+        if tags != []:
+            game.tags.set(tags)
+            game.save()
 
         return redirect('uploads')
 
