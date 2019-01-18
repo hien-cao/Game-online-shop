@@ -1,17 +1,32 @@
-export default class Sprite {
-  public sprite: CanvasImageSource;
-  public width: number;
-  public height: number;
-  public readonly scale: number = 1;
+import ship from "../static/images/ship.svg";
 
-  constructor(sprite: CanvasImageSource, scale = 1) {
-    this.sprite = sprite;
-    this.scale = scale;
-    this.width = (sprite.width as number) * scale;
-    this.height = this.width * (sprite.height as number) / (sprite.width as number);
+export default class Sprite {
+  public img: HTMLImageElement = new Image();
+
+  constructor(img: HTMLImageElement) {
+    this.img = img;
   }
 
-  public render = (ctx: CanvasRenderingContext2D, position: xy) => {
-    ctx.drawImage(this.sprite, position[0], position[1], this.width, this.height);
+  public render = (
+    ctx: CanvasRenderingContext2D,
+    position: xy,
+    dimensions: dimensions = [this.img.width, this.img.height]
+  ) => {
+    ctx.drawImage(this.img, position[0], position[1], dimensions[0], dimensions[1]);
   }
 }
+
+const loadSprite = (src: string) => new Promise<Sprite>((resolve, reject) => {
+  const img = new Image();
+  img.src = src;
+  img.onload = () => resolve(new Sprite(img));
+});
+
+export const loadSprites = (): Promise<{ [key: string]: Sprite }> => {
+  const sprites: { [key: string]: Sprite } = {};
+  return Promise.all([
+    { name: "ship", src: ship },
+  ]
+    .map(({ name, src }) => loadSprite(src).then((sprite) => sprites[name] = sprite))
+  ).then(() => sprites);
+};

@@ -1,16 +1,20 @@
-import spriteSRC from "../../static/images/ship.svg";
-import Sprite from "../Sprite";
-import GameObject from "./GameObject";
-
-const sprite = new Image();
-sprite.src = spriteSRC;
+import GameObject, { UpdateArgs } from "./GameObject";
 
 export default class Ship extends GameObject {
-  constructor() {
-    super(new Sprite(sprite, .15));
-  }
+  public update = ({ keyState }: UpdateArgs) => {
+    if (keyState.w) {
+      this.velocity[1] -= 1;
+    }
+    if (keyState.a) {
+      this.velocity[0] -= 1;
+    }
+    if (keyState.s) {
+      this.velocity[1] += 1;
+    }
+    if (keyState.d) {
+      this.velocity[0] += 1;
+    }
 
-  public update = () => {
-    //
+    this.updatePosition();
   }
 }

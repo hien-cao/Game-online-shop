@@ -1,8 +1,11 @@
 import Game from "./Game";
-
-const game = new Game();
+import { loadSprites } from "./Sprite";
 
 (() => {
-  game.unmount();
-  game.mount(document.getElementById("game-container") as HTMLElement);
+  loadSprites().then((sprites) => {
+    const game = new Game(sprites);
+
+    game.unmount();
+    game.mount(document.getElementById("game-container") as HTMLElement);
+  });
 })();
