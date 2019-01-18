@@ -1,8 +1,10 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
 
-<div>
+  {% include 'search.html'%}
+
   {% if latest %}
   <ul>
     <h2>Latest</h2>
@@ -13,6 +15,13 @@
   {% else %}
   <p>Someone has to upload some games first!</p>
   {% endif %}
-</div>
 
 {% endblock content %}
+
+{% block customjs%}
+  <script>
+    "use strict";
+    let data = "{{suggestionResult}}";
+  </script>
+  <script src="{% static 'search/search.js' %}"></script>
+{% endblock customjs%}

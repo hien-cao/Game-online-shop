@@ -13,12 +13,13 @@ from django.http import (
 from ..user.utils.validators import is_developer
 from .forms.game_form import GameForm
 
-from .models import Game, Purchase, Highscore
+from ..user.models import Profile
+from .models import Game, Purchase, Highscore, Tag
 from .contexts import (
     games_context,
     library_context,
     my_context,
-    get_play_game_context
+    get_play_game_context,
 )
 
 
@@ -181,3 +182,48 @@ def save_score(request, game_id):
         save_response = highscore.save()
         return JsonResponse(save_response)
     return JsonResponse({"message": "invalid request!"})
+
+
+# Search
+def search(request):
+    query = request.GET['query']
+    response = {}
+
+    if '#' in query:
+        query = query.replace('#', '')
+        if Game.objects.filter(tags = query).count() != 0:
+            response['redirect'] = '/tag/' + query
+    elif "@" in query:
+        query = query.replace('@', '')
+        if Game.objects.filter(created_by = query).count() != 0:
+            response['redirect'] = '/developer' + query
+    else:
+        if Game.objects.filter(name = query).count() != 0:
+            response['redirect'] = '/' + query
+    return HttpResponse(json.dumps(response), content_type='application/json')
+
+# Autosuggestion search
+def autosuggestion_search(request):
+    if request.is_ajax():
+        results = []
+        query = request.GET.get('searchTerm') # donot know how add the search term value from the games.html
+        if '#' in query:
+            query = query.replace('#', '')
+            categories = Tag.objects.filter(name__icontains = query)
+            for category in categories:
+                results.append(category.name)
+        elif '@' in query:
+            query = query.replace('@', '')
+            developers = Profile.objects.filter(name__icontains = query).filter(is_developer = True)
+            for developer in developers:
+                results.append(developer.name)
+        elif query:
+            games = Games.objects.filter(name__icontains = query)
+            for game in games:
+                results.append(game.name)
+        else: 
+            results = []
+    else:
+        results = 'It is not ajax request'
+    return HttpResponse(results)
+        
