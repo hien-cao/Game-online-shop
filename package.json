@@ -1,0 +1,13 @@
+{
+  "name": "invaders",
+  "version": "0.0.0",
+  "description": "A game implemented for CS-C3170 course",
+  "main": "src/index.ts",
+  "repository": {
+    "type": "git",
+    "url": "git@version.aalto.fi:hallast1/invaders.git"
+  },
+  "author": "Touko Hallasmaa",
+  "license": "MIT",
+  "private": false
+}
