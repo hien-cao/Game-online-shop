@@ -9,10 +9,12 @@ export default class Sprite {
 
   public render = (
     ctx: CanvasRenderingContext2D,
-    position: xy,
-    dimensions: dimensions = [this.img.width, this.img.height]
+    x: number,
+    y: number,
+    width = this.img.width,
+    height = this.img.height
   ) => {
-    ctx.drawImage(this.img, position[0], position[1], dimensions[0], dimensions[1]);
+    ctx.drawImage(this.img, x, y, width, height);
   }
 }
 

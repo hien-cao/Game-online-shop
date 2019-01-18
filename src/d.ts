@@ -5,4 +5,3 @@ declare module "*.svg" {
 
 type xy = [number, number];
 type vector = [number, number];
-type dimensions = [number, number];

@@ -1,6 +1,6 @@
 import GameObject, { UpdateArgs } from "./GameObject";
 
-export default class Ship extends GameObject {
+export default class Player extends GameObject {
   public update = ({ keyState }: UpdateArgs) => {
     if (keyState.w) {
       this.velocity[1] -= 1;

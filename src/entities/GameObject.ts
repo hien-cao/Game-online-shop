@@ -1,39 +1,44 @@
 import { KeyState } from "../controls/keyboardListener";
 import Sprite from "../Sprite";
+import Viewport from "../ViewPort";
 
 export interface UpdateArgs {
   keyState: KeyState;
 }
 
 export default abstract class GameObject {
-  public sprite?: Sprite;
+  public sprite: Sprite;
   public acceleration: number = .1;
-  public position: xy = [0, 0];
+  public x: number = 0;
+  public y: number = 0;
   public velocity: vector = [0, 0];
 
-  public dimensions: dimensions = [0, 0];
+  public width: number;
+  public height: number;
   public scale: number = 1;
 
   constructor(sprite: Sprite, scale: number = 1) {
-    if (sprite) {
-      this.sprite = sprite;
+    this.sprite = sprite;
 
-      this.scale = scale;
-      this.dimensions[0] = (sprite.img.width as number) * scale;
-      this.dimensions[1] = this.dimensions[0] * (sprite.img.height as number) / (sprite.img.width as number);
-    }
+    this.scale = scale;
+    this.width = (sprite.img.width as number) * scale;
+    this.height = this.width * (sprite.img.height as number) / (sprite.img.width as number);
   }
 
   public abstract update(args: UpdateArgs): void;
 
-  public render = (ctx: CanvasRenderingContext2D) => {
-    if (this.sprite) {
-      this.sprite.render(ctx, this.position, this.dimensions);
-    }
+  public render = (ctx: CanvasRenderingContext2D, viewport: Viewport) => {
+    this.sprite.render(
+      ctx,
+      viewport.x - this.x,
+      viewport.y - this.y,
+      this.width,
+      this.height
+    );
   }
 
   public readonly updatePosition = () => {
-    this.position[0] += this.velocity[0] * this.acceleration;
-    this.position[1] += this.velocity[1] * this.acceleration;
+    this.x += this.velocity[0] * this.acceleration;
+    this.y += this.velocity[1] * this.acceleration;
   }
 }

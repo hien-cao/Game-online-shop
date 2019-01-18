@@ -1,21 +1,33 @@
 import GameObject from "./entities/GameObject";
 
 import KeyboardListener from "./controls/keyboardListener";
-import Ship from "./entities/Ship";
+import Player from "./entities/Player";
 import Sprite from "./Sprite";
+import Viewport from "./Viewport";
 
 export default class Game {
   public canvas: HTMLCanvasElement;
+  public viewport: Viewport;
   public renderLoop?: number;
   public updateLoop?: number;
   public keyboardListener: KeyboardListener = new KeyboardListener();
 
   public gameObjects: GameObject[];
+  public player: Player;
 
   constructor(sprites: { [key: string]: Sprite }) {
     this.canvas = document.createElement("canvas");
     this.canvas.id = "game";
-    this.gameObjects = [new Ship(sprites.ship, .15)];
+
+    this.player = new Player(sprites.ship, .15);
+
+    this.viewport = new Viewport(
+      this.canvas.width,
+      this.canvas.height
+    );
+
+    this.gameObjects = [];
+
   }
 
   public mount = (element: HTMLElement) => {
@@ -44,16 +56,30 @@ export default class Game {
     this.keyboardListener.unmount(); // unmount keyboard listener
   }
 
-  public render = (ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D) => () => {
+  public render = (
+    ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D,
+    viewport = this.viewport
+  ) => () => {
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); // clear canvas before re-render
+
+    this.player.render(ctx, viewport);
+
     for (const obj of this.gameObjects) { // loop and render all game objects
-      obj.render(ctx);
+      obj.render(ctx, viewport);
     }
   }
 
   public update = () => {
+    const ctx = { keyState: this.keyboardListener.keyState };
+
+    this.player.update(ctx);
+    this.viewport.pan(
+      this.player,
+      [-this.canvas.width / 2 + this.player.width, 0]
+    );
+
     for (const obj of this.gameObjects) { // loop and update all game objects
-      obj.update({ keyState: this.keyboardListener.keyState });
+      obj.update(ctx);
     }
   }
 }
