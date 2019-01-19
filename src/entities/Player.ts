@@ -1,17 +1,9 @@
 import Game from "../game";
-import GameObject, { GameObjectArgs } from "./GameObject";
-import Weapon from "./Weapon";
+import Ship, { ShipArgs } from "./Ship";
 
-export interface PlayerArgs extends GameObjectArgs {
-  weapon?: Weapon;
-}
-
-export default class Player extends GameObject {
-  public weapon?: Weapon;
-
-  constructor({ weapon, ...rest }: PlayerArgs) {
-    super(rest);
-    this.weapon = weapon;
+export default class Player extends Ship {
+  constructor(args: ShipArgs) {
+    super(args);
 
     // add controls
     this.onUpdate = [

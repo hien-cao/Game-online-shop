@@ -31,6 +31,7 @@ export default class Game {
       weapon: new Weapon({
         Projectile: () => new GameObject({ sprite: sprites.projectile }),
         fireRate: 2,
+        ballisticVelocity: 0,
         offset: [46, 8],
       }),
     });
