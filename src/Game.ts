@@ -1,5 +1,6 @@
 import KeyboardListener from "./controls/keyboardListener";
 import GameObject from "./entities/GameObject";
+import Meteor from "./entities/Meteor";
 import Player from "./entities/Player";
 import Weapon from "./entities/Weapon";
 import { sprites } from "./sprites/Sprite";
@@ -30,8 +31,8 @@ export default class Game {
       sprite: sprites.ship,
       weapon: new Weapon({
         Projectile: () => new GameObject({ sprite: sprites.projectile }),
+        ballisticVelocity: 15,
         fireRate: 2,
-        ballisticVelocity: 0,
         offset: [46, 8],
       }),
     });
@@ -41,7 +42,13 @@ export default class Game {
       this.canvas.height
     );
 
-    this.gameObjects = [];
+    this.gameObjects = [
+      this.player,
+      new Meteor({
+        x: 100,
+        y: 0,
+      }),
+    ];
   }
 
   public mount = (element: HTMLElement) => {
@@ -85,8 +92,6 @@ export default class Game {
   ) => () => {
     ctx.clearRect(0, 0, this.viewport.width, this.viewport.height); // clear canvas before re-render
 
-    this.player.render(ctx, viewport);
-
     for (const obj of this.gameObjects) { // loop and render all game objects
       if (obj) {
         obj.render(ctx, viewport);
@@ -95,22 +100,17 @@ export default class Game {
   }
 
   public update = () => {
-    this.player.update(this);
-
     this.viewport.pan(
       this.player,
       [
         -this.canvas.width / 2 + this.player.width - this.player.acceleration[0] * 200 - this.player.width * 1.5,
-        - this.player.acceleration[1] * 400 + this.player.height / 2,
+        -this.player.acceleration[1] * 400 + this.player.height / 2,
       ]
     );
-    this.viewport.update();
 
     let i = this.gameObjects.length;
     while (i--) {
-      if (this.viewport.contains(this.gameObjects[i])) {
-        this.gameObjects[i].update(this);
-      } else {
+      if (!this.viewport.contains(this.gameObjects[i]) || this.gameObjects[i].update(this) === false) {
         this.gameObjects.splice(i, 1);
       }
     }

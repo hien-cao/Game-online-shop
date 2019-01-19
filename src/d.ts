@@ -1,3 +1,4 @@
+
 declare module "*.svg" { // to omit error when importing vector files
   const defaultExport: string;
   export default defaultExport;
@@ -10,4 +11,9 @@ interface Bounds {
   t: number;
   l: number;
   b: number;
+}
+interface Trackable {
+  x: number;
+  y: number;
+  velocity: vector;
 }

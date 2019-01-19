@@ -1,13 +1,11 @@
 import GameObject from "./entities/GameObject";
 
-type target = GameObject | { x: number, y: number, velocity: vector };
-
 export default class Viewport {
   public width: number;
   public height: number;
   public x: number;
   public y: number;
-  public target?: target;
+  public target?: Trackable;
   public targetOffset = [0, 0];
 
   constructor(width: number, height: number, x = 0, y = 0) {
@@ -28,7 +26,7 @@ export default class Viewport {
     this.y = this.y + y;
   }
 
-  public pan = (obj: target, offset = [0, 0], instant = false) => {
+  public pan = (obj: Trackable, offset = [0, 0], instant = false) => {
     if (instant) {
       this.x = obj.x + this.width / 2 + offset[0];
       this.y = obj.y - this.height / 2 + offset[1];
@@ -36,6 +34,7 @@ export default class Viewport {
       this.target = obj;
       this.targetOffset = offset;
     }
+    this.update();
   }
 
   public update = () => {
@@ -55,7 +54,7 @@ export default class Viewport {
   }
 
   public contains = (obj: GameObject, { l, r, t, b }: Bounds = { l: 0, r: 0, t: 0, b: 0 }) => (
-    obj.x > this.x - l && obj.x < this.x + this.width + r &&
-    obj.y > this.y - t && obj.y < this.y + this.height + b
+    obj.x > this.x - l && obj.x + obj.width < this.x + this.width + r &&
+    obj.y > this.y - t && obj.y + obj.height < this.y + this.height + b
   )
 }

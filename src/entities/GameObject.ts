@@ -7,13 +7,15 @@ export interface GameObjectArgs {
   scale?: number;
   initialWidth?: number;
   initialHeight?: number;
+  x?: number;
+  y?: number;
   onUpdate?: Array<(game: Game) => any>;
 }
 
 export default class GameObject {
   public sprite: Sprite;
-  public x: number = 0;
-  public y: number = 0;
+  public x: number;
+  public y: number;
   public acceleration: vector = [0, 0];
   public velocity: vector = [0, 0];
 
@@ -25,17 +27,23 @@ export default class GameObject {
   // Life determines damage caused upon collosion
   // An object will trigger
   public life: number = 0;
+  public undefined;
 
   constructor({
     sprite,
     initialWidth = 1,
     initialHeight = 1,
     scale = 1,
+    x = 0,
+    y = 0,
   }: GameObjectArgs) {
     this.sprite = sprite;
 
     this.width = initialWidth;
     this.height = initialHeight;
+
+    this.x = x;
+    this.y = y;
 
     this.sprite.img.onload = () => this.scale(scale); // to update dimensions after image has been loaded
     this.scale(scale);
@@ -51,6 +59,11 @@ export default class GameObject {
     }
   }
 
+  public getDistance = (obj: GameObject) => {
+
+  }
+
+  // returning false from update will destroy the object
   public update = (game: Game) => {
     this.updatePosition();
 
@@ -60,6 +73,13 @@ export default class GameObject {
         notify(game);
       }
     }
+    if (this.life >= 0) {
+      return true;
+    }
+    if (typeof this.onDestroy === "function") {
+      this.onDestroy(game);
+    }
+    return false;
   }
 
   public render = (ctx: CanvasRenderingContext2D, viewport: Viewport, scale = 1) => {
@@ -71,6 +91,8 @@ export default class GameObject {
       this.height
     );
   }
+
+  protected onDestroy?(game: Game): any;
 
   private readonly updatePosition = () => {
     this.x += this.velocity[0];
