@@ -7,7 +7,6 @@ from django.http import (
     HttpResponse,
     HttpResponseRedirect,
     HttpResponseForbidden,
-    Http404,
     JsonResponse
 )
 
@@ -19,7 +18,8 @@ from .contexts import (
     games_context,
     library_context,
     my_context,
-    get_play_game_context
+    get_play_game_context,
+    get_upsert_game_context
 )
 
 
@@ -44,11 +44,13 @@ def create_tags(description):
 @user_passes_test(is_developer, login_url='/games/library/')
 def manage_game(request, game_id=None):
     if game_id:
+        url = 'edit_game'
         title = 'Edit game'
         game = get_object_or_404(Game, pk=game_id)
         if game.created_by != request.user.profile:
             return HttpResponseForbidden()
     else:
+        url = 'add_game'
         title = 'Add game'
         game = Game(created_by=request.user.profile)
 
@@ -68,16 +70,15 @@ def manage_game(request, game_id=None):
         request,
         'upsert_game.html',
         {
-            'form': form,
-            'title': title
-        },
+            **get_upsert_game_context(game, form, title, url)
+        }
     )
 
 
 # GET: Display games view
 def games(request, *args, **kwargs):
     if request.method == 'GET':
-        latest_games = Game.objects.order_by('created_at')[:5]
+        latest_games = Game.objects.order_by('-created_at')[:5]
         print(latest_games)
         context = {
             'latest': latest_games,
