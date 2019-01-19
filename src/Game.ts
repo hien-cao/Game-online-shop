@@ -17,7 +17,7 @@ export default class Game {
   public prevUpdate: number = 0;
   public player: Player;
 
-  private gameObjects: GameObject[];
+  public gameObjects: GameObject[];
 
   constructor() {
     this.canvas = document.createElement("canvas");
@@ -110,7 +110,9 @@ export default class Game {
 
     let i = this.gameObjects.length;
     while (i--) {
-      if (!this.viewport.contains(this.gameObjects[i]) || this.gameObjects[i].update(this) === false) {
+      if (this.viewport.contains(this.gameObjects[i])) {
+        this.gameObjects[i].update(this, i);
+      } else {
         this.gameObjects.splice(i, 1);
       }
     }

@@ -9,6 +9,8 @@ export interface GameObjectArgs {
   initialHeight?: number;
   x?: number;
   y?: number;
+  velocity?: vector;
+  maxLife?: number;
   onUpdate?: Array<(game: Game) => any>;
 }
 
@@ -18,6 +20,7 @@ export default class GameObject {
   public y: number;
   public acceleration: vector = [0, 0];
   public velocity: vector = [0, 0];
+  public immuneTo?: GameObject[];
 
   public onUpdate?: Array<(game: Game) => any>;
 
@@ -26,8 +29,8 @@ export default class GameObject {
 
   // Life determines damage caused upon collosion
   // An object will trigger
-  public life: number = 0;
-  public undefined;
+  public life: number;
+  public maxLife: number;
 
   constructor({
     sprite,
@@ -36,6 +39,8 @@ export default class GameObject {
     scale = 1,
     x = 0,
     y = 0,
+    maxLife = 1,
+    velocity = [0, 0],
   }: GameObjectArgs) {
     this.sprite = sprite;
 
@@ -44,6 +49,11 @@ export default class GameObject {
 
     this.x = x;
     this.y = y;
+
+    this.maxLife = maxLife;
+    this.life = maxLife;
+
+    this.velocity = velocity;
 
     this.sprite.img.onload = () => this.scale(scale); // to update dimensions after image has been loaded
     this.scale(scale);
@@ -59,12 +69,17 @@ export default class GameObject {
     }
   }
 
-  public getDistance = (obj: GameObject) => {
+  public getDistance = (obj: Trackable) => Math.sqrt(
+    Math.pow(this.x - (obj.x + (obj instanceof GameObject ? obj.width : 0)), 2) +
+    Math.pow(this.y - (obj.y + (obj instanceof GameObject ? obj.height : 0)), 2)
+  )
 
-  }
+  public collides = (obj: GameObject) => (
+    obj.x + obj.width > this.x && obj.x < this.x + this.width &&
+    obj.y + obj.height > this.y && obj.y < this.y + this.height
+  )
 
-  // returning false from update will destroy the object
-  public update = (game: Game) => {
+  public update = (game: Game, objIndex: number) => {
     this.updatePosition();
 
     // loop and invoke all update listeners
@@ -73,13 +88,17 @@ export default class GameObject {
         notify(game);
       }
     }
-    if (this.life >= 0) {
-      return true;
+
+    if (this.life <= 0) {
+      return this.destroy(game, objIndex);
     }
-    if (typeof this.onDestroy === "function") {
-      this.onDestroy(game);
+    // check for collisions
+    const collision = this.checkCollisions(game, objIndex);
+    if (collision) {
+      const damage = collision.life;
+      collision.life -= this.life;
+      this.life -= damage;
     }
-    return false;
   }
 
   public render = (ctx: CanvasRenderingContext2D, viewport: Viewport, scale = 1) => {
@@ -92,7 +111,28 @@ export default class GameObject {
     );
   }
 
+  protected destroy = (game: Game, objIndex: number) => {
+    const obj = game.gameObjects[objIndex];
+    if (typeof obj.onDestroy === "function") {
+      obj.onDestroy(game);
+    }
+    game.gameObjects.splice(objIndex, 1);
+  }
+
   protected onDestroy?(game: Game): any;
+
+  private checkCollisions = (game: Game, objIndex: number): GameObject | null => {
+    // loop through non-checked game objects
+    while (objIndex--) {
+      if (
+        !(Array.isArray(this.immuneTo) && this.immuneTo.find((obj) => obj === game.gameObjects[objIndex])) &&
+        this.collides(game.gameObjects[objIndex])
+      ) {
+        return game.gameObjects[objIndex];
+      }
+    }
+    return null;
+  }
 
   private readonly updatePosition = () => {
     this.x += this.velocity[0];
