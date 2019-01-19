@@ -5,6 +5,7 @@ import Viewport from "../ViewPort";
 export interface GameObjectArgs {
   sprite: Sprite;
   scale?: number;
+  onUpdate?: Array<(game: Game) => any>;
 }
 
 export default class GameObject {
@@ -14,8 +15,14 @@ export default class GameObject {
   public acceleration: vector = [0, 0];
   public velocity: vector = [0, 0];
 
+  public onUpdate?: Array<(game: Game) => any>;
+
   public width: number = 0;
   public height: number = 0;
+
+  // Life determines damage caused upon collosion
+  // An object will trigger
+  public life: number = 0;
 
   constructor({ sprite, scale = 1 }: GameObjectArgs) {
     this.sprite = sprite;
@@ -31,6 +38,13 @@ export default class GameObject {
 
   public update = (game: Game) => {
     this.updatePosition();
+
+    // loop and invoke all update listeners
+    if (Array.isArray(this.onUpdate)) {
+      for (const notify of this.onUpdate) {
+        notify(game);
+      }
+    }
   }
 
   public render = (ctx: CanvasRenderingContext2D, viewport: Viewport, scale = 1) => {
@@ -43,7 +57,7 @@ export default class GameObject {
     );
   }
 
-  public readonly updatePosition = () => {
+  private readonly updatePosition = () => {
     this.x += this.velocity[0];
     this.y += this.velocity[1];
 
