@@ -1,3 +1,31 @@
 /*
     This file hosts all modifications to foundation.css
 */
+
+.top-bar {
+  padding: 0;
+}
+
+.top-bar, .top-bar ul {
+  background-color: #455a64;
+}
+
+.top-bar .menu a {
+  padding: 1rem;
+}
+
+.menu .is-active > a {
+  /* background: none; */
+  /* color: #1779ba; */
+  background: #607d8b;
+  font-weight: bold;
+}
+
+.menu a {
+  /* color: #1779ba; */
+  color: #fefefe;
+}
+
+.menu a:hover {
+  text-decoration: underline;
+}
