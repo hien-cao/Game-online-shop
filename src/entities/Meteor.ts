@@ -16,15 +16,17 @@ export default class Meteor extends GameObject {
     const step = 2 * Math.PI / n;
 
     ctx.beginPath();
-    const startX = (Math.random() * .1 * radius) + radius * 2;
-    const startY = (Math.random() * .1 * radius) + radius;
+    ctx.moveTo(
+      Math.random() * .1 * radius + radius * 2,
+      Math.random() * .1 * radius + radius
+    );
     for (let i = 0; i < n; i++) {
       ctx.lineTo(
         (Math.random() * .1 * radius) + (radius + Math.cos(i * step) * radius),
         (Math.random() * .1 * radius) + (radius + Math.sin(i * step) * radius)
       );
     }
-    ctx.lineTo(startX, startY);
+    ctx.closePath();
     ctx.fillStyle = "#CCC";
     ctx.fill();
     ctx.rotate(Math.random() * Math.PI);

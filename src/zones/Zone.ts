@@ -3,8 +3,8 @@ import Game from "../Game";
 import Viewport from "../ViewPort";
 
 export interface ZoneArgs {
-  x: number;
-  y: number;
+  x?: number;
+  y?: number;
   width: number;
   height: number;
   game: Game;
@@ -19,7 +19,7 @@ export default class Zone {
   public game: Game;
   public absolutePosition: boolean;
 
-  constructor({ game, x, y, width, height, absolutePosition = false }: ZoneArgs) {
+  constructor({ game, x = 0, y = 0, width, height, absolutePosition = false }: ZoneArgs) {
     this.game = game;
 
     this.absolutePosition = absolutePosition;

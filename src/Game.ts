@@ -7,6 +7,7 @@ import { sprites } from "./sprites/Sprite";
 import Viewport from "./Viewport";
 import SpawnZone from "./zones/SpawnZone";
 import Zone from "./zones/Zone";
+import { getMeteorSpawns } from "./zones/zones";
 
 export default class Game {
   public canvas: HTMLCanvasElement;
@@ -73,21 +74,7 @@ export default class Game {
 
     // add spawn zones
     this.zones = [
-      new SpawnZone({
-        game: this,
-
-        generateSpawn: () => new Meteor({
-          maxLife: 3 + Math.random() * 10,
-          velocity: [Math.random() * 2 - .5, Math.random() * .5 - .25],
-        }),
-        spawnRate: 2,
-
-        absolutePosition: true,
-        height: this.canvas.height + 400,
-        width: 200,
-        x: this.canvas.width,
-        y: -200,
-      }),
+      ...getMeteorSpawns(this),
     ];
   }
 
