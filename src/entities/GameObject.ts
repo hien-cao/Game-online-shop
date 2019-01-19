@@ -3,19 +3,27 @@ import Sprite from "../sprites/Sprite";
 import Viewport from "../ViewPort";
 
 export interface GameObjectArgs {
-  sprite: Sprite;
+  sprite?: Sprite;
   scale?: number;
   initialWidth?: number;
   initialHeight?: number;
   x?: number;
   y?: number;
   velocity?: vector;
-  maxLife?: number;
+  maxLife: number;
   onUpdate?: Array<(game: Game) => any>;
 }
 
 export default class GameObject {
-  public sprite: Sprite;
+  get sprite() {
+    return this._sprite;
+  }
+  set sprite(sprite: Sprite | undefined) {
+    this._sprite = sprite;
+    this.rescale(this.scale);
+  }
+
+  public scale: number;
   public x: number;
   public y: number;
   public acceleration: vector = [0, 0];
@@ -31,6 +39,8 @@ export default class GameObject {
   // An object will trigger
   public life: number;
   public maxLife: number;
+
+  private _sprite?: Sprite;
 
   constructor({
     sprite,
@@ -55,11 +65,18 @@ export default class GameObject {
 
     this.velocity = velocity;
 
-    this.sprite.img.onload = () => this.scale(scale); // to update dimensions after image has been loaded
-    this.scale(scale);
+    this.scale = scale;
+
+    if (this._sprite) {
+      this._sprite.img.onload = () => this.rescale(scale); // to update dimensions after image has been loaded
+      this.rescale(scale);
+    }
   }
 
-  public scale = (scale: number) => {
+  public rescale = (scale: number) => {
+    if (typeof this.sprite === "undefined") {
+      return;
+    }
     const width = (this.sprite.img.width as number) * scale;
     const height = width * (this.sprite.img.height as number) / (this.sprite.img.width as number);
 
@@ -70,8 +87,7 @@ export default class GameObject {
   }
 
   public getDistance = (obj: Trackable) => Math.sqrt(
-    Math.pow(this.x - (obj.x + (obj instanceof GameObject ? obj.width : 0)), 2) +
-    Math.pow(this.y - (obj.y + (obj instanceof GameObject ? obj.height : 0)), 2)
+    Math.pow(this.x - obj.x, 2) + Math.pow(this.y - obj.y, 2)
   )
 
   public collides = (obj: GameObject) => (
@@ -101,15 +117,14 @@ export default class GameObject {
     }
   }
 
-  public render = (ctx: CanvasRenderingContext2D, viewport: Viewport, scale = 1) => {
-    this.sprite.render(
+  public render = (ctx: CanvasRenderingContext2D, viewport: Viewport, scale = 1) =>
+    this.sprite && this.sprite.render(
       ctx,
       this.x - viewport.x,
       this.y - viewport.y,
       this.width,
       this.height
-    );
-  }
+    )
 
   protected destroy = (game: Game, objIndex: number) => {
     const obj = game.gameObjects[objIndex];

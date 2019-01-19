@@ -5,6 +5,8 @@ import Player from "./entities/Player";
 import Weapon from "./entities/Weapon";
 import { sprites } from "./sprites/Sprite";
 import Viewport from "./Viewport";
+import SpawnZone from "./zones/SpawnZone";
+import Zone from "./zones/Zone";
 
 export default class Game {
   public canvas: HTMLCanvasElement;
@@ -19,6 +21,8 @@ export default class Game {
 
   public gameObjects: GameObject[];
 
+  public zones: Zone[] = [];
+
   constructor() {
     this.canvas = document.createElement("canvas");
     this.canvas.id = "game";
@@ -27,6 +31,7 @@ export default class Game {
 
     this.player = new Player({
       initialHeight: 20,
+      maxLife: 100,
       scale: .15,
       sprite: sprites.ship,
       weapon: new Weapon({
@@ -44,10 +49,6 @@ export default class Game {
 
     this.gameObjects = [
       this.player,
-      new Meteor({
-        x: 100,
-        y: 0,
-      }),
     ];
   }
 
@@ -69,12 +70,33 @@ export default class Game {
       [-this.canvas.width / 2 + this.player.width, 0],
       true
     );
+
+    // add spawn zones
+    this.zones = [
+      new SpawnZone({
+        game: this,
+
+        generateSpawn: () => new Meteor({
+          maxLife: 3 + Math.random() * 10,
+          velocity: [Math.random() * 2 - .5, Math.random() * .5 - .25],
+        }),
+        spawnRate: 2,
+
+        absolutePosition: true,
+        height: this.canvas.height + 400,
+        width: 200,
+        x: this.canvas.width,
+        y: -200,
+      }),
+    ];
   }
 
   public unmount = () => {
     if (this.canvas.parentNode) {
       this.canvas.parentNode.removeChild(this.canvas); // remove canvas from DOM
     }
+
+    this.zones.forEach((zone) => zone.remove());
 
     window.clearInterval(this.renderLoop); // clear render loop
     window.clearInterval(this.updateLoop); // clear update loop
@@ -110,7 +132,7 @@ export default class Game {
 
     let i = this.gameObjects.length;
     while (i--) {
-      if (this.viewport.contains(this.gameObjects[i], { l: 100, t: 300, b: 300, r: 300 })) {
+      if (this.viewport.contains(this.gameObjects[i], { l: 100, t: 200, b: 200, r: 200 })) {
         this.gameObjects[i].update(this, i);
       } else {
         this.gameObjects.splice(i, 1);

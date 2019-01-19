@@ -2,7 +2,9 @@ import Game from "../Game";
 import Sprite from "../sprites/Sprite";
 import GameObject, { GameObjectArgs } from "./GameObject";
 
-export type MeteorArgs = Pick<GameObjectArgs, Exclude<keyof GameObjectArgs, "sprite">>;
+export interface MeteorArgs extends GameObjectArgs {
+  radius?: number;
+}
 
 export default class Meteor extends GameObject {
   public static generateSprite(radius: number, n: number = 3 + (Math.random() * 5)) {
@@ -30,13 +32,31 @@ export default class Meteor extends GameObject {
     return sprite;
   }
 
-  constructor({ maxLife = 1 + Math.random() * 14, ...args }: MeteorArgs) {
-    super({
-      ...args,
-      maxLife,
-      sprite: new Sprite(Meteor.generateSprite(5 + maxLife, 3 + Math.random() * Math.sqrt(maxLife))),
-    });
+  public radius: number;
+
+  constructor({ radius, ...args }: MeteorArgs) {
+    super(args);
+    this.radius = this.maxLife * 2;
+    this.sprite = new Sprite(Meteor.generateSprite(this.radius, 3 + Math.random() * Math.sqrt(this.maxLife)));
   }
+
+  public getDistance = (obj: Trackable): number => Math.sqrt(obj instanceof Meteor ?
+    (
+      Math.pow(this.x + this.radius - (obj.x + obj.radius), 2) +
+      Math.pow(this.y + this.radius - (obj.y + obj.radius), 2)
+    ) : (
+      Math.pow(this.x - obj.x, 2) +
+      Math.pow(this.y - obj.y, 2)
+    )
+  )
+
+  public collides = (obj: GameObject): boolean => obj instanceof Meteor ?
+    (
+      this.getDistance(obj) < obj.radius + this.radius
+    ) : (
+      obj.x + obj.width > this.x && obj.x < this.x + this.width &&
+      obj.y + obj.height > this.y && obj.y < this.y + this.height
+    )
 
   protected onDestroy(game: Game) {
     if (this.maxLife < 5) {
