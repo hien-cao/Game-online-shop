@@ -1,11 +1,13 @@
 import GameObject from "./entities/GameObject";
 
+type target = GameObject | { x: number, y: number, velocity: vector };
+
 export default class Viewport {
   public width: number;
   public height: number;
   public x: number;
   public y: number;
-  public target?: GameObject;
+  public target?: target;
   public targetOffset = [0, 0];
 
   constructor(width: number, height: number, x = 0, y = 0) {
@@ -26,10 +28,10 @@ export default class Viewport {
     this.y = this.y + y;
   }
 
-  public pan = (obj: GameObject, offset = [0, 0], instant = false) => {
+  public pan = (obj: target, offset = [0, 0], instant = false) => {
     if (instant) {
-      this.x = obj.x + this.width / 2 + offset[0] - obj.width * 1.5;
-      this.y = obj.y - this.height / 2 + offset[1] + obj.height / 2;
+      this.x = obj.x + this.width / 2 + offset[0];
+      this.y = obj.y - this.height / 2 + offset[1];
     } else {
       this.target = obj;
       this.targetOffset = offset;
@@ -40,16 +42,15 @@ export default class Viewport {
     if (typeof this.target === "undefined") {
       return;
     }
-    const targetX = this.target.x + this.width / 2 +
-      this.targetOffset[0] - this.target.width * 1.5 - this.target.velocity[0];
-    const targetY = this.target.y - this.height / 2 +
-      this.targetOffset[1] + this.target.height / 2 - this.target.velocity[1];
+    const { x, y, velocity } = this.target;
+    const targetX = x + this.width / 2 + this.targetOffset[0] - velocity[0];
+    const targetY = y - this.height / 2 + this.targetOffset[1] - velocity[1];
 
     if (targetX !== this.x) {
-      this.x += Math.sign(targetX - this.x) * Math.log10(Math.pow(targetX - this.x, 2)) * .6 + this.target.velocity[0];
+      this.x += Math.sign(targetX - this.x) * Math.log10(Math.pow(targetX - this.x, 2)) + velocity[0];
     }
     if (targetY !== this.y) {
-      this.y += Math.sign(targetY - this.y) * Math.log10(Math.pow(targetY - this.y, 2)) * .6 + this.target.velocity[1];
+      this.y += Math.sign(targetY - this.y) * Math.log10(Math.pow(targetY - this.y, 2)) + velocity[1];
     }
   }
 

@@ -25,23 +25,19 @@ export default class Game {
     this.canvas.height = 300;
 
     this.player = new Player({
+      initialHeight: 20,
       scale: .15,
       sprite: sprites.ship,
       weapon: new Weapon({
         Projectile: () => new GameObject({ sprite: sprites.projectile }),
         fireRate: 2,
-        offset: [25, 8],
+        offset: [46, 8],
       }),
     });
 
     this.viewport = new Viewport(
       this.canvas.width,
       this.canvas.height
-    );
-    this.viewport.pan(
-      this.player,
-      [-this.canvas.width / 2 + this.player.width, 0],
-      true
     );
 
     this.gameObjects = [];
@@ -59,6 +55,12 @@ export default class Game {
     this.updateLoop = window.setInterval(this.update, 30); // update loop
 
     this.keyboardListener.mount(); // mount keyboard listener
+
+    this.viewport.pan(
+      { x: -this.canvas.width / 3, y: this.player.height / 2, velocity: [0, 0] },
+      [-this.canvas.width / 2 + this.player.width, 0],
+      true
+    );
   }
 
   public unmount = () => {
@@ -97,8 +99,8 @@ export default class Game {
     this.viewport.pan(
       this.player,
       [
-        -this.canvas.width / 2 + this.player.width - this.player.acceleration[0] * 200,
-        - this.player.acceleration[1] * 400,
+        -this.canvas.width / 2 + this.player.width - this.player.acceleration[0] * 200 - this.player.width * 1.5,
+        - this.player.acceleration[1] * 400 + this.player.height / 2,
       ]
     );
     this.viewport.update();

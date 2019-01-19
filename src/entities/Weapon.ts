@@ -34,8 +34,8 @@ export default class Weapon {
     if (game.prevUpdate - this.lastFire > 1000 / this.fireRate) {
       this.lastFire = Date.now();
       const projectile = this.Projectile();
-      projectile.x = obj.x + this.offset[0];
-      projectile.y = obj.y + this.offset[1];
+      projectile.x = obj.x + this.offset[0] - obj.velocity[0];
+      projectile.y = obj.y + this.offset[1] - obj.velocity[1];
       projectile.velocity = [obj.velocity[0] + this.ballisticVelocity, obj.velocity[1]];
 
       game.addGameObject(projectile);

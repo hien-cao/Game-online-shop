@@ -5,6 +5,8 @@ import Viewport from "../ViewPort";
 export interface GameObjectArgs {
   sprite: Sprite;
   scale?: number;
+  initialWidth?: number;
+  initialHeight?: number;
   onUpdate?: Array<(game: Game) => any>;
 }
 
@@ -24,16 +26,29 @@ export default class GameObject {
   // An object will trigger
   public life: number = 0;
 
-  constructor({ sprite, scale = 1 }: GameObjectArgs) {
+  constructor({
+    sprite,
+    initialWidth = 1,
+    initialHeight = 1,
+    scale = 1,
+  }: GameObjectArgs) {
     this.sprite = sprite;
+
+    this.width = initialWidth;
+    this.height = initialHeight;
 
     this.sprite.img.onload = () => this.scale(scale); // to update dimensions after image has been loaded
     this.scale(scale);
   }
 
   public scale = (scale: number) => {
-    this.width = (this.sprite.img.width as number) * scale;
-    this.height = this.width * (this.sprite.img.height as number) / (this.sprite.img.width as number);
+    const width = (this.sprite.img.width as number) * scale;
+    const height = width * (this.sprite.img.height as number) / (this.sprite.img.width as number);
+
+    if (!isNaN(width) && !isNaN(height)) {
+      this.width = width;
+      this.height = height;
+    }
   }
 
   public update = (game: Game) => {
