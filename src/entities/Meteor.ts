@@ -54,8 +54,11 @@ export default class Meteor extends GameObject {
       x: this.x,
       y: this.y - 5,
     });
+
+    // splitted meteors should not be able to destroy eachother
     m1.immuneTo = [m2];
     m2.immuneTo = [m1];
+
     game.addGameObject(m1);
     game.addGameObject(m2);
   }
