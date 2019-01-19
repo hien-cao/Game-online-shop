@@ -4,12 +4,19 @@
 
 <div>
   {% if latest %}
-    <h2>Latest</h2>
+    <h1 class="h4 subheader uppercase thin">Latest</h1>
     <ul class="no-bullet game_list">
         {% for game in latest %}
         {% include 'games/game_list_item.html' %}
         {% endfor %}
     </ul>
+
+    {% if latest|length == 5 %}
+    <p class="text-right">
+      <a href="#">View more</a>
+    </p>
+    {% endif %}
+
   {% else %}
     <p>Someone has to upload some games first!</p>
   {% endif %}
