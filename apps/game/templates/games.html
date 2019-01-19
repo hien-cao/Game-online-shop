@@ -3,7 +3,11 @@
 
 {% block content %}
 
-  {% include 'search.html'%}
+  {% include 'search_form.html'%}
+
+  {% if not_found %}
+    <h2>{{not_found}}</h2>
+  {% endif %}
 
   {% if latest %}
   <ul>
@@ -19,9 +23,5 @@
 {% endblock content %}
 
 {% block customjs%}
-  <script>
-    "use strict";
-    let data = "{{suggestionResult}}";
-  </script>
   <script src="{% static 'search/search.js' %}"></script>
 {% endblock customjs%}

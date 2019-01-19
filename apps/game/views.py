@@ -183,47 +183,49 @@ def save_score(request, game_id):
         return JsonResponse(save_response)
     return JsonResponse({"message": "invalid request!"})
 
+# Autosuggestion search
+def autosuggestion_search(request, query=None):
+    if request.is_ajax():
+        if query:
+            results = []
+            term value from the games.html
+            if '#' in query:
+                query = query.replace('#', '')
+                categories = Tag.objects.filter(name__icontains = query)
+                for category in categories:
+                    results.append(category.name)
+            elif '@' in query:
+                query = query.replace('@', '')
+                developers = Profile.objects.filter(name__icontains = query).filter(is_developer = True)
+                for developer in developers:
+                    results.append(developer.name)
+            elif query:
+                games = Games.objects.filter(name__icontains = query)
+                for game in games:
+                    results.append(game.name)
+            else: 
+                results = []
+    else:
+        results = 'Request is fail!'
+    return HttpResponse(results)
 
 # Search
 def search(request):
     query = request.GET['query']
-    response = {}
+    context = {}
 
-    if '#' in query:
-        query = query.replace('#', '')
-        if Game.objects.filter(tags = query).count() != 0:
-            response['redirect'] = '/tag/' + query
-    elif "@" in query:
-        query = query.replace('@', '')
-        if Game.objects.filter(created_by = query).count() != 0:
-            response['redirect'] = '/developer' + query
-    else:
-        if Game.objects.filter(name = query).count() != 0:
-            response['redirect'] = '/' + query
-    return HttpResponse(json.dumps(response), content_type='application/json')
-
-# Autosuggestion search
-def autosuggestion_search(request):
-    if request.is_ajax():
-        results = []
-        query = request.GET.get('searchTerm') # donot know how add the search term value from the games.html
+    if query:
         if '#' in query:
             query = query.replace('#', '')
-            categories = Tag.objects.filter(name__icontains = query)
-            for category in categories:
-                results.append(category.name)
-        elif '@' in query:
+            latest_games = Game.objects.order_by('created_at').filter(tags = query)
+        elif "@" in query:
             query = query.replace('@', '')
-            developers = Profile.objects.filter(name__icontains = query).filter(is_developer = True)
-            for developer in developers:
-                results.append(developer.name)
-        elif query:
-            games = Games.objects.filter(name__icontains = query)
-            for game in games:
-                results.append(game.name)
+            latest_games = Game.objects.order_by('created_at').filter(created_by = query)
+        else:
+            latest_games = Game.objects.order_by('created_at').filter(name = query)
+    
+        if latest.length != 0:
+            context['latest'] = latest_games
         else: 
-            results = []
-    else:
-        results = 'It is not ajax request'
-    return HttpResponse(results)
-        
+            context['not_found'] = 'There is no result in the search'
+    return render(request, 'games.html', context)
