@@ -1,6 +1,8 @@
 import Game from "../Game";
 import Sprite from "../sprites/Sprite";
 import Viewport from "../ViewPort";
+import Player from "./Player";
+import Projectile from "./Projectile";
 
 export interface GameObjectArgs {
   sprite?: Sprite;
@@ -114,6 +116,7 @@ export default class GameObject {
     }
 
     if (this.life <= 0) {
+      this.life = 0;
       return this.destroy(game, objIndex);
     }
     // check for collisions
@@ -122,6 +125,10 @@ export default class GameObject {
       const damage = collision.life;
       collision.life -= this.life;
       this.life -= damage;
+
+      if (collision.life <= 0 && this.source === game.player) { // increment score on succesful kill
+        game.score += collision.maxLife * 1.2;
+      }
     }
   }
 

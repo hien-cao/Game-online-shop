@@ -1,11 +1,11 @@
 import KeyboardListener from "./controls/keyboardListener";
 import GameObject from "./entities/GameObject";
-import Meteor from "./entities/Meteor";
 import Player from "./entities/Player";
+import Projectile from "./entities/Projectile";
 import Weapon from "./entities/Weapon";
+import UserInterface from "./interface/UserInterface";
 import { sprites } from "./sprites/Sprite";
 import Viewport from "./Viewport";
-import SpawnZone from "./zones/SpawnZone";
 import Zone from "./zones/Zone";
 import { getMeteorSpawns } from "./zones/zones";
 
@@ -15,7 +15,9 @@ export default class Game {
   public renderLoop?: number;
   public updateLoop?: number;
   public keyboardListener: KeyboardListener = new KeyboardListener();
-  public scale = 1;
+
+  public ui: UserInterface;
+  public score: number = 0;
 
   public prevUpdate: number = 0;
   public player: Player;
@@ -29,6 +31,7 @@ export default class Game {
     this.canvas.id = "game";
     this.canvas.width = 500;
     this.canvas.height = 300;
+    this.ui = new UserInterface(this);
 
     this.player = new Player({
       initialHeight: 20,
@@ -36,15 +39,19 @@ export default class Game {
       scale: .15,
       sprite: sprites.ship,
 
-      maxVelocity: [10, 10],
-      minVelocity: [0, -10],
+      maxVelocity: [15, 15],
+      minVelocity: [0, -15],
+    });
 
-      weapon: new Weapon({
-        Projectile: () => new GameObject({ maxLife: 2, sprite: sprites.projectile }),
-        ballisticVelocity: 15,
-        fireRate: 2,
-        offset: [46, 8],
-      }),
+    this.player.weapon = new Weapon({
+      ballisticVelocity: 15,
+      fireRate: 2,
+      offset: [46, 8],
+      projectileSettings: {
+        damage: 2,
+        sprite: sprites.projectile,
+      },
+      ship: this.player,
     });
 
     this.viewport = new Viewport(
@@ -110,6 +117,8 @@ export default class Game {
         obj.render(ctx, viewport);
       }
     }
+
+    this.ui.render(ctx);
   }
 
   public update = () => {

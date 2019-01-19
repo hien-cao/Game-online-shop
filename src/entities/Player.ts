@@ -8,6 +8,9 @@ export default class Player extends Ship {
     // add controls
     this.onUpdate = [
       (game: Game) => {
+        game.score += .01 * Math.sqrt(this.velocity[0] * this.velocity[0] + this.velocity[1] * this.velocity[1]);
+      },
+      (game: Game) => {
         this.acceleration[0] = 0;
         this.acceleration[1] = 0;
         if (game.keyboardListener.keyState.w) {
