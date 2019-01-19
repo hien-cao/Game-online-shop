@@ -228,4 +228,6 @@ def search(request):
             context['latest'] = latest_games
         else: 
             context['not_found'] = 'There is no result in the search'
+    else:
+        context['not_found'] = 'There is no result in the search'
     return render(request, 'games.html', context)
