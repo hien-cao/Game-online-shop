@@ -30,7 +30,7 @@ export default class Game {
       scale: .15,
       sprite: sprites.ship,
       weapon: new Weapon({
-        Projectile: () => new GameObject({ sprite: sprites.projectile }),
+        Projectile: () => new GameObject({ maxLife: 2, sprite: sprites.projectile }),
         ballisticVelocity: 15,
         fireRate: 2,
         offset: [46, 8],
@@ -110,7 +110,7 @@ export default class Game {
 
     let i = this.gameObjects.length;
     while (i--) {
-      if (this.viewport.contains(this.gameObjects[i])) {
+      if (this.viewport.contains(this.gameObjects[i], { l: 100, t: 300, b: 300, r: 300 })) {
         this.gameObjects[i].update(this, i);
       } else {
         this.gameObjects.splice(i, 1);

@@ -50,8 +50,8 @@ export default class GameObject {
     this.x = x;
     this.y = y;
 
-    this.maxLife = maxLife;
-    this.life = maxLife;
+    this.maxLife = Math.floor(maxLife);
+    this.life = this.maxLife;
 
     this.velocity = velocity;
 

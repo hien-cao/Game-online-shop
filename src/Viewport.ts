@@ -54,7 +54,7 @@ export default class Viewport {
   }
 
   public contains = (obj: GameObject, { l, r, t, b }: Bounds = { l: 0, r: 0, t: 0, b: 0 }) => (
-    obj.x > this.x - l && obj.x + obj.width < this.x + this.width + r &&
-    obj.y > this.y - t && obj.y + obj.height < this.y + this.height + b
+    obj.x + obj.width > this.x - r && obj.x < this.x + this.width + l &&
+    obj.y + obj.height > this.y - t && obj.y < this.y + this.height + b
   )
 }
