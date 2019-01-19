@@ -1,8 +1,8 @@
-import GameObject from "./entities/GameObject";
-
 import KeyboardListener from "./controls/keyboardListener";
+import GameObject from "./entities/GameObject";
 import Player from "./entities/Player";
-import Sprite from "./Sprite";
+import Weapon from "./entities/Weapon";
+import { sprites } from "./sprites/Sprite";
 import Viewport from "./Viewport";
 
 export default class Game {
@@ -11,23 +11,39 @@ export default class Game {
   public renderLoop?: number;
   public updateLoop?: number;
   public keyboardListener: KeyboardListener = new KeyboardListener();
+  public scale = 1;
 
-  public gameObjects: GameObject[];
+  public prevUpdate: number = 0;
   public player: Player;
 
-  constructor(sprites: { [key: string]: Sprite }) {
+  private gameObjects: GameObject[];
+
+  constructor() {
     this.canvas = document.createElement("canvas");
     this.canvas.id = "game";
+    this.canvas.width = 500;
+    this.canvas.height = 300;
 
-    this.player = new Player(sprites.ship, .15);
+    this.player = new Player({
+      scale: .15,
+      sprite: sprites.ship,
+      weapon: new Weapon(
+        2,
+        () => new GameObject({ sprite: sprites.projectile })
+      ),
+    });
 
     this.viewport = new Viewport(
       this.canvas.width,
       this.canvas.height
     );
+    this.viewport.pan(
+      this.player,
+      [-this.canvas.width / 2 + this.player.width, 0],
+      true
+    );
 
     this.gameObjects = [];
-
   }
 
   public mount = (element: HTMLElement) => {
@@ -42,7 +58,6 @@ export default class Game {
     this.updateLoop = window.setInterval(this.update, 30); // update loop
 
     this.keyboardListener.mount(); // mount keyboard listener
-
   }
 
   public unmount = () => {
@@ -56,30 +71,46 @@ export default class Game {
     this.keyboardListener.unmount(); // unmount keyboard listener
   }
 
+  public addGameObject = (obj: GameObject) => {
+    this.gameObjects.push(obj);
+  }
+
   public render = (
     ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D,
     viewport = this.viewport
   ) => () => {
-    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); // clear canvas before re-render
+    ctx.clearRect(0, 0, this.viewport.width, this.viewport.height); // clear canvas before re-render
 
     this.player.render(ctx, viewport);
 
     for (const obj of this.gameObjects) { // loop and render all game objects
-      obj.render(ctx, viewport);
+      if (obj) {
+        obj.render(ctx, viewport);
+      }
     }
   }
 
   public update = () => {
-    const ctx = { keyState: this.keyboardListener.keyState };
+    this.player.update(this);
 
-    this.player.update(ctx);
     this.viewport.pan(
       this.player,
-      [-this.canvas.width / 2 + this.player.width, 0]
+      [
+        -this.canvas.width / 2 + this.player.width - this.player.acceleration[0] * 200,
+        - this.player.acceleration[1] * 400,
+      ]
     );
+    this.viewport.update();
 
-    for (const obj of this.gameObjects) { // loop and update all game objects
-      obj.update(ctx);
+    let i = this.gameObjects.length;
+    while (i--) {
+      if (this.viewport.contains(this.gameObjects[i])) {
+        this.gameObjects[i].update(this);
+      } else {
+        this.gameObjects.splice(i, 1);
+      }
     }
+
+    this.prevUpdate = Date.now();
   }
 }

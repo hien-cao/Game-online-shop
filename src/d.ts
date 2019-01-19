@@ -3,5 +3,4 @@ declare module "*.svg" {
   export default defaultExport;
 }
 
-type xy = [number, number];
 type vector = [number, number];

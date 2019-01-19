@@ -5,6 +5,8 @@ export default class Viewport {
   public height: number;
   public x: number;
   public y: number;
+  public target?: GameObject;
+  public targetOffset = [0, 0];
 
   constructor(width: number, height: number, x = 0, y = 0) {
     this.x = x;
@@ -24,8 +26,34 @@ export default class Viewport {
     this.y = this.y + y;
   }
 
-  public pan = (gameObject: GameObject, offset: xy = [0, 0]) => {
-    this.x = gameObject.x + this.width / 2 + offset[0] - gameObject.width / 2;
-    this.y = gameObject.y + this.height / 2 + offset[1] - gameObject.height / 2;
+  public pan = (obj: GameObject, offset = [0, 0], instant = false) => {
+    if (instant) {
+      this.x = obj.x + this.width / 2 + offset[0] - obj.width * 1.5;
+      this.y = obj.y - this.height / 2 + offset[1] + obj.height / 2;
+    } else {
+      this.target = obj;
+      this.targetOffset = offset;
+    }
   }
+
+  public update = () => {
+    if (typeof this.target === "undefined") {
+      return;
+    }
+    const targetX = this.target.x + this.width / 2 +
+      this.targetOffset[0] - this.target.width * 1.5 - this.target.velocity[0];
+    const targetY = this.target.y - this.height / 2 +
+      this.targetOffset[1] + this.target.height / 2 - this.target.velocity[1];
+
+    if (targetX !== this.x) {
+      this.x += Math.sign(targetX - this.x) * Math.log10(Math.pow(targetX - this.x, 2)) * .6 + this.target.velocity[0];
+    }
+    if (targetY !== this.y) {
+      this.y += Math.sign(targetY - this.y) * Math.log10(Math.pow(targetY - this.y, 2)) * .6 + this.target.velocity[1];
+    }
+  }
+
+  public contains = (obj: GameObject) =>
+    obj.x > this.x && obj.x < this.x + this.width &&
+    obj.y > this.y && obj.y < this.y + this.height
 }

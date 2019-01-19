@@ -1,44 +1,55 @@
-import { KeyState } from "../controls/keyboardListener";
-import Sprite from "../Sprite";
+import Game from "../Game";
+import Sprite from "../sprites/Sprite";
 import Viewport from "../ViewPort";
 
-export interface UpdateArgs {
-  keyState: KeyState;
+export interface GameObjectArgs {
+  sprite: Sprite;
+  scale?: number;
 }
 
-export default abstract class GameObject {
+export default class GameObject {
   public sprite: Sprite;
-  public acceleration: number = .1;
   public x: number = 0;
   public y: number = 0;
+  public acceleration: vector = [0, 0];
   public velocity: vector = [0, 0];
 
-  public width: number;
-  public height: number;
-  public scale: number = 1;
+  public width: number = 0;
+  public height: number = 0;
 
-  constructor(sprite: Sprite, scale: number = 1) {
+  constructor({ sprite, scale = 1 }: GameObjectArgs) {
     this.sprite = sprite;
 
-    this.scale = scale;
-    this.width = (sprite.img.width as number) * scale;
-    this.height = this.width * (sprite.img.height as number) / (sprite.img.width as number);
+    this.sprite.img.onload = () => this.scale(scale); // to update dimensions after image has been loaded
+    this.scale(scale);
   }
 
-  public abstract update(args: UpdateArgs): void;
+  public scale = (scale: number) => {
+    this.width = (this.sprite.img.width as number) * scale;
+    this.height = this.width * (this.sprite.img.height as number) / (this.sprite.img.width as number);
+  }
 
-  public render = (ctx: CanvasRenderingContext2D, viewport: Viewport) => {
+  public update = (game: Game) => {
+    this.updatePosition();
+  }
+
+  public render = (ctx: CanvasRenderingContext2D, viewport: Viewport, scale = 1) => {
     this.sprite.render(
       ctx,
-      viewport.x - this.x,
-      viewport.y - this.y,
+      this.x - viewport.x,
+      this.y - viewport.y,
       this.width,
       this.height
     );
   }
 
   public readonly updatePosition = () => {
-    this.x += this.velocity[0] * this.acceleration;
-    this.y += this.velocity[1] * this.acceleration;
+    this.x += this.velocity[0];
+    this.y += this.velocity[1];
+
+    this.velocity = [
+      this.velocity[0] + this.acceleration[0],
+      this.velocity[1] + this.acceleration[1],
+    ];
   }
 }
