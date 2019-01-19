@@ -27,10 +27,11 @@ export default class Game {
     this.player = new Player({
       scale: .15,
       sprite: sprites.ship,
-      weapon: new Weapon(
-        2,
-        () => new GameObject({ sprite: sprites.projectile })
-      ),
+      weapon: new Weapon({
+        Projectile: () => new GameObject({ sprite: sprites.projectile }),
+        fireRate: 2,
+        offset: [25, 8],
+      }),
     });
 
     this.viewport = new Viewport(

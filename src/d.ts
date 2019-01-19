@@ -3,7 +3,8 @@ declare module "*.svg" { // to omit error when importing vector files
   export default defaultExport;
 }
 
-type Vector = [number, number];
+type xy = [number, number];
+type vector = [number, number];
 interface Bounds {
   r: number;
   t: number;

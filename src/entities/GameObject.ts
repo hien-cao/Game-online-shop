@@ -11,8 +11,8 @@ export default class GameObject {
   public sprite: Sprite;
   public x: number = 0;
   public y: number = 0;
-  public acceleration: Vector = [0, 0];
-  public velocity: Vector = [0, 0];
+  public acceleration: vector = [0, 0];
+  public velocity: vector = [0, 0];
 
   public width: number = 0;
   public height: number = 0;
