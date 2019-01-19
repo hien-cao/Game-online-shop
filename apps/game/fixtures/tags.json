@@ -3,21 +3,21 @@
     "model": "game.tag",
     "pk": 1,
     "fields": {
-      "name": "adventure"
+      "name": "#adventure"
     }
   },
   {
     "model": "game.tag",
     "pk": 2,
     "fields": {
-      "name": "action"
+      "name": "#action"
     }
   },
   {
     "model": "game.tag",
     "pk": 3,
     "fields": {
-      "name": "strategy"
+      "name": "#strategy"
     }
   }
 ]

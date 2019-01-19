@@ -4,6 +4,18 @@
 */
 
 /*
+* Colors:
+* dark-primary-color    : #455a64;
+* default-primary-color : #607d8b;
+* light-primary-color   : #cfd8dc;
+* text-primary-color    : #ffffff;
+* accent-color          : #607d8b;
+* primary-text-color    : #212121;
+* secondary-text-color  : #757575;
+* divider-color         : #bdbdbd;
+*/
+
+/*
 * Font
 */
 
@@ -42,14 +54,46 @@
 */
 
 footer {
-    border-top: 1px #0a0a0a solid;
+  background-color: #607d8b;
+}
+
+footer h1, footer h2, footer h3, footer h4, footer h5, footer h6, footer a {
+  color: #fefefe;
+}
+
+footer a {
+  font-weight: 300;
+}
+
+footer a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.container {
+  padding-right: 0px;
+  padding-left: 0px;
+  margin-right: 0;
+  margin-left: 0;
+}
+
+footer > .container {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.top-bar_container {
+  background-color: #455a64;
 }
 
 .view {
-  padding-right: 0px;
-  padding-left: 0px;
-  margin-right: auto;
-  margin-left: auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex-grow: 1;
 }
 
 .game-container {
@@ -62,7 +106,7 @@ footer {
 
 /* Small devices (landscape phones, 640px and up) */
 @media (min-width: 640px) {
-  .view {
+  .container {
     padding-right: 15px;
     padding-left: 15px;
   }
@@ -74,8 +118,10 @@ footer {
 
 /* Medium devices (tablets, 768px and up) */
 @media (min-width: 768px) {
-  .view {
+  .container {
     width: 750px;
+    margin-right: auto;
+    margin-left: auto;
   }
 
   p.medium-no-margin-bottom {
@@ -85,7 +131,7 @@ footer {
 
 /* Large devices (desktops, 992px and up) */
 @media (min-width: 992px) {
-  .view {
+  .container {
     width: 970px;
   }
 
@@ -96,7 +142,7 @@ footer {
 
 /* Extra large devices (large desktops, 1200px and up) */
 @media (min-width: 1200px) {
-    .view {
+    .container {
         width: 1170px;
     }
 }
@@ -120,14 +166,6 @@ footer {
   padding: 1rem 0 2rem 0;
 }
 
-.top-bar, .top-bar ul {
-  background-color: transparent;
-}
-
-.top-bar {
-  border-bottom: 1px solid #0a0a0a;
-}
-
 /*
 * Typography
 */
@@ -136,6 +174,21 @@ footer {
   text-transform: capitalize;
 }
 
+.uppercase {
+  text-transform: uppercase;
+}
+
+.thin {
+  font-weight: 300;
+}
+
 .f_tiny {
   font-size: 12px;
+}
+
+p.help {
+  margin-top: -0.5rem;
+  font-size: 0.8125rem;
+  font-style: italic;
+  color: #0a0a0a;
 }
