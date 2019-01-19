@@ -35,6 +35,10 @@ export default class Game {
       maxLife: 100,
       scale: .15,
       sprite: sprites.ship,
+
+      maxVelocity: [10, 10],
+      minVelocity: [0, -10],
+
       weapon: new Weapon({
         Projectile: () => new GameObject({ maxLife: 2, sprite: sprites.projectile }),
         ballisticVelocity: 15,
@@ -112,8 +116,9 @@ export default class Game {
     this.viewport.pan(
       this.player,
       [
-        -this.canvas.width / 2 + this.player.width - this.player.acceleration[0] * 200 - this.player.width * 1.5,
-        -this.player.acceleration[1] * 400 + this.player.height / 2,
+        -this.canvas.width / 2 + this.player.width -
+        (this.player.velocity[0] && this.player.acceleration[0]) * 200 - this.player.width * 1.5,
+        -(this.player.velocity[1] && this.player.acceleration[1]) * 400 + this.player.height / 2,
       ]
     );
 

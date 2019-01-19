@@ -10,6 +10,8 @@ export interface GameObjectArgs {
   x?: number;
   y?: number;
   velocity?: vector;
+  maxVelocity?: vector;
+  minVelocity?: vector;
   maxLife: number;
   onUpdate?: Array<(game: Game) => any>;
 }
@@ -28,6 +30,8 @@ export default class GameObject {
   public y: number;
   public acceleration: vector = [0, 0];
   public velocity: vector = [0, 0];
+  public maxVelocity?: vector;
+  public minVelocity?: vector;
   public immuneTo?: GameObject[];
 
   public onUpdate?: Array<(game: Game) => any>;
@@ -51,6 +55,8 @@ export default class GameObject {
     y = 0,
     maxLife = 1,
     velocity = [0, 0],
+    maxVelocity,
+    minVelocity,
   }: GameObjectArgs) {
     this.sprite = sprite;
 
@@ -64,6 +70,8 @@ export default class GameObject {
     this.life = this.maxLife;
 
     this.velocity = velocity;
+    this.maxVelocity = maxVelocity;
+    this.minVelocity = minVelocity;
 
     this.scale = scale;
 
@@ -153,9 +161,16 @@ export default class GameObject {
     this.x += this.velocity[0];
     this.y += this.velocity[1];
 
-    this.velocity = [
-      this.velocity[0] + this.acceleration[0],
-      this.velocity[1] + this.acceleration[1],
-    ];
+    this.velocity[0] += this.acceleration[0];
+    this.velocity[1] += this.acceleration[1];
+
+    if (this.minVelocity) {
+      this.velocity[0] = Math.max(this.minVelocity[0], this.velocity[0]);
+      this.velocity[1] = Math.max(this.minVelocity[1], this.velocity[1]);
+    }
+    if (this.maxVelocity) {
+      this.velocity[0] = Math.min(this.maxVelocity[0], this.velocity[0]);
+      this.velocity[1] = Math.min(this.maxVelocity[1], this.velocity[1]);
+    }
   }
 }
