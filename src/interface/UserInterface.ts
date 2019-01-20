@@ -1,5 +1,6 @@
+import { Button } from "../controls/Button";
 import { globalSpeedModifier } from "../entities/GameObject";
-import Overlay from "./Overlay";
+import Overlay, { OverlayArgs, OverlayUpdateState } from "./Overlay";
 
 export interface GameState {
   x: number;
@@ -10,8 +11,27 @@ export interface GameState {
   score: number;
 }
 
+export interface UserInterfaceArgs extends OverlayArgs {
+  pause(): any;
+}
+
 export default class UserInterface extends Overlay {
-  public update = undefined; // Nothing to update
+  private pauseButton: Button;
+
+  constructor({ pause, ...args }: UserInterfaceArgs) {
+    super(args);
+    const pauseButton = new Button({
+      font: "14px Arial, Helvetica, sans-serif",
+      label: "Click here to pause",
+      onClick: pause,
+      x: 5,
+      y: 0,
+    });
+    pauseButton.y = this.canvas.height - 5 - pauseButton.height;
+    this.pauseButton = pauseButton;
+  }
+
+  public update = ({ mouse }: OverlayUpdateState) => this.pauseButton.update(mouse);
 
   public render = (state: GameState) => {
     if (JSON.stringify(this.prevState) === JSON.stringify(state)) {
@@ -19,10 +39,10 @@ export default class UserInterface extends Overlay {
     }
     const ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
     ctx.restore();
-    ctx.font = "12px Arial, Helvetica, sans-serif";
 
     // hitpoints bar
     if (!this.prevState || this.prevState.life !== state.life || this.prevState.maxLife !== state.maxLife) {
+      ctx.font = "10px Arial, Helvetica, sans-serif";
       ctx.strokeStyle = "#555";
       ctx.rect(2, 2, 102, 14); // hp background
       ctx.stroke();
@@ -33,13 +53,14 @@ export default class UserInterface extends Overlay {
 
       ctx.fillStyle = "#eee";
       ctx.textAlign = "center";
-      ctx.fillText(`${state.life} / ${state.maxLife}`, 3 + 100 / 2, 12);
+      ctx.fillText(`${state.life} / ${state.maxLife}`, 3 + 100 / 2, 11);
     }
 
+    ctx.font = "12px Arial, Helvetica, sans-serif";
     // Score
     const score = `Score: ${Math.floor(state.score)}`;
     let w = ctx.measureText(score).width;
-    ctx.clearRect(this.canvas.width - 5 - w, 0, w, 12);
+    ctx.clearRect(this.canvas.width - 10 - w, 0, w + 10, 14);
     ctx.textAlign = "right";
     ctx.fillText(score, this.canvas.width - 5, 12);
 
@@ -62,7 +83,14 @@ export default class UserInterface extends Overlay {
       this.canvas.width - 5,
       this.canvas.height - 20
     );
+
+    if (!this.rendered) {
+      this.pauseButton.render(ctx);
+    }
+
     ctx.save();
     this.prevState = state;
+
+    this.rendered = true;
   }
 }

@@ -56,13 +56,57 @@ export default class Game {
     this.overlays = {
       pause: new Pause({
         game: this,
-        onExit: () => {
-          this.pause = false;
-        },
+        onExit: () => this.pause = false,
       }),
-      ui: new UserInterface({ width: this.canvas.width, height: this.canvas.height }),
+      ui: new UserInterface({
+        height: this.canvas.height,
+        pause: () => this.pause = true,
+        width: this.canvas.width,
+      }),
     };
 
+    this.viewport = new Viewport(
+      this.canvas.width,
+      this.canvas.height
+    );
+  }
+
+  public mount = (element: HTMLElement) => {
+    // Clear pre-existing items in the element
+    while (element.firstChild) {
+      element.removeChild(element.firstChild);
+    }
+
+    element.appendChild(this.canvas);
+
+    this.reset();
+
+    this.pause = true;
+    this.loopHandle = window.requestAnimationFrame(this.loop); // loop
+
+    // input
+    this.keyboard.mount(); // mount keyboard listener
+    this.mouse.mount(this.canvas.parentNode as HTMLElement); // mount mouse listener
+  }
+
+  public unmount = () => {
+    this.gameObjects.length = 0;
+    if (this.canvas.parentNode) {
+      // input
+      this.keyboard.unmount(); // unmount keyboard listener
+      this.mouse.unmount(this.canvas.parentNode as HTMLElement); // unmount keyboard listener
+
+      while (this.canvas.parentNode.firstChild) {
+        this.canvas.parentNode.removeChild(this.canvas.parentNode.firstChild);
+      }
+    }
+
+    if (this.loopHandle) {
+      window.cancelAnimationFrame(this.loopHandle);
+    }
+  }
+
+  public reset = () => {
     this.player = new Player({
       initialHeight: 20,
       maxLife: 100,
@@ -83,20 +127,6 @@ export default class Game {
       ship: this.player,
     });
 
-    this.viewport = new Viewport(
-      this.canvas.width,
-      this.canvas.height
-    );
-  }
-
-  public mount = (element: HTMLElement) => {
-    // Clear pre-existing items in the element
-    while (element.firstChild) {
-      element.removeChild(element.firstChild);
-    }
-
-    element.appendChild(this.canvas);
-
     this.viewport.pan(
       { x: -this.canvas.width / 3, y: this.player.height / 2, velocity: [0, 0] },
       [-this.canvas.width / 2 + this.player.width, 0],
@@ -108,35 +138,10 @@ export default class Game {
     this.gameObjects = [
       this.player,
     ];
-    // add spawn zones
+    // add initial spawn zones
     this.zones = [
       ...getMeteorSpawns(this),
     ];
-
-    this.pause = true;
-    this.loopHandle = window.requestAnimationFrame(this.loop); // loop
-
-    // input
-    this.keyboard.mount(); // mount keyboard listener
-    this.mouse.mount(this.canvas.parentNode as HTMLElement); // mount mouse listener
-  }
-
-  public unmount = () => {
-    this.gameObjects.length = 0; // clear game objects
-    this.zones.length = 0;
-
-    if (this.canvas.parentNode) {
-      // input
-      this.keyboard.unmount(); // unmount keyboard listener
-      this.mouse.unmount(this.canvas.parentNode as HTMLElement); // unmount keyboard listener
-
-      this.canvas.parentNode.removeChild(this.canvas); // remove canvas from DOM
-      this.clearOverlay();
-    }
-
-    if (this.loopHandle) {
-      window.cancelAnimationFrame(this.loopHandle);
-    }
   }
 
   public addGameObject = (obj: GameObject) => {
