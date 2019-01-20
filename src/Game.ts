@@ -32,7 +32,7 @@ export default class Game {
     this.canvas.id = "game";
     this.canvas.width = 500;
     this.canvas.height = 300;
-    this.ui = new UserInterface(this.canvas.width, this.canvas.height);
+    this.ui = new UserInterface({ width: this.canvas.width, height: this.canvas.height });
 
     this.player = new Player({
       initialHeight: 20,
@@ -106,8 +106,6 @@ export default class Game {
     if (this.canvas.parentNode) {
       this.canvas.parentNode.removeChild(this.canvas); // remove canvas from DOM
     }
-
-    this.zones.forEach((zone) => zone.remove());
 
     if (this.loopHandle) {
       window.cancelAnimationFrame(this.loopHandle);

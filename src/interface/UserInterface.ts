@@ -1,6 +1,7 @@
 import { globalSpeedModifier } from "../entities/GameObject";
+import Overlay, { OverlayArgs } from "./Overlay";
 
-export interface CanvasState {
+export interface GameState {
   x: number;
   y: number;
   velocity: vector;
@@ -9,17 +10,12 @@ export interface CanvasState {
   score: number;
 }
 
-export default class UserInterface {
-  public canvas: HTMLCanvasElement;
-  public prevState?: CanvasState;
-
-  constructor(width: number, height: number) {
-    this.canvas = document.createElement("canvas");
-    this.canvas.width = width;
-    this.canvas.height = height;
+export default class UserInterface extends Overlay {
+  constructor(args: OverlayArgs) {
+    super(args);
   }
 
-  public render = (state: CanvasState) => {
+  public render = (state: GameState) => {
     if (JSON.stringify(this.prevState) === JSON.stringify(state)) {
       return; // no need to re-render if no updates
     }
