@@ -5,8 +5,8 @@
 {% if game %}
 <div>
   <h1>{{ game.name }}</h1>
-  <div id="game" class="responsive-embed widescreen game-container">
-    <iframe src="{{ game.url }}" frameborder="0" allowfullscreen></iframe>
+  <div class="responsive-embed widescreen game-container">
+    <iframe id="game" src="{{ game.url }}" frameborder="0" allowfullscreen></iframe>
   </div>
 </div>
 {% endif %}
@@ -17,8 +17,9 @@
 <!-- Pass Django variables to JS (global scope). -->
 <script>
   "use strict";
-  const raw_game_url = "{{ game.url }}";
-  const game_url = new URL(raw_game_url);
+  const rawGameURL = "{{ game.url }}";
+  const gameID = "{{ game.id }}";
+  const gameURL = new URL("{{ game.url }}");
 </script>
 
 <script src="{% static 'scripts/play/message_validation.js' %}"></script>
