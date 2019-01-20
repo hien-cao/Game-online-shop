@@ -216,9 +216,9 @@ export default class Game {
 
     // populate gameObjects
     state.gameObjects.map((obj) => {
-      if (obj.type === "Player") {
+      if (obj.type === Player.prototype.constructor.name) {
         (this.player as Player).state = obj;
-      } else if (obj.type === "Projectile") {
+      } else if (obj.type === Projectile.prototype.constructor.name) {
         this.gameObjects.push(new Projectile(obj));
       } else {
         this.gameObjects.push(new Meteor(obj));

@@ -46,7 +46,7 @@ const attachMessageListener = () => {
             gameState
           ).then(response => {
             console.log(response);
-            if (response.ok) {
+            if (response.ok) {
               window.alert("Game saved succesfully")
             } else {
               window.alert("Attempting to save the game failed")
