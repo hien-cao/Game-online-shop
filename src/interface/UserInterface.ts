@@ -60,7 +60,7 @@ export default class UserInterface extends Overlay {
     // Score
     const score = `Score: ${Math.floor(state.score)}`;
     let w = ctx.measureText(score).width;
-    ctx.clearRect(this.canvas.width - 10 - w, 0, w + 10, 14);
+    ctx.clearRect(this.canvas.width - 20 - w, 0, w + 20, 14);
     ctx.textAlign = "right";
     ctx.fillText(score, this.canvas.width - 5, 12);
 

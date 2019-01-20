@@ -1,11 +1,11 @@
 import GameObject, { GameObjectArgs } from "./GameObject";
 
 export interface ProjectileArgs extends GameObjectArgs {
-  source: GameObject;
+  source?: GameObject;
 }
 
 export default class Projectile extends GameObject {
-  public source: GameObject;
+  public source?: GameObject;
 
   constructor({ source, ...args }: ProjectileArgs) {
     super(args);

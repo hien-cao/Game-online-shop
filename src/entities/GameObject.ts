@@ -18,7 +18,16 @@ export interface GameObjectArgs {
   onUpdate?: Array<(d: number, game: Game) => any>;
 }
 
-export default class GameObject {
+export interface GameObjectState {
+  type: string;
+  x: number;
+  y: number;
+  velocity: vector;
+  maxLife: number;
+  life: number;
+}
+
+export default abstract class GameObject {
   get sprite() {
     return this._sprite;
   }
@@ -140,6 +149,21 @@ export default class GameObject {
       this.width,
       this.height
     )
+
+  get state(): GameObjectState {
+    return {
+      life: this.life,
+      maxLife: this.maxLife,
+      type: this.constructor.name,
+      velocity: this.velocity,
+      x: this.x,
+      y: this.y,
+    };
+  }
+
+  set state(state: GameObjectState) {
+    Object.assign(this, state);
+  }
 
   protected destroy = (game: Game, objIndex: number) => {
     const obj = game.gameObjects[objIndex];

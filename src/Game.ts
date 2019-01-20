@@ -1,7 +1,9 @@
 import KeyboardListener from "./controls/keyboardListener";
 import MouseListener from "./controls/MouseListener";
-import GameObject from "./entities/GameObject";
+import GameObject, { GameObjectState } from "./entities/GameObject";
+import Meteor from "./entities/Meteor";
 import Player from "./entities/Player";
+import Projectile from "./entities/Projectile";
 import Weapon from "./entities/Weapon";
 import End from "./interface/End";
 import Overlay from "./interface/Overlay";
@@ -11,6 +13,11 @@ import { sprites } from "./sprites/Sprite";
 import Viewport from "./Viewport";
 import Zone from "./zones/Zone";
 import { getMeteorSpawns } from "./zones/zones";
+
+export interface GameState {
+  score: number;
+  gameObjects: GameObjectState[];
+}
 
 export default class Game {
 
@@ -54,6 +61,15 @@ export default class Game {
     this.canvas.id = "game";
     this.canvas.width = 500;
     this.canvas.height = 300;
+
+    parent.postMessage({
+      messageType: "SETTING",
+      options: {
+        height: this.canvas.height,
+        width: this.canvas.width,
+      },
+    }, window.location.href);
+
     this.overlays = {
       end: new End({
         game: this,
@@ -166,6 +182,57 @@ export default class Game {
     this.loopHandle = window.requestAnimationFrame(this.loop);
   }
 
+  // Send load request to the parent window as described in the project description
+  public requestLoad = () => {
+    parent.postMessage({
+      messageType: "LOAD_REQUEST",
+    }, window.location.href);
+  }
+
+  public load: EventListener = ({ data }: { [key: string]: any }) => {
+    if (typeof data === "object") {
+      if ("messageType" in data && data.messageType === "LOAD") {
+        if ("gameState" in data) {
+          this.gameState = data.gameState;
+        }
+      } else if (data.messageType === "error") {
+        alert(data.info || "Error loading game state");
+      }
+    }
+  }
+
+  // Send save request to the parent window as described in the project description
+  public save = () => {
+    parent.postMessage({
+      messageType: "SAVE",
+
+      gameState: this.gameState,
+    }, window.location.href);
+  }
+
+  set gameState(state: GameState) {
+    this.reset();
+    this.score = state.score;
+
+    // populate gameObjects
+    state.gameObjects.map((obj) => {
+      if (obj.type === "Player") {
+        (this.player as Player).state = obj;
+      } else if (obj.type === "Projectile") {
+        this.gameObjects.push(new Projectile(obj));
+      } else {
+        this.gameObjects.push(new Meteor(obj));
+      }
+    });
+  }
+
+  get gameState(): GameState {
+    return {
+      gameObjects: this.gameObjects.map((obj) => obj.state),
+      score: this.score,
+    };
+  }
+
   public render = (
     ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D,
     viewport = this.viewport
@@ -211,14 +278,6 @@ export default class Game {
       }
     }
 
-    let i = this.gameObjects.length;
-    while (i--) {
-      if (this.viewport.contains(this.gameObjects[i], { l: 0, t: 200, b: 200, r: 200 })) {
-        this.gameObjects[i].update(d, this, i);
-      } else {
-        this.gameObjects.splice(i, 1); // delete object from game (not in bounds)
-      }
-    }
     if (this.player) {
       this.viewport.pan(
         this.player,
@@ -228,6 +287,15 @@ export default class Game {
         ],
         d
       );
+    }
+
+    let i = this.gameObjects.length;
+    while (i--) {
+      if (this.viewport.contains(this.gameObjects[i], { l: 0, t: 200, b: 200, r: 200 })) {
+        this.gameObjects[i].update(d, this, i);
+      } else {
+        this.gameObjects.splice(i, 1); // delete object from game (not in bounds)
+      }
     }
   }
 

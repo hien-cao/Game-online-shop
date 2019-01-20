@@ -36,7 +36,7 @@ export default class MouseListener {
 
   private handleMouseDown = (e: MouseEvent) => {
     this.mouseDown = true;
-    this.mouseClick = Date.now();
+    this.mouseClick = this.mouseClick || Date.now();
   }
 
   private handleMouseUp = (e: MouseEvent) => {

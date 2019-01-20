@@ -22,7 +22,7 @@ export default class Pause extends Overlay {
     const saveButton = new Button({
       font: "14px Arial, Helvetica, sans-serif",
       label: "Save game",
-      onClick: () => console.log("jej"),
+      onClick: () => game.save(),
       x: 5,
       y: this.canvas.height - 20,
     });
