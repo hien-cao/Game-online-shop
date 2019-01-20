@@ -1,4 +1,4 @@
-import GameObject from "./entities/GameObject";
+import GameObject, { globalSpeedModifier } from "./entities/GameObject";
 
 export default class Viewport {
   public width: number;
@@ -26,7 +26,7 @@ export default class Viewport {
     this.y = this.y + y;
   }
 
-  public pan = (obj: Trackable, offset = [0, 0], instant = false) => {
+  public pan = (obj: Trackable, offset = [0, 0], d: number = 0, instant = false) => {
     if (instant) {
       this.x = obj.x + this.width / 2 + offset[0];
       this.y = obj.y - this.height / 2 + offset[1];
@@ -34,27 +34,28 @@ export default class Viewport {
       this.target = obj;
       this.targetOffset = offset;
     }
-    this.update();
+    this.update(d);
   }
 
-  public update = () => {
+  public update = (d: number) => {
     if (typeof this.target === "undefined") {
       return;
     }
     const { x, y, velocity } = this.target;
-    const targetX = x + this.width / 2 + this.targetOffset[0] - velocity[0];
-    const targetY = y - this.height / 2 + this.targetOffset[1] - velocity[1];
-
+    const targetX = x + this.width / 2 + this.targetOffset[0];
+    const targetY = y - this.height / 2 + this.targetOffset[1];
     if (targetX !== this.x) {
-      this.x += Math.sign(targetX - this.x) * Math.log10(Math.pow(targetX - this.x, 2)) + velocity[0];
+      this.x += Math.sign(targetX - this.x) * Math.log10(Math.pow(targetX - this.x, 2))
+        + d * globalSpeedModifier * (velocity[0]);
     }
     if (targetY !== this.y) {
-      this.y += Math.sign(targetY - this.y) * Math.log10(Math.pow(targetY - this.y, 2)) + velocity[1];
+      this.y += Math.sign(targetY - this.y) * Math.log10(Math.pow(targetY - this.y, 2))
+        + d * globalSpeedModifier * (velocity[1]);
     }
   }
 
   public contains = (obj: GameObject, { l, r, t, b }: Bounds = { l: 0, r: 0, t: 0, b: 0 }) => (
-    obj.x + obj.width > this.x - r && obj.x < this.x + this.width + l &&
+    obj.x + obj.width > this.x - l && obj.x < this.x + this.width + r &&
     obj.y + obj.height > this.y - t && obj.y < this.y + this.height + b
   )
 }

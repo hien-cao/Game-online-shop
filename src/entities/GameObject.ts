@@ -1,8 +1,8 @@
 import Game from "../Game";
 import Sprite from "../sprites/Sprite";
 import Viewport from "../ViewPort";
-import Player from "./Player";
-import Projectile from "./Projectile";
+
+export const globalSpeedModifier = 20;
 
 export interface GameObjectArgs {
   sprite?: Sprite;
@@ -15,7 +15,7 @@ export interface GameObjectArgs {
   maxVelocity?: vector;
   minVelocity?: vector;
   maxLife: number;
-  onUpdate?: Array<(game: Game) => any>;
+  onUpdate?: Array<(d: number, game: Game) => any>;
 }
 
 export default class GameObject {
@@ -36,7 +36,7 @@ export default class GameObject {
   public minVelocity?: vector;
   public immuneTo?: GameObject[];
 
-  public onUpdate?: Array<(game: Game) => any>;
+  public onUpdate?: Array<(d: number, game: Game) => any>;
 
   public width: number = 0;
   public height: number = 0;
@@ -105,13 +105,13 @@ export default class GameObject {
     obj.y + obj.height > this.y && obj.y < this.y + this.height
   )
 
-  public update = (game: Game, objIndex: number) => {
-    this.updatePosition();
+  public update = (d: number, game: Game, objIndex: number) => {
+    this.updatePosition(d);
 
     // loop and invoke all update listeners
     if (Array.isArray(this.onUpdate)) {
       for (const notify of this.onUpdate) {
-        notify(game);
+        notify(d, game);
       }
     }
 
@@ -143,6 +143,7 @@ export default class GameObject {
 
   protected destroy = (game: Game, objIndex: number) => {
     const obj = game.gameObjects[objIndex];
+    this.velocity = [0, 0];
     if (typeof obj.onDestroy === "function") {
       obj.onDestroy(game);
     }
@@ -164,12 +165,12 @@ export default class GameObject {
     return null;
   }
 
-  private readonly updatePosition = () => {
-    this.x += this.velocity[0];
-    this.y += this.velocity[1];
+  private readonly updatePosition = (d: number) => {
+    this.x += this.velocity[0] * d * globalSpeedModifier;
+    this.y += this.velocity[1] * d * globalSpeedModifier;
 
-    this.velocity[0] += this.acceleration[0];
-    this.velocity[1] += this.acceleration[1];
+    this.velocity[0] += this.acceleration[0] * d * globalSpeedModifier;
+    this.velocity[1] += this.acceleration[1] * d * globalSpeedModifier;
 
     if (this.minVelocity) {
       this.velocity[0] = Math.max(this.minVelocity[0], this.velocity[0]);

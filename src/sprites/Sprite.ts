@@ -22,7 +22,7 @@ export default class Sprite {
     width = this.img.width,
     height = this.img.height
   ) => {
-    ctx.drawImage(this.img, Math.floor(x), Math.floor(y), width, height);
+    ctx.drawImage(this.img, ~~x, ~~y, width, height);
   }
 }
 

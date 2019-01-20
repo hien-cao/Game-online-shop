@@ -23,6 +23,7 @@
       "spaces",
       2
     ],
+    "no-bitwise": false,
     "interface-name": [
       true,
       "never-prefix"

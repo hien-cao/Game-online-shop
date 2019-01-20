@@ -1,7 +1,6 @@
 import KeyboardListener from "./controls/keyboardListener";
 import GameObject from "./entities/GameObject";
 import Player from "./entities/Player";
-import Projectile from "./entities/Projectile";
 import Weapon from "./entities/Weapon";
 import UserInterface from "./interface/UserInterface";
 import { sprites } from "./sprites/Sprite";
@@ -12,14 +11,16 @@ import { getMeteorSpawns } from "./zones/zones";
 export default class Game {
   public canvas: HTMLCanvasElement;
   public viewport: Viewport;
-  public renderLoop?: number;
-  public updateLoop?: number;
+  public loopHandle?: number;
   public keyboardListener: KeyboardListener = new KeyboardListener();
 
   public ui: UserInterface;
   public score: number = 0;
 
-  public prevUpdate: number = 0;
+  public pause = false;
+
+  public prevRender: number = 0;
+  public prevLoop: number = Date.now();
   public player: Player;
 
   public gameObjects: GameObject[];
@@ -31,12 +32,12 @@ export default class Game {
     this.canvas.id = "game";
     this.canvas.width = 500;
     this.canvas.height = 300;
-    this.ui = new UserInterface(this);
+    this.ui = new UserInterface(this.canvas.width, this.canvas.height);
 
     this.player = new Player({
       initialHeight: 20,
       maxLife: 100,
-      scale: .15,
+      scale: 1.7,
       sprite: sprites.ship,
 
       maxVelocity: [15, 15],
@@ -44,8 +45,7 @@ export default class Game {
     });
 
     this.player.weapon = new Weapon({
-      ballisticVelocity: 15,
-      fireRate: 2,
+      fireRate: 3,
       offset: [46, 8],
       projectileSettings: {
         damage: 2,
@@ -71,15 +71,14 @@ export default class Game {
     }
 
     element.appendChild(this.canvas);
-
-    this.renderLoop = window.setInterval(this.render(), 1000 / 60); // render loop
-    this.updateLoop = window.setInterval(this.update, 30); // update loop
+    element.appendChild(this.ui.canvas);
 
     this.keyboardListener.mount(); // mount keyboard listener
 
     this.viewport.pan(
       { x: -this.canvas.width / 3, y: this.player.height / 2, velocity: [0, 0] },
       [-this.canvas.width / 2 + this.player.width, 0],
+      0,
       true
     );
 
@@ -87,6 +86,20 @@ export default class Game {
     this.zones = [
       ...getMeteorSpawns(this),
     ];
+
+    this.loopHandle = window.requestAnimationFrame(this.loop); // loop
+  }
+
+  public loop = () => {
+    const time = Date.now();
+    if (time - this.prevRender > 1000 / 60) {
+      this.render();
+    }
+    this.update((time - this.prevLoop) / 1000);
+
+    this.prevLoop = time;
+
+    this.loopHandle = window.requestAnimationFrame(this.loop);
   }
 
   public unmount = () => {
@@ -96,8 +109,9 @@ export default class Game {
 
     this.zones.forEach((zone) => zone.remove());
 
-    window.clearInterval(this.renderLoop); // clear render loop
-    window.clearInterval(this.updateLoop); // clear update loop
+    if (this.loopHandle) {
+      window.cancelAnimationFrame(this.loopHandle);
+    }
 
     this.keyboardListener.unmount(); // unmount keyboard listener
   }
@@ -109,37 +123,53 @@ export default class Game {
   public render = (
     ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D,
     viewport = this.viewport
-  ) => () => {
-    ctx.clearRect(0, 0, this.viewport.width, this.viewport.height); // clear canvas before re-render
+  ) => {
+    this.prevRender = Date.now();
 
+    ctx.clearRect(0, 0, this.viewport.width, this.viewport.height); // clear canvas before re-render
     for (const obj of this.gameObjects) { // loop and render all game objects
-      if (obj) {
+      if (obj && this.viewport.contains(obj)) {
         obj.render(ctx, viewport);
       }
     }
 
-    this.ui.render(ctx);
+    this.ui.render({
+      life: this.player.life,
+      maxLife: this.player.maxLife,
+      score: this.score,
+      velocity: this.player.velocity,
+      x: this.player.x,
+      y: this.player.y,
+    });
   }
 
-  public update = () => {
-    this.viewport.pan(
-      this.player,
-      [
-        -this.canvas.width / 2 + this.player.width -
-        (this.player.velocity[0] && this.player.acceleration[0]) * 200 - this.player.width * 1.5,
-        -(this.player.velocity[1] && this.player.acceleration[1]) * 400 + this.player.height / 2,
-      ]
-    );
+  public update = (d: number) => {
+    if (this.pause) {
+      return;
+    }
 
-    let i = this.gameObjects.length;
-    while (i--) {
-      if (this.viewport.contains(this.gameObjects[i], { l: 100, t: 200, b: 200, r: 200 })) {
-        this.gameObjects[i].update(this, i);
-      } else {
-        this.gameObjects.splice(i, 1);
+    for (const zone of this.zones) {
+      if (zone.update) {
+        zone.update();
       }
     }
 
-    this.prevUpdate = Date.now();
+    let i = this.gameObjects.length;
+    while (i--) {
+      if (this.viewport.contains(this.gameObjects[i], { l: 0, t: 200, b: 200, r: 200 })) {
+        this.gameObjects[i].update(d, this, i);
+      } else {
+        this.gameObjects.splice(i, 1); // delete object from game (not in bounds)
+      }
+    }
+
+    this.viewport.pan(
+      this.player,
+      [
+        -this.canvas.width / 2 - this.player.acceleration[0] * 20 - this.player.width * .5,
+        -(this.player.acceleration[1]) * 40 + this.player.height / 2,
+      ],
+      d
+    );
   }
 }

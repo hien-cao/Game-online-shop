@@ -29,7 +29,7 @@ export default class Weapon {
   constructor({
     fireRate,
     projectileSettings,
-    ballisticVelocity = 15,
+    ballisticVelocity = 25,
     lastFire = 0,
     ship,
     offset = [0, 0],
@@ -43,7 +43,7 @@ export default class Weapon {
   }
 
   public fire = (obj: GameObject, game: Game) => {
-    if (this.ship && game.prevUpdate - this.lastFire > 1000 / this.fireRate) {
+    if (this.ship && game.prevLoop - this.lastFire > 1000 / this.fireRate) {
       this.lastFire = Date.now();
       const projectile = new Projectile({
         maxLife: this.projectileSettings.damage,

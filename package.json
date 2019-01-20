@@ -5,7 +5,7 @@
   "main": "src/index.ts",
   "scripts": {
     "serve": "parcel index.html",
-    "build": "parcel build index.html",
+    "build": "parcel build index.html --public-url ./",
     "lint": "tslint -c tslint.json './src/**/*.ts'"
   },
   "repository": {

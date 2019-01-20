@@ -29,7 +29,7 @@ export default class Zone {
     this.height = height;
   }
 
-  public remove = (): any => true;
+  public update?(): any;
 
   public contains = (obj: GameObject) => this.absolutePosition ?
     (

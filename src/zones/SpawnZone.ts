@@ -1,32 +1,35 @@
 import GameObject from "../entities/GameObject";
+import Game from "../Game";
 import Zone, { ZoneArgs } from "./Zone";
 
 type spawnable = GameObject | GameObject[];
 
-export interface SpawnZoneArgs extends ZoneArgs {
+export interface SpawnZoneArgs extends Pick<ZoneArgs, Exclude<keyof ZoneArgs, "absolutePosition">> {
   spawnRate: number;
+  getSpawnModifier?(game: Game): number;
   generateSpawn(zone: SpawnZone): spawnable;
 }
 
 export default class SpawnZone extends Zone {
-  public spawnHandle?: number;
   public spawnRate: number;
+  public prevSpawn = 0;
+  public getSpawnModifier: (game: Game) => number;
   public generateSpawn: (zone: SpawnZone) => spawnable;
 
-  constructor({ spawnRate, generateSpawn, ...args }: SpawnZoneArgs) {
-    super(args);
-
+  constructor({ spawnRate, generateSpawn, getSpawnModifier = () => 1, ...args }: SpawnZoneArgs) {
+    super({
+      ...args,
+      absolutePosition: true,
+    });
+    this.getSpawnModifier = getSpawnModifier;
     this.spawnRate = spawnRate;
     this.generateSpawn = generateSpawn;
-    this.spawnHandle = window.setInterval(
-      this.spawnObjects,
-      1000 / this.spawnRate
-    );
   }
 
-  public remove = () => window.clearInterval(this.spawnHandle);
-
-  private spawnObjects = () => {
+  public update = () => {
+    if (this.game.prevLoop - this.prevSpawn < 1000 / (this.getSpawnModifier(this.game) * this.spawnRate)) {
+      return;
+    }
     const spawn = this.generateSpawn(this);
     if (Array.isArray(spawn)) {
       for (const obj of spawn) {
@@ -35,6 +38,7 @@ export default class SpawnZone extends Zone {
     } else {
       this.spawn(spawn);
     }
+    this.prevSpawn = Date.now();
   }
 
   private spawn = (obj: GameObject) => {

@@ -7,7 +7,8 @@ export interface MeteorArgs extends GameObjectArgs {
 }
 
 export default class Meteor extends GameObject {
-  public static generateSprite(radius: number, n: number = 3 + (Math.random() * 5)) {
+  public static generateSprite(radius: number) {
+    const n = 3 + Math.random() * Math.sqrt(radius); // number of verices
     const sprite = document.createElement("canvas");
     sprite.width = radius * 2;
     sprite.height = radius * 2;
@@ -38,8 +39,8 @@ export default class Meteor extends GameObject {
 
   constructor({ radius, ...args }: MeteorArgs) {
     super(args);
-    this.radius = this.maxLife * 2;
-    this.sprite = new Sprite(Meteor.generateSprite(this.radius, 3 + Math.random() * Math.sqrt(this.maxLife)));
+    this.radius = this.maxLife * 2.5;
+    this.sprite = new Sprite(Meteor.generateSprite(this.radius));
   }
 
   public getDistance = (obj: Trackable): number => Math.sqrt(obj instanceof Meteor ?
@@ -66,13 +67,13 @@ export default class Meteor extends GameObject {
     }
     const m1 = new Meteor({
       maxLife: this.maxLife / 2,
-      velocity: [this.velocity[0] + .5 - Math.random(), Math.min(this.velocity[1], 0) - Math.random()],
+      velocity: [this.velocity[0] + .5 - Math.random(), Math.min(this.velocity[1], 0) - 2 * Math.random()],
       x: this.x,
       y: this.y - 5,
     });
     const m2 = new Meteor({
       maxLife: this.maxLife / 2,
-      velocity: [this.velocity[0] + .5 - Math.random(), Math.max(this.velocity[1], 0) + Math.random()],
+      velocity: [this.velocity[0] + .5 - Math.random(), Math.max(this.velocity[1], 0) + 2 * Math.random()],
       x: this.x,
       y: this.y - 5,
     });

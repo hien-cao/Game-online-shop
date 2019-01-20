@@ -10,13 +10,14 @@ export const getMeteorSpawns = (game: Game) => [
       maxLife: 3 + Math.random() * 10,
       velocity: [Math.random() * 2 - 1, Math.random() * .5 - .25],
     }),
-    spawnRate: 3,
+    getSpawnModifier: ({ player }) =>
+      .2 + .8 * player.velocity[0] / player.maxVelocity[0],
+    spawnRate: 3.5,
 
-    absolutePosition: true,
-    height: game.canvas.height + 400,
-    width: 200,
+    height: game.canvas.height + 200,
+    width: 150,
     x: game.canvas.width,
-    y: -200,
+    y: -100,
   }),
   new SpawnZone({
     game,
@@ -25,10 +26,11 @@ export const getMeteorSpawns = (game: Game) => [
       maxLife: 3 + Math.random() * 10,
       velocity: [Math.random() * .5 - .25, Math.random() * 2 - .5],
     }),
-    spawnRate: .5,
+    getSpawnModifier: ({ player }) =>
+      .2 + .8 * Math.min(0, player.velocity[1]) / player.minVelocity[1],
+    spawnRate: 1.5,
 
-    absolutePosition: true,
-    height: 180,
+    height: 100,
     width: game.canvas.width,
     y: -200,
   }),
@@ -36,13 +38,14 @@ export const getMeteorSpawns = (game: Game) => [
     game,
 
     generateSpawn: () => new Meteor({
-      maxLife: 3 + Math.random() * 10,
+      maxLife: 3 + Math.random() * 8,
       velocity: [Math.random() * .5 - .25, -Math.random() * 2 + .5],
     }),
-    spawnRate: .5,
+    getSpawnModifier: ({ player }) =>
+      .2 + .8 * Math.max(0, player.velocity[1]) / player.maxVelocity[1],
+    spawnRate: 1.5,
 
-    absolutePosition: true,
-    height: 180,
+    height: 100,
     width: game.canvas.width,
     y: game.canvas.height,
   }),
