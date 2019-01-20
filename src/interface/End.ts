@@ -29,7 +29,12 @@ export default class End extends Overlay {
     const highScoreButton = new Button({
       font: "18px Arial, Helvetica, sans-serif",
       label: "Submit score",
-      onClick: () => console.log("jej"),
+      onClick: () => {
+        parent.postMessage({
+          messageType: "SCORE",
+          score: game.score,
+        }, window.location.href);
+      },
       x: 0,
       y: this.canvas.height - 40,
     });
