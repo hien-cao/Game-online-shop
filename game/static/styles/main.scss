@@ -1,0 +1,17 @@
+@import "normalize.css";
+
+body {
+  overflow: hidden;
+}
+
+#game-container {
+  canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
+
+#game {
+  background: rgb(12, 22, 42);
+}
