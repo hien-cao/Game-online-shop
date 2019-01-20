@@ -30,4 +30,8 @@ export default class Player extends Ship {
       },
     ];
   }
+
+  public onDestroy(game: Game) {
+    game.setOverlay(game.overlays.end);
+  }
 }

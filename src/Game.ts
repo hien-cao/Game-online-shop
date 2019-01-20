@@ -3,6 +3,7 @@ import MouseListener from "./controls/MouseListener";
 import GameObject from "./entities/GameObject";
 import Player from "./entities/Player";
 import Weapon from "./entities/Weapon";
+import End from "./interface/End";
 import Overlay from "./interface/Overlay";
 import Pause from "./interface/Pause";
 import UserInterface from "./interface/UserInterface";
@@ -12,6 +13,19 @@ import Zone from "./zones/Zone";
 import { getMeteorSpawns } from "./zones/zones";
 
 export default class Game {
+
+  set pause(pause: boolean) {
+    this._pause = pause;
+    if (pause) {
+      this.setOverlay(this.overlays.pause);
+      return;
+    }
+    this.setOverlay(this.overlays.ui);
+  }
+
+  get pause() {
+    return this._pause;
+  }
   public readonly fps: number = 60;
 
   public canvas: HTMLCanvasElement;
@@ -27,7 +41,7 @@ export default class Game {
 
   public prevRender: number = 0;
   public prevLoop: number = Date.now();
-  public player: Player;
+  public player?: Player;
 
   public gameObjects: GameObject[] = [];
 
@@ -35,25 +49,15 @@ export default class Game {
 
   private _pause = false;
 
-  set pause(pause: boolean) {
-    this._pause = pause;
-    if (pause) {
-      this.setOverlay(this.overlays.pause);
-      return;
-    }
-    this.setOverlay(this.overlays.ui);
-  }
-
-  get pause() {
-    return this._pause;
-  }
-
   constructor() {
     this.canvas = document.createElement("canvas");
     this.canvas.id = "game";
     this.canvas.width = 500;
     this.canvas.height = 300;
     this.overlays = {
+      end: new End({
+        game: this,
+      }),
       pause: new Pause({
         game: this,
         onExit: () => this.pause = false,
@@ -81,7 +85,6 @@ export default class Game {
 
     this.reset();
 
-    this.pause = true;
     this.loopHandle = window.requestAnimationFrame(this.loop); // loop
 
     // input
@@ -107,6 +110,7 @@ export default class Game {
   }
 
   public reset = () => {
+    this.score = 0;
     this.player = new Player({
       initialHeight: 20,
       maxLife: 100,
@@ -142,6 +146,8 @@ export default class Game {
     this.zones = [
       ...getMeteorSpawns(this),
     ];
+
+    this.pause = true;
   }
 
   public addGameObject = (obj: GameObject) => {
@@ -174,14 +180,19 @@ export default class Game {
     }
 
     if (this.activeOverlay) {
-      this.activeOverlay.render({
-        life: this.player.life,
-        maxLife: this.player.maxLife,
+      const state = {
         score: this.score,
-        velocity: this.player.velocity,
-        x: this.player.x,
-        y: this.player.y,
-      });
+      };
+      if (this.player) {
+        Object.assign(state, {
+          life: this.player.life,
+          maxLife: this.player.maxLife,
+          velocity: this.player.velocity,
+          x: this.player.x,
+          y: this.player.y,
+        });
+      }
+      this.activeOverlay.render(state);
     }
   }
 
@@ -208,15 +219,24 @@ export default class Game {
         this.gameObjects.splice(i, 1); // delete object from game (not in bounds)
       }
     }
+    if (this.player) {
+      this.viewport.pan(
+        this.player,
+        [
+          -this.canvas.width / 2 - this.player.acceleration[0] * 20 - this.player.width * .5,
+          -(this.player.acceleration[1]) * 40 + this.player.height / 2,
+        ],
+        d
+      );
+    }
+  }
 
-    this.viewport.pan(
-      this.player,
-      [
-        -this.canvas.width / 2 - this.player.acceleration[0] * 20 - this.player.width * .5,
-        -(this.player.acceleration[1]) * 40 + this.player.height / 2,
-      ],
-      d
-    );
+  public setOverlay = (overlay: Overlay) => {
+    this.clearOverlay();
+    this.activeOverlay = overlay;
+    if (this.canvas.parentNode) {
+      this.canvas.parentNode.appendChild(this.activeOverlay.canvas);
+    }
   }
 
   private clearOverlay = () => {
@@ -225,14 +245,6 @@ export default class Game {
       if (overlay) {
         this.canvas.parentNode.removeChild(overlay); // remove overlay canvas
       }
-    }
-  }
-
-  private setOverlay = (overlay: Overlay) => {
-    this.clearOverlay();
-    this.activeOverlay = overlay;
-    if (this.canvas.parentNode) {
-      this.canvas.parentNode.appendChild(this.activeOverlay.canvas);
     }
   }
 }
