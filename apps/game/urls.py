@@ -16,7 +16,7 @@ from .views import (
 urlpatterns = [
     path('', games, name='games'),
     path('search/', search, name='search'),
-    path('<query>/', autosuggestion_search, name='autosuggestion'),
+    path('search/searchTerm/<query>', autosuggestion_search, name='autosuggestion'),
     path('<int:game_id>/', game_details, name='game_details'),
     path('<int:game_id>/purchase/', purchase_game, name='purchase_game'),
     path('add/', manage_game, name='add_game'),

@@ -9,88 +9,65 @@
 /* Loading once the document ready */
 window.onload = function () {
   'use strict';
-
-  const searchTerm = document.querySelector('.searchTerm');
-  const searchBtn = document.querySelector('.searchBtn');
+  const search_term = document.querySelector('.search_term');
+  const min_length = 2;
 
   // Execute the auto suggestion 
-  searchTerm.addEventListener('input', function (e) {
-
-    let url = '/' + searchTerm.value;
-
-    fetch(url)
-      .then(response => autosuggestion(e, response))
-      .catch(error => console.error(error))
-  });
-
-  // Execute the search form:
-  searchBtn.addEventListener('click', function (e) {
-    // Prevent the page reload
-    e.preventDefault();
-    // Submit the query
-    submitSearchForm();
-  });
-
-  function submitSearchForm() {
-    const data = {
-      'query': searchTerm.value
-    };
-    fetch('/search/', {
-      method: 'POST',
-      mode: "same-origin",
-      cache: "no-cache",
-      credentials: "same-origin",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: data
-    })
+  search_term.addEventListener('keyup', function (e) {
+    const query = search_term.value;
+    if (query.length >= min_length) {
+      const url = '/games/search/searchTerm/' + query;
+      fetch(url, {
+        method: 'GET',
+      })
       .then(response => response.json())
-      .catch(error => console.error(error));
-  }
+      .then(data => autosuggestion(e, data.results))
+      .catch(error => console.error(error))
+    };
+  });
 
   /* Create the auto-suggestion function */
-  function autosuggestion(input, nameList) {
+  function autosuggestion(input, name_list) {
     /* The autosuggestion function takes two arguments, the input value and a list of possible autosuggested values */
-    // Create currentFocus to define the position of suggested item to add class active and simulate a click event
-    let currentFocus;
+    // Create current_focus to define the position of suggested item to add class active and simulate a click event
+    let current_focus;
     // someone input a search
-    let newDIV1, newDIV2, val = input.value;
+    let new_div1, new_div2, val = input.value;
     // Close all already opened suggestions of a search
     closeSuggestion();
     if (!val) { return false; }
-    currentFocus = -1;
+    current_focus = -1;
     // Create a DIV element containing the suggestion name
-    newDIV1 = document.createElement('div');
-    newDIV1.setAttribute('id', 'autosuggestionListItem');
-    newDIV1.setAttribute('class', 'suggestionList');
+    new_div1 = document.createElement('div');
+    new_div1.setAttribute('id', 'autosuggestionListItem');
+    new_div1.setAttribute('class', 'suggestionList');
     // Append The DIV element as a child in the 'autosuggestion' container
-    input.parentNode.appendChild(newDIV1);
+    input.parentNode.appendChild(new_div1);
     // For each item in the array, if the item is the same with the value 
     // in the input, it will create a new div element for each maching item
-    nameList.forEach(function (item) {
+    name_list.forEach(function (item) {
       if (item.substr(0, val.length).toUpperCase() == val.toUpperCase()) {
         // Create a DIV element for each matching item
-        newDIV2 = document.createElement('div');
+        new_div2 = document.createElement('div');
         // Add the name to the div 
         // Check if the search for category, developer or game name
         if (val[0] == '@') {
-          newDIV2.innerHTML = 'Search for developer @' + item;
+          new_div2.innerHTML = 'Search for developer @' + item;
         } else if (val[0] == '#') {
-          newDIV2.innerHTML = 'Search for catelogry #' + item;
+          new_div2.innerHTML = 'Search for catelogry #' + item;
         } else {
-          newDIV2.innerHTML = 'Search for game: ' + item;
+          new_div2.innerHTML = 'Search for game: ' + item;
         }
         // Insert a input field that will hold the current array item's value
-        newDIV2.innerHTML += `<input type='hidden' value='${item}'>`;
+        new_div2.innerHTML += `<input type='hidden' value='${item}'>`;
         // Execute a function when someone clicks on the item value (DIV element)
-        newDIV2.addEventListener('click', function () {
+        new_div2.addEventListener('click', function () {
           // Insert the value for the search input field
           input.value = input.getElementsByTagName('input')[0].value;
           // Close all already opened suggestions of a search
           closeSuggestion();
         });
-        newDIV1.appendChild(newDIV2);
+        new_div1.appendChild(new_div2);
       }
     })
     // Execute a function which handle key press in the keyboard
@@ -100,22 +77,22 @@ window.onload = function () {
         selectedItem = selectedItem.getElementsByTagName('div');
       }
       if (evt.keyCode == 40) {
-        // Increase the currentFocus as the arrow DOWN key is pressed
-        currentFocus += 1;
+        // Increase the current_focus as the arrow DOWN key is pressed
+        current_focus += 1;
         // Add class active to the selected item
         addActive(selectedItem);
       } else if (evt.keyCode == 38) {
-        // Decrease the currentFocus as the arrow UP key is pressed
-        currentFocus -= 1;
+        // Decrease the current_focus as the arrow UP key is pressed
+        current_focus -= 1;
         // Add class active to the selected item
         addActive(selectedItem);
       } else if (evt.keyCode == 13) {
         // The ENTER key is pressed
         evt.preventDefault();
-        if (currentFocus > -1) {
+        if (current_focus > -1) {
           // Simulate a click on the active item
           if (selectedItem) {
-            selectedItem[currentFocus].click();
+            selectedItem[current_focus].click();
           }
         }
       }

@@ -183,51 +183,61 @@ def save_score(request, game_id):
         return JsonResponse(save_response)
     return JsonResponse({"message": "invalid request!"})
 
-# Autosuggestion search
+# Autosuggestion for search query
 def autosuggestion_search(request, query=None):
-    if request.is_ajax():
-        if query:
-            results = []
-            term value from the games.html
-            if '#' in query:
-                query = query.replace('#', '')
-                categories = Tag.objects.filter(name__icontains = query)
-                for category in categories:
-                    results.append(category.name)
-            elif '@' in query:
-                query = query.replace('@', '')
-                developers = Profile.objects.filter(name__icontains = query).filter(is_developer = True)
-                for developer in developers:
-                    results.append(developer.name)
-            elif query:
-                games = Games.objects.filter(name__icontains = query)
-                for game in games:
-                    results.append(game.name)
+    if request.method == 'GET':
+        if request.is_ajax():
+            if query:
+                results = []
+                #term value from the games.html
+                if '#' in query:
+                    query = query.replace('#', '')
+                    categories = Tag.objects.filter(name__icontains = query)
+                    for category in categories:
+                        results.append(category.name)
+                elif '@' in query:
+                    query = query.replace('@', '')
+                    developers = Profile.objects.filter(name__icontains = query).filter(is_developer = True)
+                    for developer in developers:
+                        results.append(developer.name)
+                elif query:
+                    games = Games.objects.filter(name__icontains = query)
+                    for game in games:
+                        results.append(game.name)
+                else: 
+                    results = []
             else: 
                 results = []
-    else:
-        results = 'Request is fail!'
-    return HttpResponse(results)
-
-# Search
-def search(request):
-    query = request.GET['query']
-    context = {}
-
-    if query:
-        if '#' in query:
-            query = query.replace('#', '')
-            latest_games = Game.objects.order_by('created_at').filter(tags = query)
-        elif "@" in query:
-            query = query.replace('@', '')
-            latest_games = Game.objects.order_by('created_at').filter(created_by = query)
         else:
-            latest_games = Game.objects.order_by('created_at').filter(name = query)
+            results = 'Request is fail!'
+        data = json.dumps({"results": results}) 
+        return HttpResponse(data)
+    return HttpResponse(staus=404)
     
-        if latest.length != 0:
-            context['latest'] = latest_games
-        else: 
-            context['not_found'] = 'There is no result in the search'
-    else:
-        context['not_found'] = 'There is no result in the search'
-    return render(request, 'games.html', context)
+# Search for the games by categories, developer, and game name
+def search(request):
+    if request.method == 'GET':
+        lastest_games = Game.objects.order_by('created_at')
+        context = {}
+        #  Collect the data that match the search
+        if 'search_term' in request.GET:
+            query = request.GET['search_term']
+            if query: 
+                if '#' == query[0]:
+                    query = query.replace('#', '')
+                    latest_games = lastest_games.filter(tags=query)[:5]
+                elif "@" == query[0]:
+                    query = query.replace('@', '')
+                    latest_games = lastest_games.filter(created_by = query)[:5]
+                else:
+                    latest_games = lastest_games.filter(name = query)[:5]
+
+            if latest_games.count() != 0:
+                context['latest'] = latest_games
+            else: 
+                context['not_found'] = 'There is no result in the search'
+        return render(request, 'games.html', context)
+    return HttpResponse(status=404)
+        
+
+
