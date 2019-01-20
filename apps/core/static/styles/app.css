@@ -53,6 +53,10 @@
 * Containers
 */
 
+#main-navigation a {
+  text-transform: uppercase;
+}
+
 footer {
   background-color: #607d8b;
 }
