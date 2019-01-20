@@ -11,7 +11,9 @@ export default abstract class Overlay {
     this.canvas = document.createElement("canvas");
     this.canvas.width = width;
     this.canvas.height = height;
+    this.canvas.id = "overlay";
   }
 
-  public abstract render(state: any): any;
+  public abstract render(state?: any): any;
+  public abstract update?(state?: any): any;
 }

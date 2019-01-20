@@ -1,5 +1,5 @@
 import { globalSpeedModifier } from "../entities/GameObject";
-import Overlay, { OverlayArgs } from "./Overlay";
+import Overlay from "./Overlay";
 
 export interface GameState {
   x: number;
@@ -11,16 +11,14 @@ export interface GameState {
 }
 
 export default class UserInterface extends Overlay {
-  constructor(args: OverlayArgs) {
-    super(args);
-  }
+  public update = undefined; // Nothing to update
 
   public render = (state: GameState) => {
     if (JSON.stringify(this.prevState) === JSON.stringify(state)) {
       return; // no need to re-render if no updates
     }
     const ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
-
+    ctx.restore();
     ctx.font = "12 Arial, Helvetica, sans-serif";
 
     // hitpoints bar
@@ -64,8 +62,7 @@ export default class UserInterface extends Overlay {
       this.canvas.width - 5,
       this.canvas.height - 20
     );
-
+    ctx.save();
     this.prevState = state;
   }
-
 }

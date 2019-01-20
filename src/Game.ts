@@ -2,6 +2,8 @@ import KeyboardListener from "./controls/keyboardListener";
 import GameObject from "./entities/GameObject";
 import Player from "./entities/Player";
 import Weapon from "./entities/Weapon";
+import Overlay from "./interface/Overlay";
+import Pause from "./interface/Pause";
 import UserInterface from "./interface/UserInterface";
 import { sprites } from "./sprites/Sprite";
 import Viewport from "./Viewport";
@@ -14,25 +16,43 @@ export default class Game {
   public loopHandle?: number;
   public keyboardListener: KeyboardListener = new KeyboardListener();
 
-  public ui: UserInterface;
-  public score: number = 0;
+  public activeOverlay?: Overlay;
+  public overlays: { [key: string]: Overlay };
 
-  public pause = false;
+  public score: number = 0;
 
   public prevRender: number = 0;
   public prevLoop: number = Date.now();
   public player: Player;
 
-  public gameObjects: GameObject[];
+  public gameObjects: GameObject[] = [];
 
   public zones: Zone[] = [];
+
+  private _pause = false;
+
+  set pause(pause: boolean) {
+    this._pause = pause;
+    if (pause) {
+      this.setOverlay(this.overlays.pause);
+      return;
+    }
+    this.setOverlay(this.overlays.ui);
+  }
+
+  get pause() {
+    return this._pause;
+  }
 
   constructor() {
     this.canvas = document.createElement("canvas");
     this.canvas.id = "game";
     this.canvas.width = 500;
     this.canvas.height = 300;
-    this.ui = new UserInterface({ width: this.canvas.width, height: this.canvas.height });
+    this.overlays = {
+      pause: new Pause({ width: this.canvas.width, height: this.canvas.height }),
+      ui: new UserInterface({ width: this.canvas.width, height: this.canvas.height }),
+    };
 
     this.player = new Player({
       initialHeight: 20,
@@ -58,10 +78,6 @@ export default class Game {
       this.canvas.width,
       this.canvas.height
     );
-
-    this.gameObjects = [
-      this.player,
-    ];
   }
 
   public mount = (element: HTMLElement) => {
@@ -71,7 +87,6 @@ export default class Game {
     }
 
     element.appendChild(this.canvas);
-    element.appendChild(this.ui.canvas);
 
     this.keyboardListener.mount(); // mount keyboard listener
 
@@ -82,12 +97,37 @@ export default class Game {
       true
     );
 
+    // add initial game objects
+    this.gameObjects = [
+      this.player,
+    ];
     // add spawn zones
     this.zones = [
       ...getMeteorSpawns(this),
     ];
 
+    this.pause = true;
     this.loopHandle = window.requestAnimationFrame(this.loop); // loop
+  }
+
+  public unmount = () => {
+    this.gameObjects.length = 0; // clear game objects
+    this.zones.length = 0;
+
+    if (this.canvas.parentNode) {
+      this.canvas.parentNode.removeChild(this.canvas); // remove canvas from DOM
+      this.clearOverlay();
+    }
+
+    if (this.loopHandle) {
+      window.cancelAnimationFrame(this.loopHandle);
+    }
+
+    this.keyboardListener.unmount(); // unmount keyboard listener
+  }
+
+  public addGameObject = (obj: GameObject) => {
+    this.gameObjects.push(obj);
   }
 
   public loop = () => {
@@ -100,22 +140,6 @@ export default class Game {
     this.prevLoop = time;
 
     this.loopHandle = window.requestAnimationFrame(this.loop);
-  }
-
-  public unmount = () => {
-    if (this.canvas.parentNode) {
-      this.canvas.parentNode.removeChild(this.canvas); // remove canvas from DOM
-    }
-
-    if (this.loopHandle) {
-      window.cancelAnimationFrame(this.loopHandle);
-    }
-
-    this.keyboardListener.unmount(); // unmount keyboard listener
-  }
-
-  public addGameObject = (obj: GameObject) => {
-    this.gameObjects.push(obj);
   }
 
   public render = (
@@ -131,18 +155,24 @@ export default class Game {
       }
     }
 
-    this.ui.render({
-      life: this.player.life,
-      maxLife: this.player.maxLife,
-      score: this.score,
-      velocity: this.player.velocity,
-      x: this.player.x,
-      y: this.player.y,
-    });
+    if (this.activeOverlay) {
+      this.activeOverlay.render({
+        life: this.player.life,
+        maxLife: this.player.maxLife,
+        score: this.score,
+        velocity: this.player.velocity,
+        x: this.player.x,
+        y: this.player.y,
+      });
+    }
   }
 
   public update = (d: number) => {
-    if (this.pause) {
+    if (this.activeOverlay && this.activeOverlay.update) {
+      this.activeOverlay.update();
+    }
+
+    if (this._pause) { // Don't update the game if it has been paused
       return;
     }
 
@@ -169,5 +199,22 @@ export default class Game {
       ],
       d
     );
+  }
+
+  private clearOverlay = () => {
+    if (this.canvas.parentNode) {
+      const overlay = document.getElementById("overlay");
+      if (overlay) {
+        this.canvas.parentNode.removeChild(overlay); // remove overlay canvas
+      }
+    }
+  }
+
+  private setOverlay = (overlay: Overlay) => {
+    this.clearOverlay();
+    this.activeOverlay = overlay;
+    if (this.canvas.parentNode) {
+      this.canvas.parentNode.appendChild(this.activeOverlay.canvas);
+    }
   }
 }
