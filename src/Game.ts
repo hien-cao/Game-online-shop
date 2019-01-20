@@ -1,4 +1,5 @@
 import KeyboardListener from "./controls/keyboardListener";
+import MouseListener from "./controls/MouseListener";
 import GameObject from "./entities/GameObject";
 import Player from "./entities/Player";
 import Weapon from "./entities/Weapon";
@@ -11,10 +12,13 @@ import Zone from "./zones/Zone";
 import { getMeteorSpawns } from "./zones/zones";
 
 export default class Game {
+  public readonly fps: number = 60;
+
   public canvas: HTMLCanvasElement;
   public viewport: Viewport;
   public loopHandle?: number;
-  public keyboardListener: KeyboardListener = new KeyboardListener();
+  public keyboard: KeyboardListener = new KeyboardListener();
+  public mouse: MouseListener = new MouseListener();
 
   public activeOverlay?: Overlay;
   public overlays: { [key: string]: Overlay };
@@ -50,7 +54,12 @@ export default class Game {
     this.canvas.width = 500;
     this.canvas.height = 300;
     this.overlays = {
-      pause: new Pause({ width: this.canvas.width, height: this.canvas.height }),
+      pause: new Pause({
+        game: this,
+        onExit: () => {
+          this.pause = false;
+        },
+      }),
       ui: new UserInterface({ width: this.canvas.width, height: this.canvas.height }),
     };
 
@@ -88,8 +97,6 @@ export default class Game {
 
     element.appendChild(this.canvas);
 
-    this.keyboardListener.mount(); // mount keyboard listener
-
     this.viewport.pan(
       { x: -this.canvas.width / 3, y: this.player.height / 2, velocity: [0, 0] },
       [-this.canvas.width / 2 + this.player.width, 0],
@@ -108,6 +115,10 @@ export default class Game {
 
     this.pause = true;
     this.loopHandle = window.requestAnimationFrame(this.loop); // loop
+
+    // input
+    this.keyboard.mount(); // mount keyboard listener
+    this.mouse.mount(this.canvas.parentNode as HTMLElement); // mount mouse listener
   }
 
   public unmount = () => {
@@ -115,6 +126,10 @@ export default class Game {
     this.zones.length = 0;
 
     if (this.canvas.parentNode) {
+      // input
+      this.keyboard.unmount(); // unmount keyboard listener
+      this.mouse.unmount(this.canvas.parentNode as HTMLElement); // unmount keyboard listener
+
       this.canvas.parentNode.removeChild(this.canvas); // remove canvas from DOM
       this.clearOverlay();
     }
@@ -122,8 +137,6 @@ export default class Game {
     if (this.loopHandle) {
       window.cancelAnimationFrame(this.loopHandle);
     }
-
-    this.keyboardListener.unmount(); // unmount keyboard listener
   }
 
   public addGameObject = (obj: GameObject) => {
@@ -132,7 +145,7 @@ export default class Game {
 
   public loop = () => {
     const time = Date.now();
-    if (time - this.prevRender > 1000 / 60) {
+    if (time - this.prevRender > 1000 / this.fps) {
       this.render();
     }
     this.update((time - this.prevLoop) / 1000);
@@ -169,7 +182,7 @@ export default class Game {
 
   public update = (d: number) => {
     if (this.activeOverlay && this.activeOverlay.update) {
-      this.activeOverlay.update();
+      this.activeOverlay.update({ mouse: this.mouse, keyboard: this.keyboard });
     }
 
     if (this._pause) { // Don't update the game if it has been paused

@@ -12,19 +12,19 @@ export default class Player extends Ship {
       (d, game: Game) => {
         this.acceleration[0] = 0;
         this.acceleration[1] = 0;
-        if (game.keyboardListener.keyState.w) {
+        if (game.keyboard.keyState.w) {
           this.acceleration[1] -= 1;
         }
-        if (game.keyboardListener.keyState.a) {
+        if (game.keyboard.keyState.a) {
           this.acceleration[0] -= 1;
         }
-        if (game.keyboardListener.keyState.s) {
+        if (game.keyboard.keyState.s) {
           this.acceleration[1] += 1;
         }
-        if (game.keyboardListener.keyState.d) {
+        if (game.keyboard.keyState.d) {
           this.acceleration[0] += 1;
         }
-        if (this.weapon && game.keyboardListener.keyState[" "]) {
+        if (this.weapon && game.keyboard.keyState[" "]) {
           this.weapon.fire(this, game);
         }
       },

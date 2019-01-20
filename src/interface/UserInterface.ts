@@ -19,7 +19,7 @@ export default class UserInterface extends Overlay {
     }
     const ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
     ctx.restore();
-    ctx.font = "12 Arial, Helvetica, sans-serif";
+    ctx.font = "12px Arial, Helvetica, sans-serif";
 
     // hitpoints bar
     if (!this.prevState || this.prevState.life !== state.life || this.prevState.maxLife !== state.maxLife) {
