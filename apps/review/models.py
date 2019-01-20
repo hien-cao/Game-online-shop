@@ -6,6 +6,7 @@ from ..user.models import Profile
 
 rn = 'reviews'
 
+
 class Review(models.Model):
     game = models.ForeignKey(
         Game,
@@ -18,9 +19,12 @@ class Review(models.Model):
         related_name=rn
     )
     grade = models.IntegerField(
+        default=3,
         validators=[
             MinValueValidator(0),
             MaxValueValidator(5)
         ]
     )
-    content = models.TextField()
+    content = models.TextField(
+        blank=True
+    )

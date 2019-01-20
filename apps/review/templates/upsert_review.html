@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="h3">Review</h1>
+
+<form method="post">
+  {% csrf_token %}
+  <div class="grid-x grid-padding-x">
+    {% for field in form %}
+    <div class="cell small-12">
+      {{ field.label_tag }} {{ field }}
+      {% if field.errors %}
+      {% include 'forms/errors_list.html' with errors=field.errors %}
+      {% endif %}
+      {% if field.help_text %}
+      <p class="help">{{ field.help_text|safe }}</p>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  <div class="row text-right">
+    <input class="button" type="submit" title="Submit review" value="Submit">
+  </div>
+</form>
+{% endblock content %}
