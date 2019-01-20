@@ -29,7 +29,7 @@ export default class Pause extends Overlay {
     const loadButton = new Button({
       font: "14px Arial, Helvetica, sans-serif",
       label: "Load game",
-      onClick: () => console.log("jej"),
+      onClick: () => game.requestLoad(),
       x: 0,
       y: this.canvas.height - 20,
     });
