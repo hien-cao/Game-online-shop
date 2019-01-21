@@ -1,3 +1,5 @@
+from .models import Highscore
+
 games_context = {
     'games': 'is-active',
     'crumbs': [
@@ -65,6 +67,8 @@ def get_purchase_context(purchase):
 
 def get_play_game_context(game):
     return {
+        # Select top 10 scores
+        'highscores': Highscore.objects.filter(game=game).order_by('-score')[:10],
         'game': game,
         'crumbs': [
             {
@@ -77,7 +81,12 @@ def get_play_game_context(game):
             },
             {
                 'label': game.name,
-                'game': game
+                'url': 'game_details',
+                'is_game_url': True,
+                'game': game,
+            },
+            {
+                'label': "play",
             },
         ]
     }

@@ -197,6 +197,13 @@ footer > .container {
   font-size: .8rem;
 }
 
+.game-header {
+  margin: 0 0 4rem;
+}
+.game-header>h1 {
+  margin: 1rem 0 0;
+}
+
 p.help {
   margin-top: -0.5rem;
   font-size: 0.8125rem;

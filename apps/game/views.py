@@ -186,17 +186,13 @@ def play(request, game_id):
     game = get_object_or_404(Game, pk=game_id)
     profile = request.user.profile
     if profile.games and Purchase.objects.filter(created_by=profile, game=game).count() > 0:
-        print('User has purchased the game')
         context = {
             'profile': profile,
             **get_play_game_context(game)
         }
-        print(context)
         return render(request, 'play_game.html', context)
 
-    print('User has not purchased the game.')
-    # TODO Redirect to purchase.
-    return redirect('games')
+    return redirect('/games/{}'.format(game.id))
 
 
 # POST: Store a highscore
