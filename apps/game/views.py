@@ -103,7 +103,20 @@ def game_details(request, game_id):
             if game.created_by.user.id == request.user.id:
                 # TODO Render (and return) developer view
                 pass
-        return render(request, 'game_details.html', {'game': game, 'purchased': purchased})
+        return render(
+            request,
+            'game_details.html',
+            {
+                'game': game,
+                'purchased': purchased,
+                'crumbs': [
+                    {
+                        'label': 'Browse',
+                        'url': 'games'
+                    },
+                    {'label': game.name},
+                ]
+            })
     return HttpResponse(status=404)  # other methods not supported
 
 

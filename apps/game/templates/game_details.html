@@ -3,13 +3,25 @@
 {% block content %}
 
 <div>
-  <h2>{{ game.name }}</h2>
+  <div class="text-center">
+    <span class="grey">{{ game.created_at|date:"F d, Y" }}</span>
+    <h1 class="uppercase h4">{{ game.name }}</h1>
+    <span class="capitalized">{{ game.created_by }}</span>
+  </div>
+
+  {% if game.tags %}
+  <div class="game-tags">
+    {% include 'games/game_tags.html' %}
+  </div>
+  {% endif %}
+
+  <h5>Description</h5>
   <p>{{ game.description }}</p>
-  <div>
+  <div class="float-right">
     {% if purchased %}
-    <a href="/games/{{game.id}}/play">Play game</a>
+    <a class="button" href="/games/{{game.id}}/play">Play game</a>
     {% else %}
-    <a href="/games/{{game.id}}/purchase">Purchase game</a>
+    <a class="button" href="/games/{{game.id}}/purchase">Purchase game</a>
     {% endif %}
   </div>
 </div>
