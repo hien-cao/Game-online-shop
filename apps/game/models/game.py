@@ -33,9 +33,9 @@ class Game(models.Model):
         "Returns the grade calculated from reviews"
         reviews = self.reviews.all()
         for review in reviews:
-            return float(sum(
+            return round(float(sum(
                 [review.grade for review in reviews]
-            ) / len(reviews))
+            ) / len(reviews)), 2)
         return None
 
     def __str__(self):
