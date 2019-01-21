@@ -17,11 +17,11 @@
 
   <h5>Description</h5>
   <p>{{ game.description }}</p>
-  <div class="float-right">
+  <div class="clearfix">
     {% if purchased %}
-    <a class="button" href="/games/{{game.id}}/play">Play game</a>
+    <a class="button float-right" href="/games/{{game.id}}/play">Play game</a>
     {% else %}
-    <a class="button" href="/games/{{game.id}}/purchase">Purchase game</a>
+    <a class="button float-right" href="/games/{{game.id}}/purchase">Purchase game</a>
     {% endif %}
   </div>
 </div>

@@ -43,6 +43,26 @@ my_context = {
 }
 
 
+def get_purchase_context(purchase):
+    return {
+        **purchase.get_payment_context(),
+        'purchase': purchase,
+        'crumbs': [
+            {
+                'label': 'Browse',
+                'url': 'games'
+            },
+            {
+                'label': purchase.game.name,
+                'url': 'game_details',
+                'is_game_url': True,
+                'game': purchase.game,
+            },
+            {'label': 'Purchase'},
+        ]
+    }
+
+
 def get_play_game_context(game):
     return {
         'game': game,
@@ -57,8 +77,6 @@ def get_play_game_context(game):
             },
             {
                 'label': game.name,
-                'url': 'play',
-                'is_game_url': True,
                 'game': game
             },
         ]

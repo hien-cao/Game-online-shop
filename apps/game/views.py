@@ -20,7 +20,8 @@ from .contexts import (
     library_context,
     my_context,
     get_play_game_context,
-    get_upsert_game_context
+    get_upsert_game_context,
+    get_purchase_context,
 )
 
 
@@ -147,8 +148,7 @@ def purchase_game(request, game_id):
     purchase.save()
 
     return render(request, 'purchase.html', {
-        **purchase.get_payment_context(),
-        'purchase': purchase,
+        **get_purchase_context(purchase),
         'success_url': '{}?purchase_id={}'.format(request.build_absolute_uri('?'), purchase.id),
         'error_url': '{}?purchase_id={}'.format(request.build_absolute_uri('?'), purchase.id),
         'cancel_url': '{}?purchase_id={}'.format(request.build_absolute_uri('?'), purchase.id),
