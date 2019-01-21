@@ -8,8 +8,7 @@ games_context = {
             'url': 'home'
         },
         {
-            'label': 'Browse',
-            'url': 'games'
+            'label': 'Browse'
         }
     ]
 }
@@ -23,8 +22,7 @@ library_context = {
             'url': 'home'
         },
         {
-            'label': 'Library',
-            'url': 'library'
+            'label': 'Library'
         }
     ]
 }
@@ -38,8 +36,7 @@ my_context = {
             'url': 'home'
         },
         {
-            'label': 'Uploads',
-            'url': 'uploads'
+            'label': 'Uploads'
         }
     ]
 }
