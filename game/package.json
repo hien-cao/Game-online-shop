@@ -1,6 +1,6 @@
 {
-  "name": "invaders",
-  "version": "0.0.0",
+  "name": "space_shooter",
+  "version": "1.0.0",
   "description": "A game implemented for CS-C3170 course",
   "main": "src/index.ts",
   "scripts": {

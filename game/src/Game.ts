@@ -217,7 +217,15 @@ export default class Game {
     // populate gameObjects
     state.gameObjects.map((obj) => {
       if (obj.type === Player.prototype.constructor.name) {
-        (this.player as Player).state = obj;
+        const player = this.player as Player;
+        player.state = obj;
+
+        this.viewport.pan(
+          { x: player.x - this.canvas.width / 3, y: player.y + player.height / 2, velocity: [0, 0] },
+          [-this.canvas.width / 2 + player.width, 0],
+          0,
+          true
+        );
       } else if (obj.type === Projectile.prototype.constructor.name) {
         this.gameObjects.push(new Projectile(obj));
       } else {

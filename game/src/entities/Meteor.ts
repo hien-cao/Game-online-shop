@@ -68,14 +68,14 @@ export default class Meteor extends GameObject {
     const m1 = new Meteor({
       maxLife: this.maxLife / 2,
       velocity: [this.velocity[0] + .5 - Math.random(), Math.min(this.velocity[1], 0) - 2 * Math.random()],
-      x: this.x,
-      y: this.y - 5,
+      x: this.x + this.radius,
+      y: this.y + this.radius - 5,
     });
     const m2 = new Meteor({
       maxLife: this.maxLife / 2,
       velocity: [this.velocity[0] + .5 - Math.random(), Math.max(this.velocity[1], 0) + 2 * Math.random()],
-      x: this.x,
-      y: this.y - 5,
+      x: this.x + this.radius,
+      y: this.y + this.radius + 5,
     });
 
     // splitted meteors should not be able to destroy eachother
