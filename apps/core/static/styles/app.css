@@ -159,11 +159,18 @@ footer > .container {
   white-space: nowrap;
 }
 
+.circle {
+  background-color: #cccccc;
+}
+
+.circle.full {
+  background-color: #455a64;
+}
+
 .review_circles.small > .circle {
-    display: inline-block;
-    background-color: #cccccc;
-    padding: 5px;
-    border-radius: 50%;
+  display: inline-block;
+  padding: 5px;
+  border-radius: 50%;
 }
 
 .breadcrumbs_container {
