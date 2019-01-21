@@ -14,6 +14,7 @@ from ..user.utils.validators import is_developer
 from .forms.game_form import GameForm
 
 from .models import Game, Purchase, Highscore, Tag
+
 from .contexts import (
     games_context,
     library_context,
@@ -78,14 +79,14 @@ def manage_game(request, game_id=None):
 # GET: Display games view
 def games(request, *args, **kwargs):
     if request.method == 'GET':
-        latest_games = Game.objects.order_by('-created_at')[:5]
-        print(latest_games)
         context = {
-            'latest': latest_games,
+            # Latest games
+            'latest': Game.objects.order_by('-created_at')[:5],
             **games_context,
         }
         return render(request, 'games/games.html', context)
     return HttpResponse(status=404)
+
 
 # GET: Display single game view
 # POST: Add game
