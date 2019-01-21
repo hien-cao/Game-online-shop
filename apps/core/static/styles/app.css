@@ -190,6 +190,13 @@ footer > .container {
   color: #666;
 }
 
+.game-tags {
+  margin: 1rem 0;
+  color: #666;
+  font-style: italic;
+  font-size: .8rem;
+}
+
 p.help {
   margin-top: -0.5rem;
   font-size: 0.8125rem;
