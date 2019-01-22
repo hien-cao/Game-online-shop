@@ -91,6 +91,7 @@ def games(request, *args, **kwargs):
         return render(request, 'games/games.html', context)
     return HttpResponse(status=404)
 
+
 # GET: Display single game view
 # POST: Add game
 

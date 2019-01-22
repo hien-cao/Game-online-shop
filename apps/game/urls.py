@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 
 from .views import (
     game_details,
@@ -23,4 +23,5 @@ urlpatterns = [
     path('<int:game_id>/state/', game_state, name='game_state'),
     path('library/', library, name='library'),
     path('<int:game_id>/edit/', manage_game, name='edit_game'),
+    path('<int:game_id>/review/', include('apps.review.urls')),
 ]

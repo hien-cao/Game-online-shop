@@ -3,7 +3,7 @@
 */
 
 .top-bar {
-  padding: 0;
+  /* padding: 0; */
 }
 
 .top-bar, .top-bar ul {
@@ -11,7 +11,8 @@
 }
 
 .top-bar .menu a {
-  padding: 1rem;
+  /* padding: 1rem; */
+  font-size: 13px;
 }
 
 .menu .is-active > a {
