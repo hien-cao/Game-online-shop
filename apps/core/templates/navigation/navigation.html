@@ -1,15 +1,22 @@
+{% load static %}
+
 <div class="top-bar_container">
   <div class="container">
     <div class="title-bar" data-responsive-toggle="main-navigation" data-hide-for="medium">
       <button class="menu-icon" type="button" data-toggle="main-navigation"></button>
-      <div class="title-bar-title"></div>
+      <div class="title-bar-title">
+      </div>
     </div>
 
     <div class="top-bar" id="main-navigation">
       <div class="top-bar-left">
         <ul class="vertical medium-horizontal menu">
-          <li class="{{ home }}"><a title="Home" href="{% url 'home' %}"><i class="icon-app-logo"></i></a></li>
-          <li class="{{ games }}"><a title="Browse games" href="{% url 'games' %}">Browse</a></li>
+          <li class="{{ home }}">
+            <a class="logo" title="Home" href="{% url 'home' %}">
+              <img src="{% static 'img/logo.svg' %}" width=28 height=28 />
+            </a>
+          </li>
+          <li class="{{ games }}"> <a title="Browse games" href="{% url 'games' %}">Browse</a></li>
           {% if user.is_authenticated %}
           {% include 'navigation/signed_in_left.html' %}
           {% endif %}
