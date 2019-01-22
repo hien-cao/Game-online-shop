@@ -163,7 +163,6 @@ footer > .container {
   padding: 10px;
   border-radius: 50%;
 }
-.
 
 .breadcrumbs_container {
   padding: 1rem 0 2rem 0;
@@ -214,6 +213,14 @@ p.help {
   display: block;
   height: 3rem;
   clear: both;
+}
+
+.spacer.medium {
+  height: 2rem;
+}
+
+.spacer.small {
+  height: 1rem;
 }
 
 .button.compact {
