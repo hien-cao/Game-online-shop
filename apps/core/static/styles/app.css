@@ -166,6 +166,25 @@ footer > .container {
   padding: 1rem 0 2rem 0;
 }
 
+.top-bar, .top-bar ul {
+  background-color: transparent;
+}
+
+.top-bar {
+  border-bottom: 1px solid #0a0a0a;
+  height: 100px;
+}
+
+.top-bar a {
+  color: #000;
+}
+
+/* 
+* Search form
+*/
+
+
+
 /*
 * Typography
 */

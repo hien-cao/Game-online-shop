@@ -16,7 +16,7 @@
   };
 
   const search = debounced((event, query) => {
-    fetch(`/games/search/search-term/${query}`, {
+    fetch(`/games/search/search-term/${query}/`, {
       method: 'GET',
     })
       .then(response => response.json())
