@@ -4,9 +4,9 @@
 
 <div>
   <h1 class="h4 subheader uppercase thin">My uploads</h1>
-  {% if uploads %}
+  {% if my_uploads %}
   <ul class="no-bullet game_list">
-    {% for game in uploads %}
+    {% for game in my_uploads %}
     {% include 'games/game_list_item.html' %}
     {% endfor %}
   </ul>

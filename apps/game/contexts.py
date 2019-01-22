@@ -10,7 +10,7 @@ library_context = {
 }
 
 
-my_context = {
+uploads_context = {
     'uploads': 'is-active',
 }
 

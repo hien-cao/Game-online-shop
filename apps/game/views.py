@@ -18,7 +18,7 @@ from .models import Game, Purchase, Highscore, Tag, Save
 from .contexts import (
     games_context,
     library_context,
-    my_context,
+    uploads_context,
     get_play_game_context,
     get_upsert_game_context,
     get_purchase_context,
@@ -182,8 +182,8 @@ def uploads(request, *args, **kwargs):
             request,
             'games/uploads.html',
             {
-                **my_context,
-                'uploads': Game.objects.filter(created_by=request.user.profile)
+                **uploads_context,
+                'my_uploads': Game.objects.filter(created_by=request.user.profile)
             }
         )
     return HttpResponse(status=404)
