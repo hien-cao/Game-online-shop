@@ -2,31 +2,16 @@ from .models import Highscore
 
 games_context = {
     'games': 'is-active',
-    'crumbs': [
-        {
-            'label': 'Browse'
-        }
-    ]
 }
 
 
 library_context = {
     'library': 'is-active',
-    'crumbs': [
-        {
-            'label': 'Library'
-        }
-    ]
 }
 
 
 my_context = {
     'uploads': 'is-active',
-    'crumbs': [
-        {
-            'label': 'Uploads'
-        }
-    ]
 }
 
 

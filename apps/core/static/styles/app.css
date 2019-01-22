@@ -210,3 +210,9 @@ p.help {
   font-style: italic;
   color: #0a0a0a;
 }
+
+.spacer {
+  display: block;
+  height: 3rem;
+  clear: both;
+}
