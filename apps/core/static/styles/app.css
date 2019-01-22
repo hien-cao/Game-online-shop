@@ -20,7 +20,8 @@
 */
 
 .logo {
-  padding: 10px !important;
+  height: 100%;
+  padding: 3px 0 !important;
   margin-right: 3rem;
 }
 
@@ -132,6 +133,7 @@ footer > .container {
 
 .review_circles {
   white-space: nowrap;
+  user-select: none;
 }
 
 .review_circles.reversed {
@@ -145,11 +147,11 @@ footer > .container {
 }
 
 .review_circles > .circle.full {
-  background-color: #455a64;
+  background-color: #C376A3;
 }
 
 .review_circles > .circle.hoverable:hover, .review_circles > .circle.hoverable:hover ~ i {
-  background-color: #607d8b;
+  background-color: #DEA3C6;
 }
 
 .review_circles.small > .circle {
@@ -177,10 +179,6 @@ footer > .container {
 
 .uppercase {
   text-transform: uppercase;
-}
-
-.thin {
-  font-weight: 300;
 }
 
 .f_tiny {
@@ -221,4 +219,8 @@ p.help {
 .button.compact {
   padding: .2rem .5rem !important;
   margin: 0;
+}
+
+button, .button {
+  user-select: none;
 }
