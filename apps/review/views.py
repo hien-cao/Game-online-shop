@@ -27,6 +27,7 @@ def manage_review(request, game_id):
     return render(
         request,
         'upsert_review.html', {
-            'form': form
+            'form': form,
+            'game_id': game_id
         }
     )
