@@ -174,15 +174,19 @@ def library(request, *args, **kwargs):
 
 # GET: Display games uploaded
 @login_required
-@user_passes_test(is_developer, login_url='/games/library')
+@user_passes_test(is_developer)
 def uploads(request, *args, **kwargs):
-    profile = request.user.profile
-    games = Game.objects.filter(created_by=request.user.profile)
-    print(games)
-    context = {
-        **my_context,
-    }
-    return HttpResponse('List games uploaded by me!')
+    if request.method == "GET":
+        profile = request.user.profile
+        return render(
+            request,
+            'games/uploads.html',
+            {
+                **my_context,
+                'uploads': Game.objects.filter(created_by=request.user.profile)
+            }
+        )
+    return HttpResponse(status=404)
 
 
 # GET: Display games uploaded
@@ -223,7 +227,7 @@ def save_score(request, game_id):
         )
         save_response = highscore.save()
         return JsonResponse(save_response)
-    return JsonResponse({"message": "invalid request!"})
+    return HttpResponse(status=404)  # other methods not supported
 
 
 @login_required
