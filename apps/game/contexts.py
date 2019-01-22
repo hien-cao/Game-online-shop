@@ -4,10 +4,6 @@ games_context = {
     'games': 'is-active',
     'crumbs': [
         {
-            'label': 'Home',
-            'url': 'home'
-        },
-        {
             'label': 'Browse'
         }
     ]
@@ -18,10 +14,6 @@ library_context = {
     'library': 'is-active',
     'crumbs': [
         {
-            'label': 'Home',
-            'url': 'home'
-        },
-        {
             'label': 'Library'
         }
     ]
@@ -31,10 +23,6 @@ library_context = {
 my_context = {
     'uploads': 'is-active',
     'crumbs': [
-        {
-            'label': 'Home',
-            'url': 'home'
-        },
         {
             'label': 'Uploads'
         }
@@ -69,10 +57,6 @@ def get_play_game_context(game):
         'game': game,
         'crumbs': [
             {
-                'label': 'Home',
-                'url': 'home'
-            },
-            {
                 'label': 'Browse',
                 'url': 'games'
             },
@@ -94,10 +78,6 @@ def get_upsert_game_context(game, form, title, url):
         'form': form,
         'title': title,
         'crumbs': [
-            {
-                'label': 'Home',
-                'url': 'home'
-            },
             {
                 'label': 'Uploads',
                 'url': 'uploads'
