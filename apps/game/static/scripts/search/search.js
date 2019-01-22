@@ -11,9 +11,9 @@ window.onload = function () {
   'use strict';
   const search_term = document.querySelector('.search_term');
   const min_length = 2;
-
+ 
   // Execute the auto suggestion 
-  search_term.addEventListener('keyup', function (e) {
+  search_term.addEventListener('input', function () {
     const query = search_term.value;
     if (query.length >= min_length) {
       const url = '/games/search/searchTerm/' + query;
@@ -54,7 +54,7 @@ window.onload = function () {
         if (val[0] == '@') {
           new_div2.innerHTML = 'Search for developer @' + item;
         } else if (val[0] == '#') {
-          new_div2.innerHTML = 'Search for catelogry #' + item;
+          new_div2.innerHTML = 'Search for catelory #' + item;
         } else {
           new_div2.innerHTML = 'Search for game: ' + item;
         }
