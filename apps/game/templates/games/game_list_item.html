@@ -10,7 +10,7 @@
     </p>
   </div>
   <p class="cell medium-shrink text-right">
-      {% if purchases and game in purchases.all %}
+      {% if game in allow_play %}
         <a class="button compact" title="play" href="/games/{{game.id}}/play">Play Game</a>
       {% endif %}
       {% include 'review_circles.html' with classes="small small-offset-1 medium-offset-2" %}
