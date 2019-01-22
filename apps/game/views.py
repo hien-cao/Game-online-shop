@@ -83,9 +83,9 @@ def manage_game(request, game_id=None):
 def games(request, *args, **kwargs):
     if request.method == 'GET':
         latest_games = Game.objects.order_by('-created_at')[:5]
-        print(latest_games)
         context = {
             'latest': latest_games,
+            'purchases': request.user.profile.games,
             **games_context,
         }
         return render(request, 'games/games.html', context)
@@ -158,13 +158,18 @@ def purchase_game(request, game_id):
 # GET: Display games purchased
 @login_required
 def library(request, *args, **kwargs):
-    profile = request.user.profile
-    purchases = profile.games
-    print(games)
-    context = {
-        **library_context,
-    }
-    return HttpResponse('List games I have purchased!')
+    if request.method == "GET":
+        profile = request.user.profile
+        return render(
+            request,
+            'games/library.html',
+            {
+                **library_context,
+                'purchases': profile.games,
+                'profile': "profile"
+            }
+        )
+    return HttpResponse(status=404)
 
 
 # GET: Display games uploaded

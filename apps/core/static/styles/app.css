@@ -191,3 +191,8 @@ p.help {
   height: 3rem;
   clear: both;
 }
+
+.button.compact {
+  padding: .2rem .5rem !important;
+  margin: 0;
+}
