@@ -3,11 +3,13 @@
 {% block content %}
 
 <div>
-  <h1 class="h4 subheader uppercase thin">My games</h1>
+  <h1 class="h4 subheader uppercase">My games</h1>
   {% if purchases %}
   <ul class="no-bullet game_list">
-    {% for game in purchases.all %}
+    {% for purchase in purchases.all %}
+    {% with purchase.game as game %}
     {% include 'games/game_list_item.html' %}
+    {% endwith %}
     {% endfor %}
   </ul>
   {% else %}

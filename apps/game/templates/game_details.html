@@ -6,7 +6,7 @@
   <div class="game-header text-center">
     <div class="grey uppercase">{{ game.created_at|date:"F d, Y" }}</div>
     <h1 class="uppercase h4">{{ game.name }}</h1>
-    <div class="capitalized">{{ game.created_by }}</div>
+    <div class="capitalized grey">{{ game.created_by }}</div>
     {% if request.user.is_authenticated %}
     {% include 'review_circles.html' with classes="large" %}
     <div class="text-right">

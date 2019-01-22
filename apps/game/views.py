@@ -85,7 +85,7 @@ def games(request, *args, **kwargs):
         latest_games = Game.objects.order_by('-created_at')[:5]
         context = {
             'latest': latest_games,
-            'purchases': request.user.profile.games,
+            'purchases': request.user.profile.purchases,
             **games_context,
         }
         return render(request, 'games/games.html', context)
@@ -166,7 +166,8 @@ def library(request, *args, **kwargs):
             'games/library.html',
             {
                 **library_context,
-                'purchases': profile.games,
+                'allow_play': [purchase.game for purchase in profile.purchases.all()],
+                'purchases': profile.purchases.filter(purchased_at__isnull=False),
                 'profile': "profile"
             }
         )
@@ -195,13 +196,14 @@ def uploads(request, *args, **kwargs):
 def play(request, game_id):
     game = get_object_or_404(Game, pk=game_id)
     profile = request.user.profile
-    if profile.games and Purchase.objects.filter(created_by=profile, game=game).count() > 0:
+    # Only allow player to play game if he has bought it
+    if profile.purchases and profile.purchases.filter(game=game).count() > 0:
         context = {
             'profile': profile,
             **get_play_game_context(game)
         }
         return render(request, 'play_game.html', context)
-
+    # otherwise redirect to its details page
     return redirect('/games/{}'.format(game.id))
 
 
