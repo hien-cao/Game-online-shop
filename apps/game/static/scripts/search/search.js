@@ -1,73 +1,84 @@
-/* 
+'use strict';
+/*
     The search.js handles the search engine for the games in the web app. The game can be sought by name, categories, and developer name. The suggestions  are provided based on the current input in the search box.
     In order to use the search, follow the below instructions:
       + Start with "@" to search for games with the desired developer
       + Start with "#" to search for games with the desired categories tags
       + Start with no prefix to search for games with the desired name
   */
+(() => {
+  const debounced = function (fn, delay) {
+    let timeout;
+    return function () {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => fn(...arguments), delay);
+    };
+  };
 
-/* Loading once the document ready */
-window.onload = function () {
-  'use strict';
-  const search_term = document.querySelector('.search_term');
-  const min_length = 2;
-
-  // Execute the auto suggestion 
-  search_term.addEventListener('keyup', function (e) {
-    const query = search_term.value;
-    if (query.length >= min_length) {
-      const url = '/games/search/searchTerm/' + query;
-      fetch(url, {
-        method: 'GET',
-      })
+  const search = debounced((event, query) => {
+    fetch(`/games/search/search-term/${query}`, {
+      method: 'GET',
+    })
       .then(response => response.json())
-      .then(data => autosuggestion(e, data.results))
+      .then(data => autosuggestion(event.target, data.results))
       .catch(error => console.error(error))
+  }, 300);
+
+  /* Loading once the document ready */
+  const searchterm = document.getElementById('searchterm');
+  const minlength = 2;
+
+  // Execute the auto suggestion
+  searchterm.addEventListener('input', function (event) {
+    const query = searchterm.value;
+    if (query.length >= minlength) {
+      search(event, query)
     };
   });
 
   /* Create the auto-suggestion function */
-  function autosuggestion(input, name_list) {
+  function autosuggestion(input, namelist) {
     /* The autosuggestion function takes two arguments, the input value and a list of possible autosuggested values */
-    // Create current_focus to define the position of suggested item to add class active and simulate a click event
-    let current_focus;
+    // Create currentfocus to define the position of suggested item to add class active and simulate a click event
+    let currentfocus;
     // someone input a search
-    let new_div1, new_div2, val = input.value;
+    let newdiv1, newdiv2, val = input.value;
     // Close all already opened suggestions of a search
     closeSuggestion();
     if (!val) { return false; }
-    current_focus = -1;
+    currentfocus = -1;
     // Create a DIV element containing the suggestion name
-    new_div1 = document.createElement('div');
-    new_div1.setAttribute('id', 'autosuggestionListItem');
-    new_div1.setAttribute('class', 'suggestionList');
+    newdiv1 = document.createElement('div');
+    newdiv1.setAttribute('id', 'autosuggestionListItem');
+    newdiv1.setAttribute('class', 'suggestionList');
     // Append The DIV element as a child in the 'autosuggestion' container
-    input.parentNode.appendChild(new_div1);
-    // For each item in the array, if the item is the same with the value 
+    input.parentNode.appendChild(newdiv1);
+    // For each item in the array, if the item is the same with the value
     // in the input, it will create a new div element for each maching item
-    name_list.forEach(function (item) {
+    console.log(input);
+    namelist.forEach(function (item) {
       if (item.substr(0, val.length).toUpperCase() == val.toUpperCase()) {
         // Create a DIV element for each matching item
-        new_div2 = document.createElement('div');
-        // Add the name to the div 
+        newdiv2 = document.createElement('div');
+        // Add the name to the div
         // Check if the search for category, developer or game name
         if (val[0] == '@') {
-          new_div2.innerHTML = 'Search for developer @' + item;
+          newdiv2.innerHTML = 'Search for developer @' + item;
         } else if (val[0] == '#') {
-          new_div2.innerHTML = 'Search for catelogry #' + item;
+          newdiv2.innerHTML = 'Search for catelogry #' + item;
         } else {
-          new_div2.innerHTML = 'Search for game: ' + item;
+          newdiv2.innerHTML = 'Search for game: ' + item;
         }
         // Insert a input field that will hold the current array item's value
-        new_div2.innerHTML += `<input type='hidden' value='${item}'>`;
+        newdiv2.innerHTML += `<input type='hidden' value='${item}'>`;
         // Execute a function when someone clicks on the item value (DIV element)
-        new_div2.addEventListener('click', function () {
+        newdiv2.addEventListener('click', function () {
           // Insert the value for the search input field
           input.value = input.getElementsByTagName('input')[0].value;
           // Close all already opened suggestions of a search
           closeSuggestion();
         });
-        new_div1.appendChild(new_div2);
+        newdiv1.appendChild(newdiv2);
       }
     })
     // Execute a function which handle key press in the keyboard
@@ -77,22 +88,22 @@ window.onload = function () {
         selectedItem = selectedItem.getElementsByTagName('div');
       }
       if (evt.keyCode == 40) {
-        // Increase the current_focus as the arrow DOWN key is pressed
-        current_focus += 1;
+        // Increase the currentfocus as the arrow DOWN key is pressed
+        currentfocus += 1;
         // Add class active to the selected item
         addActive(selectedItem);
       } else if (evt.keyCode == 38) {
-        // Decrease the current_focus as the arrow UP key is pressed
-        current_focus -= 1;
+        // Decrease the currentfocus as the arrow UP key is pressed
+        currentfocus -= 1;
         // Add class active to the selected item
         addActive(selectedItem);
       } else if (evt.keyCode == 13) {
         // The ENTER key is pressed
         evt.preventDefault();
-        if (current_focus > -1) {
+        if (currentfocus > -1) {
           // Simulate a click on the active item
           if (selectedItem) {
-            selectedItem[current_focus].click();
+            selectedItem[currentfocus].click();
           }
         }
       }
@@ -137,8 +148,4 @@ window.onload = function () {
       closeSuggestion(e.target);
     });
   }
-}
-
-
-
-
+})()

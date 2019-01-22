@@ -67,21 +67,24 @@ def games(request, *args, **kwargs):
 
 # GET: Display single game view
 # POST: Add game
+
+
 def game_details(request, game_id):
     game = get_object_or_404(Game, pk=game_id)
     if request.method == 'GET':
-        purchased = bool(Purchase.objects.filter(game=game_id, created_by=request.user.id, purchased_at__isnull=False))
+        purchased = bool(Purchase.objects.filter(
+            game=game_id, created_by=request.user.id, purchased_at__isnull=False))
         if request.user.is_authenticated:
             if game.created_by.user.id == request.user.id:
                 # TODO Render (and return) developer view
                 pass
         return render(request, 'game_details.html', {'game': game, 'purchased': purchased})
-    return HttpResponse(status=404) # other methods not supported
+    return HttpResponse(status=404)  # other methods not supported
 
 
 @login_required
 def purchase_game(request, game_id):
-    if request.method != 'GET': # Only supports get -method
+    if request.method != 'GET':  # Only supports get -method
         return HttpResponse(status=404)
     # Should redirect to game page if already purchased
     if bool(Purchase.objects.filter(game=game_id, created_by=request.user.id, purchased_at__isnull=False)):
@@ -184,37 +187,39 @@ def save_score(request, game_id):
     return JsonResponse({"message": "invalid request!"})
 
 # Autosuggestion for search query
+
+
 def autosuggestion_search(request, query=None):
     if request.method == 'GET':
-        if request.is_ajax():
-            if query:
-                results = []
-                #term value from the games.html
-                if '#' in query:
-                    query = query.replace('#', '')
-                    categories = Tag.objects.filter(name__icontains = query)
-                    for category in categories:
-                        results.append(category.name)
-                elif '@' in query:
-                    query = query.replace('@', '')
-                    developers = Profile.objects.filter(name__icontains = query).filter(is_developer = True)
-                    for developer in developers:
-                        results.append(developer.name)
-                elif query:
-                    games = Games.objects.filter(name__icontains = query)
-                    for game in games:
-                        results.append(game.name)
-                else: 
-                    results = []
-            else: 
+        if query:
+            results = []
+            # term value from the games.html
+            if '#' in query:
+                query = query.replace('#', '')
+                categories = Tag.objects.filter(name__icontains=query)
+                for category in categories:
+                    results.append(category.name)
+            elif '@' in query:
+                query = query.replace('@', '')
+                developers = Profile.objects.filter(
+                    name__icontains=query).filter(is_developer=True)
+                for developer in developers:
+                    results.append(developer.name)
+            elif query:
+                games = Game.objects.filter(name__icontains=query)
+                for game in games:
+                    results.append(game.name)
+            else:
                 results = []
         else:
-            results = 'Request is fail!'
-        data = json.dumps({"results": results}) 
+            results = []
+        data = json.dumps({"results": results})
         return HttpResponse(data)
     return HttpResponse(staus=404)
-    
+
 # Search for the games by categories, developer, and game name
+
+
 def search(request):
     if request.method == 'GET':
         lastest_games = Game.objects.order_by('created_at')
@@ -222,22 +227,19 @@ def search(request):
         #  Collect the data that match the search
         if 'search_term' in request.GET:
             query = request.GET['search_term']
-            if query: 
+            if query:
                 if '#' == query[0]:
                     query = query.replace('#', '')
                     latest_games = lastest_games.filter(tags=query)[:5]
                 elif "@" == query[0]:
                     query = query.replace('@', '')
-                    latest_games = lastest_games.filter(created_by = query)[:5]
+                    latest_games = lastest_games.filter(created_by=query)[:5]
                 else:
-                    latest_games = lastest_games.filter(name = query)[:5]
+                    latest_games = lastest_games.filter(name=query)[:5]
 
             if latest_games.count() != 0:
                 context['latest'] = latest_games
-            else: 
+            else:
                 context['not_found'] = 'There is no result in the search'
         return render(request, 'games.html', context)
     return HttpResponse(status=404)
-        
-
-
