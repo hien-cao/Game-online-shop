@@ -1,3 +1,5 @@
+from .models import Highscore
+
 games_context = {
     'games': 'is-active',
     'crumbs': [
@@ -6,8 +8,7 @@ games_context = {
             'url': 'home'
         },
         {
-            'label': 'Browse',
-            'url': 'games'
+            'label': 'Browse'
         }
     ]
 }
@@ -21,8 +22,7 @@ library_context = {
             'url': 'home'
         },
         {
-            'label': 'Library',
-            'url': 'library'
+            'label': 'Library'
         }
     ]
 }
@@ -36,15 +36,36 @@ my_context = {
             'url': 'home'
         },
         {
-            'label': 'Uploads',
-            'url': 'uploads'
+            'label': 'Uploads'
         }
     ]
 }
 
 
+def get_purchase_context(purchase):
+    return {
+        **purchase.get_payment_context(),
+        'purchase': purchase,
+        'crumbs': [
+            {
+                'label': 'Browse',
+                'url': 'games'
+            },
+            {
+                'label': purchase.game.name,
+                'url': 'game_details',
+                'is_game_url': True,
+                'game': purchase.game,
+            },
+            {'label': 'Purchase'},
+        ]
+    }
+
+
 def get_play_game_context(game):
     return {
+        # Select top 10 scores
+        'highscores': Highscore.objects.filter(game=game).order_by('-score')[:10],
         'game': game,
         'crumbs': [
             {
@@ -57,9 +78,12 @@ def get_play_game_context(game):
             },
             {
                 'label': game.name,
-                'url': 'play',
+                'url': 'game_details',
                 'is_game_url': True,
-                'game': game
+                'game': game,
+            },
+            {
+                'label': "play",
             },
         ]
     }

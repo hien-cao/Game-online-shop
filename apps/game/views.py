@@ -20,7 +20,8 @@ from .contexts import (
     library_context,
     my_context,
     get_play_game_context,
-    get_upsert_game_context
+    get_upsert_game_context,
+    get_purchase_context,
 )
 
 
@@ -103,7 +104,20 @@ def game_details(request, game_id):
             if game.created_by.user.id == request.user.id:
                 # TODO Render (and return) developer view
                 pass
-        return render(request, 'game_details.html', {'game': game, 'purchased': purchased})
+        return render(
+            request,
+            'game_details.html',
+            {
+                'game': game,
+                'purchased': purchased,
+                'crumbs': [
+                    {
+                        'label': 'Browse',
+                        'url': 'games'
+                    },
+                    {'label': game.name},
+                ]
+            })
     return HttpResponse(status=404)  # other methods not supported
 
 
@@ -134,8 +148,7 @@ def purchase_game(request, game_id):
     purchase.save()
 
     return render(request, 'purchase.html', {
-        **purchase.get_payment_context(),
-        'purchase': purchase,
+        **get_purchase_context(purchase),
         'success_url': '{}?purchase_id={}'.format(request.build_absolute_uri('?'), purchase.id),
         'error_url': '{}?purchase_id={}'.format(request.build_absolute_uri('?'), purchase.id),
         'cancel_url': '{}?purchase_id={}'.format(request.build_absolute_uri('?'), purchase.id),
@@ -173,17 +186,13 @@ def play(request, game_id):
     game = get_object_or_404(Game, pk=game_id)
     profile = request.user.profile
     if profile.games and Purchase.objects.filter(created_by=profile, game=game).count() > 0:
-        print('User has purchased the game')
         context = {
             'profile': profile,
             **get_play_game_context(game)
         }
-        print(context)
         return render(request, 'play_game.html', context)
 
-    print('User has not purchased the game.')
-    # TODO Redirect to purchase.
-    return redirect('games')
+    return redirect('/games/{}'.format(game.id))
 
 
 # POST: Store a highscore
