@@ -28,6 +28,24 @@
     <a class="button float-right" href="/games/{{game.id}}/purchase">Purchase game</a>
     {% endif %}
   </div>
+
+
+  <h5 class="uppercase grey">Reviews</h5>
+  <p>
+    <a href="{% url 'review' game_id=game.id %}">Write a review</a>
+  </p>
+  {% if game.reviews %}
+  <ul>
+    {% for review in game.reviews.all %}
+    {% include 'review.html' %}
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>This game has no reviews.</p>
+  {% endif %}
+
+
+
   {% else %}
   <h5>Note</h5>
   <p>Only registered users can review and play the game.</p>
