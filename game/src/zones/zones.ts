@@ -8,7 +8,7 @@ export const getMeteorSpawns = (game: Game) => [
 
     generateSpawn: () => new Meteor({
       maxLife: 3 + Math.random() * 10,
-      velocity: [Math.random() * 2 - 1, Math.random() * .5 - .25],
+      velocity: [Math.random() * 6 - 3, Math.random() * 1.5 - .75],
     }),
     getSpawnModifier: ({ player }) =>
       .2 + .8 * player.velocity[0] / player.maxVelocity[0],
@@ -24,7 +24,7 @@ export const getMeteorSpawns = (game: Game) => [
 
     generateSpawn: () => new Meteor({
       maxLife: 3 + Math.random() * 10,
-      velocity: [Math.random() * .5 - .25, Math.random() * 2 - .5],
+      velocity: [Math.random() * 1.5 - .75, Math.random() * 6 - 1.5],
     }),
     getSpawnModifier: ({ player }) =>
       .2 + .8 * Math.min(0, player.velocity[1]) / player.minVelocity[1],
@@ -39,7 +39,7 @@ export const getMeteorSpawns = (game: Game) => [
 
     generateSpawn: () => new Meteor({
       maxLife: 3 + Math.random() * 8,
-      velocity: [Math.random() * .5 - .25, -Math.random() * 2 + .5],
+      velocity: [Math.random() * 1.5 - .75, -Math.random() * 6 + 1.5],
     }),
     getSpawnModifier: ({ player }) =>
       .2 + .8 * Math.max(0, player.velocity[1]) / player.maxVelocity[1],
