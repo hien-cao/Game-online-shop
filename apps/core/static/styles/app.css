@@ -159,19 +159,34 @@ footer > .container {
   white-space: nowrap;
 }
 
-.circle {
+.review_circles.reversed {
+  display: block;
+  direction: rtl;
+}
+
+.review_circles > .circle {
+  display: inline-block;
   background-color: #cccccc;
 }
 
-.circle.full {
+.review_circles > .circle.full {
   background-color: #455a64;
 }
 
+.review_circles > .circle.hoverable:hover, .review_circles > .circle.hoverable:hover ~ i {
+  background-color: #607d8b;
+}
+
 .review_circles.small > .circle {
-  display: inline-block;
   padding: 5px;
   border-radius: 50%;
 }
+
+.review_circles.large > .circle {
+  padding: 10px;
+  border-radius: 50%;
+}
+.
 
 .breadcrumbs_container {
   padding: 1rem 0 2rem 0;

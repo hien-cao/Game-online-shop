@@ -19,9 +19,9 @@ class Review(models.Model):
         related_name=rn
     )
     grade = models.IntegerField(
-        default=3,
+        default=0,
         validators=[
-            MinValueValidator(0),
+            MinValueValidator(1),
             MaxValueValidator(5)
         ]
     )

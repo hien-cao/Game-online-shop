@@ -1,4 +1,4 @@
-from django.forms import ModelForm, Textarea
+from django.forms import ModelForm, Textarea, HiddenInput
 from ..models import Review
 
 
@@ -12,5 +12,6 @@ class ReviewForm(ModelForm):
                 Please do not use provocative language!"""
         }
         widgets = {
+            'grade': HiddenInput(),
             'content': Textarea(attrs={'rows': 4}),
         }
