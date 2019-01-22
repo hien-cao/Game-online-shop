@@ -9,6 +9,17 @@
     <div class="capitalized">{{ game.created_by }}</div>
     {% if request.user.is_authenticated %}
     {% include 'review_circles.html' with classes="large" %}
+    <div class="text-right">
+      {% if not purchased %}
+      <span class="label secondary">
+        Price: {{ game.price }}€
+      </span>
+      {% else %}
+      <span class="label secondary">
+        You have purchased this game
+      </span>
+      {% endif %}
+    </div>
     {% endif %}
   </div>
 
@@ -21,18 +32,24 @@
   <h2 class="h5 uppercase grey">Description</h2>
   <p>{{ game.description }}</p>
   {% if request.user.is_authenticated %}
-  <div class="clearfix">
+  <div class="clearfix text-right">
+    {% if game.created_by == request.user.profile %}
+    <a class="button secondary" href="{% url 'edit_game' game_id=game.id %}">Edit details</a>
+    {% endif %}
     {% if purchased %}
-    <a class="button float-right" href="/games/{{game.id}}/play">Play game</a>
+    <a class="button" href="/games/{{game.id}}/play">Play game</a>
     {% else %}
-    <a class="button float-right" href="/games/{{game.id}}/purchase">Purchase game</a>
+    <a class="button" href="/games/{{game.id}}/purchase">Purchase game</a>
     {% endif %}
   </div>
 
+  {% if request.user.is_authenticated and game.created_by == request.user.profile %}
+  {% include 'statistics.html' %}
+  {% endif %}
 
   <h2 class="h5 uppercase grey">Reviews</h2>
   <p>
-    <a href="{% url 'review' game_id=game.id %}">Write a review</a>
+    <a class="button compact" href="{% url 'review' game_id=game.id %}">Write a review</a>
   </p>
   {% if game.reviews %}
   <ul>
