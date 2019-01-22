@@ -1,4 +1,5 @@
 import json
+import base64
 import re
 
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -13,14 +14,14 @@ from django.http import (
 from ..user.utils.validators import is_developer
 from .forms.game_form import GameForm
 
-from .models import Game, Purchase, Highscore, Tag
-
+from .models import Game, Purchase, Highscore, Tag, Save
 from .contexts import (
     games_context,
     library_context,
     my_context,
     get_play_game_context,
-    get_upsert_game_context
+    get_upsert_game_context,
+    get_purchase_context,
 )
 
 
@@ -41,6 +42,8 @@ def create_tags(description):
 
 # Add/Edit game
 # TODO Change redirection to profile/settings?
+
+
 @login_required
 @user_passes_test(is_developer, login_url='/games/library/')
 def manage_game(request, game_id=None):
@@ -90,21 +93,37 @@ def games(request, *args, **kwargs):
 
 # GET: Display single game view
 # POST: Add game
+
+
 def game_details(request, game_id):
     game = get_object_or_404(Game, pk=game_id)
     if request.method == 'GET':
-        purchased = bool(Purchase.objects.filter(game=game_id, created_by=request.user.id, purchased_at__isnull=False))
+        purchased = bool(Purchase.objects.filter(
+            game=game_id, created_by=request.user.id, purchased_at__isnull=False))
         if request.user.is_authenticated:
             if game.created_by.user.id == request.user.id:
                 # TODO Render (and return) developer view
                 pass
-        return render(request, 'game_details.html', {'game': game, 'purchased': purchased})
-    return HttpResponse(status=404) # other methods not supported
+        return render(
+            request,
+            'game_details.html',
+            {
+                'game': game,
+                'purchased': purchased,
+                'crumbs': [
+                    {
+                        'label': 'Browse',
+                        'url': 'games'
+                    },
+                    {'label': game.name},
+                ]
+            })
+    return HttpResponse(status=404)  # other methods not supported
 
 
 @login_required
 def purchase_game(request, game_id):
-    if request.method != 'GET': # Only supports get -method
+    if request.method != 'GET':  # Only supports get -method
         return HttpResponse(status=404)
     # Should redirect to game page if already purchased
     if bool(Purchase.objects.filter(game=game_id, created_by=request.user.id, purchased_at__isnull=False)):
@@ -129,8 +148,7 @@ def purchase_game(request, game_id):
     purchase.save()
 
     return render(request, 'purchase.html', {
-        **purchase.get_payment_context(),
-        'purchase': purchase,
+        **get_purchase_context(purchase),
         'success_url': '{}?purchase_id={}'.format(request.build_absolute_uri('?'), purchase.id),
         'error_url': '{}?purchase_id={}'.format(request.build_absolute_uri('?'), purchase.id),
         'cancel_url': '{}?purchase_id={}'.format(request.build_absolute_uri('?'), purchase.id),
@@ -168,17 +186,13 @@ def play(request, game_id):
     game = get_object_or_404(Game, pk=game_id)
     profile = request.user.profile
     if profile.games and Purchase.objects.filter(created_by=profile, game=game).count() > 0:
-        print('User has purchased the game')
         context = {
             'profile': profile,
             **get_play_game_context(game)
         }
-        print(context)
         return render(request, 'play_game.html', context)
 
-    print('User has not purchased the game.')
-    # TODO Redirect to purchase.
-    return redirect('games')
+    return redirect('/games/{}'.format(game.id))
 
 
 # POST: Store a highscore
@@ -205,3 +219,19 @@ def save_score(request, game_id):
         save_response = highscore.save()
         return JsonResponse(save_response)
     return JsonResponse({"message": "invalid request!"})
+
+
+@login_required
+def game_state(request, game_id):
+    game = get_object_or_404(Game, pk=game_id)
+    if request.method == 'GET':
+        save = get_object_or_404(Save, game=game, user=request.user.profile)
+        return JsonResponse(save.game_state)
+    elif request.method == 'POST':
+        Save.objects.update_or_create(
+            game=game,
+            user=request.user.profile,
+            defaults={'content': base64.encodebytes(request.body)},
+        )
+        return HttpResponse(status=201)
+    return HttpResponse(status=404)  # other methods not supported

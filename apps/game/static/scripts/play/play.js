@@ -2,65 +2,99 @@
 /**
  * JS for `games/:id/play`
  * Global variables in this view:
- * @var {String} raw_game_url; The full URL of the game.
- * @var {URL} game_url; URL object that may be parsed.
+ * @var {String} rawGameURL; The full URL of the game.
+ * @var {URL} gameURL; URL object that may be parsed.
  */
 
 /**
  * Loosely validates if the message object received is correct.
- * 
+ *
  * @param {Event} e; Message Event from child
  * @param {URL} url; URL of the game
  */
 const messageIsValid = (e, url) => (
-    e.origin === url.origin &&
-    validateMessage(e.data)
+  e.origin === url.origin &&
+  validateMessage(e.data)
 );
 
 /**
  * Attach message listener for incoming messages.
  */
 const attachMessageListener = () => {
-    window.addEventListener("message", (e) => {
-        if (messageIsValid(e, game_url)) {
-            console.log('message received is valid and from the right game url');
-            const { data } = e;
+  window.addEventListener("message", (e) => {
+    if (messageIsValid(e, gameURL)) {
+      console.log('message received is valid and from the right game url');
+      const { data } = e;
 
-            switch (data.messageType) {
-                case "SCORE":
-                    console.log("Update score for player");
-                    const payload = {
-                        score: data.score,
-                    }
-                    postData(
-                        "save-score",
-                        payload
-                    ).then(data => {
-                        console.log(data);
-                    });
-                    break;
-                case "SAVE":
-                    console.log("Save score somewhere");
-                    break;
-                case "SETTING":
-                    console.log("Set settings somewhere");
-                    break;
-                default: // LOAD_REQUEST
-                    console.log("Do something with load request");
-                    break;
+      switch (data.messageType) {
+        case "SCORE":
+          console.log("Update score for player");
+          const payload = {
+            score: data.score,
+          }
+          postData(
+            `/games/${gameID}/save-score/`,
+            payload
+          )
+            .then(response => response.json())
+            .then(console.log);
+          break;
+        case "SAVE":
+          const { gameState } = data;
+          postData(
+            `/games/${gameID}/state/`,
+            gameState
+          ).then(response => {
+            console.log(response);
+            if (response.ok) {
+              window.alert("Game saved succesfully")
+            } else {
+              window.alert("Attempting to save the game failed")
             }
-        }
-    });
+          })
+          break;
+        case "SETTING":
+          console.log("Set settings somewhere");
+          break;
+        case "LOAD_REQUEST":
+          fetch(`/games/${gameID}/state`)
+            .then(response => response.json())
+            .then(gameState => {
+              document.getElementById("game").contentWindow.postMessage(
+                {
+                  messageType: "LOAD",
+                  gameState
+                },
+                gameURL.origin
+              )
+            })
+            .catch((e) => {
+              console.log(e);
+              document.getElementById("game").contentWindow.postMessage(
+                {
+                  messageType: "ERROR",
+                  info: "Gamestate could not be loaded",
+                },
+                gameURL.origin
+              )
+            })
+          console.log("Do something with load request");
+          break;
+        default:
+          throw new Error("Invalid message type");
+      }
+    }
+  });
 };
 
 /**
  * Attach listeners when DOM fully loaded.
  */
 const onLoad = () => {
-    attachMessageListener();
+  attachMessageListener();
 };
 
 /**
- * Trigger onLoad when window fully loaded. 
+ * Trigger onLoad when window fully loaded.
 */
 (() => onLoad())();
