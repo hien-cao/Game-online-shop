@@ -18,6 +18,9 @@ class Review(models.Model):
         on_delete=models.CASCADE,
         related_name=rn
     )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
     grade = models.IntegerField(
         default=0,
         validators=[
