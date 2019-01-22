@@ -18,7 +18,7 @@
   </div>
   {% endif %}
 
-  <h5>Description</h5>
+  <h2 class="h5 uppercase grey">Description</h2>
   <p>{{ game.description }}</p>
   {% if request.user.is_authenticated %}
   <div class="clearfix">
@@ -30,7 +30,7 @@
   </div>
 
 
-  <h5 class="uppercase grey">Reviews</h5>
+  <h2 class="h5 uppercase grey">Reviews</h2>
   <p>
     <a href="{% url 'review' game_id=game.id %}">Write a review</a>
   </p>
