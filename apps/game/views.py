@@ -18,7 +18,7 @@ from .models import Game, Purchase, Highscore, Tag, Save
 from .contexts import (
     games_context,
     library_context,
-    my_context,
+    uploads_context,
     get_play_game_context,
     get_upsert_game_context,
     get_purchase_context,
@@ -82,9 +82,10 @@ def manage_game(request, game_id=None):
 # GET: Display games view
 def games(request, *args, **kwargs):
     if request.method == 'GET':
+        latest_games = Game.objects.order_by('-created_at')[:5]
         context = {
-            # Latest games
-            'latest': Game.objects.order_by('-created_at')[:5],
+            'latest': latest_games,
+            'purchases': request.user.profile.games,
             **games_context,
         }
         return render(request, 'games/games.html', context)
@@ -158,26 +159,35 @@ def purchase_game(request, game_id):
 # GET: Display games purchased
 @login_required
 def library(request, *args, **kwargs):
-    profile = request.user.profile
-    purchases = profile.games
-    print(games)
-    context = {
-        **library_context,
-    }
-    return HttpResponse('List games I have purchased!')
+    if request.method == "GET":
+        profile = request.user.profile
+        return render(
+            request,
+            'games/library.html',
+            {
+                **library_context,
+                'purchases': profile.games,
+                'profile': "profile"
+            }
+        )
+    return HttpResponse(status=404)
 
 
 # GET: Display games uploaded
 @login_required
-@user_passes_test(is_developer, login_url='/games/library')
+@user_passes_test(is_developer)
 def uploads(request, *args, **kwargs):
-    profile = request.user.profile
-    games = Game.objects.filter(created_by=request.user.profile)
-    print(games)
-    context = {
-        **my_context,
-    }
-    return HttpResponse('List games uploaded by me!')
+    if request.method == "GET":
+        profile = request.user.profile
+        return render(
+            request,
+            'games/uploads.html',
+            {
+                **uploads_context,
+                'my_uploads': Game.objects.filter(created_by=request.user.profile)
+            }
+        )
+    return HttpResponse(status=404)
 
 
 # GET: Display games uploaded
@@ -218,7 +228,7 @@ def save_score(request, game_id):
         )
         save_response = highscore.save()
         return JsonResponse(save_response)
-    return JsonResponse({"message": "invalid request!"})
+    return HttpResponse(status=404)  # other methods not supported
 
 
 @login_required

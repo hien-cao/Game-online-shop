@@ -13,7 +13,7 @@ class Profile(models.Model):
     is_developer = models.BooleanField(default=False)
     email_confirmed = models.BooleanField(default=False)
     games = models.ManyToManyField(
-        'game.Game',
+        "game.Game",
         through='game.Purchase',
         blank=True
     )
