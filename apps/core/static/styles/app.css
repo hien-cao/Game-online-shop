@@ -104,7 +104,7 @@ footer > .container {
   border: 1px solid #7a7a7a;
 }
 
-.small-no-margin-bottom, .medium-no-margin-bottom, .large-no-margin-bottom {
+.small-no-margin-bottom, .medium-no-margin-bottom, .large-no-margin-bottom, .no-margin-bottom {
   margin-bottom: 0;
 }
 
