@@ -65,7 +65,7 @@
         if (val[0] == '@') {
           newdiv2.innerHTML = 'Search for developer @' + item;
         } else if (val[0] == '#') {
-          newdiv2.innerHTML = 'Search for catelogry #' + item;
+          newdiv2.innerHTML = 'Search for category #' + item;
         } else {
           newdiv2.innerHTML = 'Search for game: ' + item;
         }

@@ -3,6 +3,7 @@ from django.urls import path
 from .views import (
     game_details,
     games,
+    game_state,
     manage_game,
     library,
     uploads,
@@ -24,6 +25,7 @@ urlpatterns = [
     path('uploads/', uploads, name='uploads'),
     path('<int:game_id>/play/', play, name='play'),
     path('<int:game_id>/save-score/', save_score, name='save_score'),
+    path('<int:game_id>/state/', game_state, name='game_state'),
     path('library/', library, name='library'),
     path('<int:game_id>/edit/', manage_game, name='edit_game'),
 ]

@@ -1,4 +1,6 @@
 import json
+import base64
+import re
 
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect, get_object_or_404
@@ -6,7 +8,6 @@ from django.http import (
     HttpResponse,
     HttpResponseRedirect,
     HttpResponseForbidden,
-    Http404,
     JsonResponse
 )
 
@@ -14,32 +15,58 @@ from ..user.utils.validators import is_developer
 from .forms.game_form import GameForm
 
 from ..user.models import Profile
-from .models import Game, Purchase, Highscore, Tag
+from .models import Game, Purchase, Highscore, Tag, Save
 from .contexts import (
     games_context,
     library_context,
     my_context,
     get_play_game_context,
+    get_upsert_game_context
 )
 
 
+def parse_tags(description):
+    regex = re.compile(r'\B#\w+')
+    return regex.findall(description)
+
+
+# Create new tags from game's description
+def create_tags(description):
+    parsed_tags = parse_tags(description)
+    tags = []
+    if parsed_tags != []:
+        for tag_name in parsed_tags:
+            obj, _ = Tag.objects.get_or_create(name=tag_name.lower())
+            tags.append(obj)
+    return tags
+
 # Add/Edit game
 # TODO Change redirection to profile/settings?
+
+
 @login_required
 @user_passes_test(is_developer, login_url='/games/library/')
 def manage_game(request, game_id=None):
     if game_id:
+        url = 'edit_game'
         title = 'Edit game'
         game = get_object_or_404(Game, pk=game_id)
         if game.created_by != request.user.profile:
             return HttpResponseForbidden()
     else:
+        url = 'add_game'
         title = 'Add game'
         game = Game(created_by=request.user.profile)
 
     form = GameForm(request.POST or None, instance=game)
     if request.POST and form.is_valid():
-        form.save()
+        game = form.save()
+
+        # Create and attach new tags to game.
+        tags = create_tags(game.description)
+        if tags != []:
+            game.tags.set(tags)
+            game.save()
 
         return redirect('uploads')
 
@@ -47,22 +74,21 @@ def manage_game(request, game_id=None):
         request,
         'upsert_game.html',
         {
-            'form': form,
-            'title': title
-        },
+            **get_upsert_game_context(game, form, title, url)
+        }
     )
 
 
 # GET: Display games view
 def games(request, *args, **kwargs):
     if request.method == 'GET':
-        latest_games = Game.objects.order_by('created_at')[:5]
+        latest_games = Game.objects.order_by('-created_at')[:5]
         print(latest_games)
         context = {
             'latest': latest_games,
             **games_context,
         }
-        return render(request, 'games.html', context)
+        return render(request, 'games/games.html', context)
     return HttpResponse(status=404)
 
 # GET: Display single game view
@@ -243,3 +269,19 @@ def search(request):
                 context['not_found'] = 'There is no result in the search'
         return render(request, 'games.html', context)
     return HttpResponse(status=404)
+
+
+@login_required
+def game_state(request, game_id):
+    game = get_object_or_404(Game, pk=game_id)
+    if request.method == 'GET':
+        save = get_object_or_404(Save, game=game, user=request.user.profile)
+        return JsonResponse(save.game_state)
+    elif request.method == 'POST':
+        Save.objects.update_or_create(
+            game=game,
+            user=request.user.profile,
+            defaults={'content': base64.encodebytes(request.body)},
+        )
+        return HttpResponse(status=201)
+    return HttpResponse(status=404)  # other methods not supported
