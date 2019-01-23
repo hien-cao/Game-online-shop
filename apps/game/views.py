@@ -1,7 +1,14 @@
 import json
 import base64
 import re
+import pytz
+from datetime import (
+    datetime,
+    timedelta,
+    timezone
+)
 
+from django.utils import timezone
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import (
@@ -99,12 +106,38 @@ def games(request, *args, **kwargs):
 def game_details(request, game_id):
     game = get_object_or_404(Game, pk=game_id)
     if request.method == 'GET':
+        developer_context = None
         purchased = bool(Purchase.objects.filter(
             game=game_id, created_by=request.user.id, purchased_at__isnull=False))
         if request.user.is_authenticated:
             if game.created_by.user.id == request.user.id:
-                # TODO Render (and return) developer view
-                pass
+                now = timezone.now()
+                developer_context = {
+                    'reviews': {
+                        'year': len(game.reviews.filter(
+                            created_at__year=now.year
+                        )),
+                        'month': len(game.reviews.filter(
+                            created_at__year=now.year,
+                            created_at__month=now.month
+                        )),
+                        'pd': round(len(game.reviews.all()) / (
+                            (now - game.created_at).total_seconds() / (60 * 60 * 24)
+                        ), 2)
+                    },
+                    'purchases': {
+                        'year': len(game.purchases.filter(
+                            purchased_at__year=now.year
+                        )),
+                        'month': len(game.purchases.filter(
+                            purchased_at__year=now.year,
+                            purchased_at__month=now.month
+                        )),
+                        'pd': round(len(game.purchases.all()) / (
+                            (now - game.created_at).total_seconds() / (60 * 60 * 24)
+                        ), 2)
+                    }
+                }
         return render(
             request,
             'game_details.html',
@@ -117,7 +150,8 @@ def game_details(request, game_id):
                         'url': 'games'
                     },
                     {'label': game.name},
-                ]
+                ],
+                **developer_context,
             })
     return HttpResponse(status=404)  # other methods not supported
 

@@ -38,9 +38,11 @@
     <a class="button" href="/games/{{game.id}}/purchase">Purchase game</a>
     {% endif %}
   </div>
+  <div class="spacer medium"></div>
 
   {% if request.user.is_authenticated and game.created_by == request.user.profile %}
   {% include 'statistics.html' %}
+  <div class="spacer"></div>
   {% endif %}
 
   <h2 class="h5 uppercase grey">Reviews</h2>

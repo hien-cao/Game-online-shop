@@ -19,6 +19,7 @@ class Purchase(models.Model):
     ref = models.IntegerField(null=True) # we probably want to store ref number (in case if we could query against payment api)
     game = models.ForeignKey(
         Game,
+        related_name='purchases',
         on_delete=models.CASCADE
     )
     created_by = models.ForeignKey(
