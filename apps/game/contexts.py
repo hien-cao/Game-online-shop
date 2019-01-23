@@ -18,6 +18,7 @@ uploads_context = {
 def get_purchase_context(purchase):
     return {
         **purchase.get_payment_context(),
+        'games': 'is-active',
         'purchase': purchase,
         'crumbs': [
             {
@@ -39,6 +40,7 @@ def get_play_game_context(game):
     return {
         # Select top 10 scores
         'highscores': Highscore.objects.filter(game=game).order_by('-score')[:10],
+        'library': 'is-active',
         'game': game,
         'crumbs': [
             {
@@ -61,6 +63,7 @@ def get_play_game_context(game):
 def get_upsert_game_context(game, form, title, url):
     return {
         'form': form,
+        'uploads': 'is-active',
         'title': title,
         'crumbs': [
             {
