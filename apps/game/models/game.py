@@ -27,7 +27,6 @@ class Game(models.Model):
         blank=True
     )
 
-
     @property
     def grade(self):
         "Returns the grade calculated from reviews"
