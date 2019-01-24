@@ -77,7 +77,13 @@ footer > .container {
 }
 
 .game-container {
-  border: 1px solid #7a7a7a;
+  display: flex;
+  justify-content: center;
+  margin: 3rem 0;
+}
+
+#game {
+  border: 1px solid #999999;
 }
 
 .small-no-margin-bottom, .medium-no-margin-bottom, .large-no-margin-bottom, .no-margin-bottom {

@@ -144,6 +144,7 @@ def game_details(request, game_id):
             {
                 'game': game,
                 'purchased': purchased,
+                'games': 'is-active',
                 'crumbs': [
                     {
                         'label': 'Browse',
