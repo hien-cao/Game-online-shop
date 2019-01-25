@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div>
+  <h1 class="h4 subheader uppercase thin">My uploads</h1>
+  <a class="button compact" href="{% url 'add_game' %}">Add game</a>
+  {% if my_uploads %}
+  <ul class="no-bullet game_list">
+    {% for game in my_uploads %}
+    {% include 'games/game_list_item.html' %}
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>You haven't uploaded any games.<p>
+  {% endif %}
+</div>
+
+{% endblock content %}

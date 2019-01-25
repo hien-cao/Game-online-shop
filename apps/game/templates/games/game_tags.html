@@ -1,5 +1,11 @@
-
-{% for tag in tags.all %}
-  <!-- TODO: make hyperlink that does <path>?search=<name-of-tag> -->
-  <span class="{{ class }}"><em>{{ tag }}</em></span>
+{% if game %}
+{% for tag in game.tags.all %}
+<!-- TODO: make hyperlink that does <path>?search=<name-of-tag> -->
+<span class="{{ class }}"><em>{{ tag }}</em></span>
 {% endfor %}
+{% else %}
+{% for tag in tags.all %}
+<!-- TODO: make hyperlink that does <path>?search=<name-of-tag> -->
+<span class="{{ class }}"><em>{{ tag }}</em></span>
+{% endfor %}
+{% endif %}

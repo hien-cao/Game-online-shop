@@ -16,44 +16,22 @@
 */
 
 /*
-* Font
+* logo
 */
 
-@font-face {
-  font-family: 'icomoon';
-  src:  url('../fonts/icomoon.eot?6tt57g');
-  src:  url('../fonts/icomoon.eot?6tt57g#iefix') format('embedded-opentype'),
-    url('../fonts/icomoon.ttf?6tt57g') format('truetype'),
-    url('../fonts/icomoon.woff?6tt57g') format('woff'),
-    url('../fonts/icomoon.svg?6tt57g#icomoon') format('svg');
-  font-weight: normal;
-  font-style: normal;
-}
-
-[class^="icon-"], [class*=" icon-"] {
-  /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'icomoon' !important;
-  speak: none;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
-
-  /* Better Font Rendering =========== */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-* {box-sizing: border-box;}
-
-.icon-app-logo:before {
-  content: "\e900";
+.logo {
+  height: 100%;
+  padding: 3px 0 !important;
+  margin-right: 3rem;
 }
 
 /*
 * Containers
 */
+
+#main-navigation a {
+  text-transform: uppercase;
+}
 
 footer {
   background-color: #607d8b;
@@ -99,10 +77,16 @@ footer > .container {
 }
 
 .game-container {
-  border: 1px solid #7a7a7a;
+  display: flex;
+  justify-content: center;
+  margin: 3rem 0;
 }
 
-.small-no-margin-bottom, .medium-no-margin-bottom, .large-no-margin-bottom {
+#game {
+  border: 1px solid #999999;
+}
+
+.small-no-margin-bottom, .medium-no-margin-bottom, .large-no-margin-bottom, .no-margin-bottom {
   margin-bottom: 0;
 }
 
@@ -155,13 +139,35 @@ footer > .container {
 
 .review_circles {
   white-space: nowrap;
+  user-select: none;
+}
+
+.review_circles.reversed {
+  display: block;
+  direction: rtl;
+}
+
+.review_circles > .circle {
+  display: inline-block;
+  background-color: #cccccc;
+}
+
+.review_circles > .circle.full {
+  background-color: #C376A3;
+}
+
+.review_circles > .circle.hoverable:hover, .review_circles > .circle.hoverable:hover ~ i {
+  background-color: #DEA3C6;
 }
 
 .review_circles.small > .circle {
-    display: inline-block;
-    background-color: #cccccc;
-    padding: 5px;
-    border-radius: 50%;
+  padding: 5px;
+  border-radius: 50%;
+}
+
+.review_circles.large > .circle {
+  padding: 10px;
+  border-radius: 50%;
 }
 
 .breadcrumbs_container {
@@ -267,12 +273,26 @@ footer > .container {
   text-transform: uppercase;
 }
 
-.thin {
-  font-weight: 300;
-}
-
 .f_tiny {
   font-size: 12px;
+}
+
+.grey {
+  color: #666;
+}
+
+.game-tags {
+  margin: 1rem 0;
+  color: #666;
+  font-style: italic;
+  font-size: .8rem;
+}
+
+.game-header {
+  margin: 0 0 4rem;
+}
+.game-header>h1 {
+  margin: 1rem 0 0;
 }
 
 p.help {
@@ -280,4 +300,27 @@ p.help {
   font-size: 0.8125rem;
   font-style: italic;
   color: #0a0a0a;
+}
+
+.spacer {
+  display: block;
+  height: 3rem;
+  clear: both;
+}
+
+.spacer.medium {
+  height: 2rem;
+}
+
+.spacer.small {
+  height: 1rem;
+}
+
+.button.compact {
+  padding: .2rem .5rem !important;
+  margin: 0;
+}
+
+button, .button {
+  user-select: none;
 }

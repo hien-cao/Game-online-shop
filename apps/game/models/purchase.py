@@ -23,6 +23,7 @@ class Purchase(models.Model):
     )
     created_by = models.ForeignKey(
         Profile,
+        related_name='purchases',
         on_delete=models.CASCADE
     )
 

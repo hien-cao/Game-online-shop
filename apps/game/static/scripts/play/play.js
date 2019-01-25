@@ -46,7 +46,7 @@ const attachMessageListener = () => {
             gameState
           ).then(response => {
             console.log(response);
-            if (response.ok) {
+            if (response.ok) {
               window.alert("Game saved succesfully")
             } else {
               window.alert("Attempting to save the game failed")
@@ -54,7 +54,15 @@ const attachMessageListener = () => {
           })
           break;
         case "SETTING":
-          console.log("Set settings somewhere");
+          if (data.hasOwnProperty("options")) {
+            const game = document.getElementById("game");
+            if (data.options.hasOwnProperty("width")) {
+              game.style.width = data.options.width + "px";
+            }
+            if (data.options.hasOwnProperty("height")) {
+              game.style.height = data.options.height + "px";
+            }
+          }
           break;
         case "LOAD_REQUEST":
           fetch(`/games/${gameID}/state`)

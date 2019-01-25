@@ -20,9 +20,10 @@ from .models import Game, Purchase, Highscore, Tag, Save
 from .contexts import (
     games_context,
     library_context,
-    my_context,
+    uploads_context,
     get_play_game_context,
-    get_upsert_game_context
+    get_upsert_game_context,
+    get_purchase_context,
 )
 
 
@@ -84,13 +85,14 @@ def manage_game(request, game_id=None):
 def games(request, *args, **kwargs):
     if request.method == 'GET':
         latest_games = Game.objects.order_by('-created_at')[:5]
-        print(latest_games)
         context = {
             'latest': latest_games,
+            'purchases': request.user.profile.purchases,
             **games_context,
         }
         return render(request, 'games/games.html', context)
     return HttpResponse(status=404)
+
 
 # GET: Display single game view
 # POST: Add game
@@ -105,7 +107,21 @@ def game_details(request, game_id):
             if game.created_by.user.id == request.user.id:
                 # TODO Render (and return) developer view
                 pass
-        return render(request, 'game_details.html', {'game': game, 'purchased': purchased})
+        return render(
+            request,
+            'game_details.html',
+            {
+                'game': game,
+                'purchased': purchased,
+                'games': 'is-active',
+                'crumbs': [
+                    {
+                        'label': 'Browse',
+                        'url': 'games'
+                    },
+                    {'label': game.name},
+                ]
+            })
     return HttpResponse(status=404)  # other methods not supported
 
 
@@ -136,8 +152,7 @@ def purchase_game(request, game_id):
     purchase.save()
 
     return render(request, 'purchase.html', {
-        **purchase.get_payment_context(),
-        'purchase': purchase,
+        **get_purchase_context(purchase),
         'success_url': '{}?purchase_id={}'.format(request.build_absolute_uri('?'), purchase.id),
         'error_url': '{}?purchase_id={}'.format(request.build_absolute_uri('?'), purchase.id),
         'cancel_url': '{}?purchase_id={}'.format(request.build_absolute_uri('?'), purchase.id),
@@ -147,26 +162,36 @@ def purchase_game(request, game_id):
 # GET: Display games purchased
 @login_required
 def library(request, *args, **kwargs):
-    profile = request.user.profile
-    purchases = profile.games
-    print(games)
-    context = {
-        **library_context,
-    }
-    return HttpResponse('List games I have purchased!')
+    if request.method == "GET":
+        profile = request.user.profile
+        return render(
+            request,
+            'games/library.html',
+            {
+                **library_context,
+                'allow_play': [purchase.game for purchase in profile.purchases.all()],
+                'purchases': profile.purchases.filter(purchased_at__isnull=False),
+                'profile': "profile"
+            }
+        )
+    return HttpResponse(status=404)
 
 
 # GET: Display games uploaded
 @login_required
-@user_passes_test(is_developer, login_url='/games/library')
+@user_passes_test(is_developer)
 def uploads(request, *args, **kwargs):
-    profile = request.user.profile
-    games = Game.objects.filter(created_by=request.user.profile)
-    print(games)
-    context = {
-        **my_context,
-    }
-    return HttpResponse('List games uploaded by me!')
+    if request.method == "GET":
+        profile = request.user.profile
+        return render(
+            request,
+            'games/uploads.html',
+            {
+                **uploads_context,
+                'my_uploads': Game.objects.filter(created_by=request.user.profile)
+            }
+        )
+    return HttpResponse(status=404)
 
 
 # GET: Display games uploaded
@@ -174,18 +199,15 @@ def uploads(request, *args, **kwargs):
 def play(request, game_id):
     game = get_object_or_404(Game, pk=game_id)
     profile = request.user.profile
-    if profile.games and Purchase.objects.filter(created_by=profile, game=game).count() > 0:
-        print('User has purchased the game')
+    # Only allow player to play game if he has bought it
+    if profile.purchases and profile.purchases.filter(game=game).count() > 0:
         context = {
             'profile': profile,
             **get_play_game_context(game)
         }
-        print(context)
         return render(request, 'play_game.html', context)
-
-    print('User has not purchased the game.')
-    # TODO Redirect to purchase.
-    return redirect('games')
+    # otherwise redirect to its details page
+    return redirect('/games/{}'.format(game.id))
 
 
 # POST: Store a highscore
@@ -211,7 +233,7 @@ def save_score(request, game_id):
         )
         save_response = highscore.save()
         return JsonResponse(save_response)
-    return JsonResponse({"message": "invalid request!"})
+    return HttpResponse(status=404)  # other methods not supported
 
 # Autosuggestion for search query
 

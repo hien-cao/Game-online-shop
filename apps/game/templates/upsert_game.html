@@ -19,6 +19,7 @@
     {% endfor %}
   </div>
   <div class="row text-right">
+    <a class="button secondary" href="{{ request.META.HTTP_REFERER|escape }}">Cancel</a>
     <input class="button" type="submit" title="Save game" value="Submit">
   </div>
 </form>

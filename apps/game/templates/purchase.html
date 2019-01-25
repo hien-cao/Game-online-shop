@@ -3,6 +3,7 @@
 {% block content %}
 
 <div>
+  <h1 class="h4 uppercase grey">Disclaimer:</h1>
   <p>
     After you have placed your payment of {{purchase.price}} for {{purchase.game.name}}, you will be redirected back
     to the site. You will be able to play the game after we have proceeded and confirmed your payment.
@@ -16,7 +17,9 @@
       <input type="hidden" name="success_url" value="{{success_url}}">
       <input type="hidden" name="cancel_url" value="{{cancel_url}}">
       <input type="hidden" name="error_url" value="{{error_url}}">
-      <button type="submit">Continue to payment</button>
+      <div class="clearfix">
+        <button type="submit" class="button float-right">Continue to payment</button>
+      </div>
     </form>
   </div>
 </div>

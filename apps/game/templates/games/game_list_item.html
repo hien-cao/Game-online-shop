@@ -10,9 +10,9 @@
     </p>
   </div>
   <p class="cell medium-shrink text-right">
-      {# % if game.has_label % #}
-      <span class="label">Some label</span>
-      {# % endif % #}
+      {% if game in allow_play %}
+        <a class="button compact" title="play" href="/games/{{game.id}}/play">Play Game</a>
+      {% endif %}
       {% include 'review_circles.html' with classes="small small-offset-1 medium-offset-2" %}
   </p>
 </li>

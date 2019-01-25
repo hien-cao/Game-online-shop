@@ -27,7 +27,7 @@ const postData = (url = "", data = {}, options = {}) => {
     body: JSON.stringify(data),
   };
   return fetch(
-    url,
+    encodeURI(url),
     args,
   )
 };

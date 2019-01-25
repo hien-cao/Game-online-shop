@@ -3,13 +3,19 @@
   <ul class="breadcrumbs">
     {% for crumb in crumbs %}
     <li>
+      {% if crumb.url %}
       {% if crumb.is_game_url %}
       <a href="{% url crumb.url game_id=crumb.game.id %}">{{ crumb.label }}</a>
       {% else %}
       <a href="{% url crumb.url %}">{{ crumb.label }}</a>
       {% endif %}
+      {% else %}
+      <span>{{crumb.label}}</span>
+      {% endif %}
     </li>
     {% endfor %}
   </ul>
 </nav>
+{% else %}
+<div class="spacer"></div>
 {% endif %}

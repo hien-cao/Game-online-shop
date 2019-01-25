@@ -1,0 +1,27 @@
+{
+  "name": "space_shooter",
+  "version": "1.0.0",
+  "description": "A game implemented for CS-C3170 course",
+  "main": "src/index.ts",
+  "scripts": {
+    "serve": "parcel index.html",
+    "build": "parcel build index.html --public-url ./",
+    "lint": "tslint -c tslint.json './src/**/*.ts'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@version.aalto.fi:hallast1/invaders.git"
+  },
+  "author": "Touko Hallasmaa",
+  "license": "MIT",
+  "private": false,
+  "devDependencies": {
+    "parcel-bundler": "^1.11.0",
+    "sass": "^1.16.1",
+    "tslint": "^5.12.1",
+    "typescript": "^3.2.4"
+  },
+  "dependencies": {
+    "normalize.css": "^8.0.1"
+  }
+}

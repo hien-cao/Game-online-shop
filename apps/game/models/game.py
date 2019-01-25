@@ -27,5 +27,15 @@ class Game(models.Model):
         blank=True
     )
 
+    @property
+    def grade(self):
+        "Returns the grade calculated from reviews"
+        reviews = self.reviews.all()
+        for review in reviews:
+            return round(float(sum(
+                [review.grade for review in reviews]
+            ) / len(reviews)), 2)
+        return None
+
     def __str__(self):
         return self.name

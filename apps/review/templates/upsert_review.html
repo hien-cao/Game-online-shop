@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load custom_filters %}
+
+{% block content %}
+<h1 class="h3">Review</h1>
+
+<form method="post">
+  {% csrf_token %}
+  <div class="grid-x grid-padding-x">
+    {{ form.grade }}
+    <div class="cell small-12">
+      {% if form.grade.errors %}
+      {% include 'forms/errors_list.html' with errors=form.grade.errors %}
+      {% endif %}
+      <label for="review_circles">Grade:</label>
+      <span id="review_circles" class="review_circles reversed large text-left">
+        {% for n in 5|times %}
+          <i id="circle_{{ 5|subtract:n }}" class="circle hoverable"></i>
+        {% endfor %}
+      </span>
+    </div>
+    <div class="cell small-12">
+      {{ form.content.label_tag }} {{ form.content }}
+      <p class="help">
+        {{ form.content.help_text|safe }}
+      </p>
+    </div>
+  </div>
+  <div class="row text-right">
+    <a class="button secondary" href="{% url 'game_details' game_id=game_id %}">Cancel</a>
+    <input class="button" type="submit" title="Submit review" value="Submit">
+  </div>
+</form>
+{% endblock content %}
+
+{% block customjs %}
+  <script src="{% static 'scripts/circles.js' %}"></script>
+{% endblock customjs %}
+
