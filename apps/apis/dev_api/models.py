@@ -1,21 +1,21 @@
-from django.db import models
 import uuid
+
+from django.db import models
 
 from ...user.models import Profile
 
-class ApiKey(models.Model):
-    key = models.CharField(
-        max_length=128,
-        unique=True,
-        default=uuid.uuid4
-    )
-    owner = models.ForeignKey(
-        Profile,
-        on_delete=models.CASCADE
-    )
 
-    def generate(self):
-        self.key = uuid.uuid4()
+class ApiKey(models.Model):
+    key = models.UUIDField(
+        default=uuid.uuid4,
+        editable=False
+    )
+    owner = models.OneToOneField(
+        Profile,
+        primary_key=True,
+        on_delete=models.CASCADE,
+        related_name='apikey'
+    )
 
     def __str__(self):
-        return self.key
+        return str(self.key)
