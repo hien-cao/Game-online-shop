@@ -2,6 +2,7 @@ import json
 import base64
 import re
 
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import (
@@ -214,31 +215,26 @@ def save_score(request, game_id):
 
 # Autosuggestion for search query
 
-
-def autosuggestion_search(request, query=None):
+def autosuggestion_search(request):
     if request.method == 'GET':
-        if query:
-            results = []
-            # term value from the games.html
-            if '#' in query:
-                query = query.replace('#', '')
-                categories = Tag.objects.filter(name__icontains=query)
-                for category in categories:
-                    results.append(category.name)
-            elif '@' in query:
-                query = query.replace('@', '')
-                developers = Profile.objects.filter(
-                    name__icontains=query).filter(is_developer=True)
-                for developer in developers:
-                    results.append(developer.name)
-            elif query:
-                games = Game.objects.filter(name__icontains=query)
-                for game in games:
-                    results.append(game.name)
-            else:
-                results = []
+        results = []
+        if request.GET.get('tag'):
+            query = request.GET.get('tag')
+            categories = Tag.objects.filter(name__icontains=query)
+            for category in categories:
+                results.append(category.name)
+        elif request.GET.get('author'):
+            query = request.GET.get('author')
+            users = User.objects.filter(username__icontains=query)
+            developers = Profile.objects.filter(user__in=users, is_developer=True)
+            for developer in developers:
+                results.append('@' + developer.user.username)
         else:
-            results = []
+            query = request.GET.get('name')
+            games = Game.objects.filter(name__icontains=query)
+            for game in games:
+                results.append(game.name)
+     
         data = json.dumps({"results": results})
         return HttpResponse(data)
     return HttpResponse(staus=404)
@@ -255,19 +251,21 @@ def search(request):
             query = request.GET['search_term']
             if query:
                 if '#' == query[0]:
-                    query = query.replace('#', '')
-                    latest_games = lastest_games.filter(tags=query)[:5]
+                    tag = Tag.objects.filter(name=query)
+                    lastest_games = lastest_games.filter(tags__in=tag)[:5]
                 elif "@" == query[0]:
-                    query = query.replace('@', '')
-                    latest_games = lastest_games.filter(created_by=query)[:5]
+                    user_query = query.replace('@', '')
+                    user = User.objects.filter(username=user_query)
+                    developer = Profile.objects.filter(user__in=user, is_developer=True)
+                    lastest_games = lastest_games.filter(created_by__in=developer)[:5]
                 else:
-                    latest_games = lastest_games.filter(name=query)[:5]
+                    lastest_games = lastest_games.filter(name=query)[:5]
 
-            if latest_games.count() != 0:
-                context['latest'] = latest_games
+            if lastest_games.count() != 0:
+                context['latest'] = lastest_games
             else:
-                context['not_found'] = 'There is no result in the search'
-        return render(request, 'games.html', context)
+                context['query'] = query
+        return render(request, 'games/games.html', context)
     return HttpResponse(status=404)
 
 
