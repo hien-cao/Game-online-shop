@@ -3,7 +3,7 @@ from django.contrib.auth import views as auth_views
 
 from .forms import SignInForm
 from .views import (
-    welcome,
+    profile,
     account_activation_sent,
     activate,
     signup,
@@ -20,5 +20,5 @@ urlpatterns = [
     re_path('^oauth/', include('social_django.urls')),
     re_path('^account_activation_sent/$', account_activation_sent, name='account_activation_sent'),
     path('activate/<uidb64>/<token>', activate, name='activate'),
-    path('welcome/', welcome, name='welcome')
+    path('profile/', profile, name='profile')
 ]

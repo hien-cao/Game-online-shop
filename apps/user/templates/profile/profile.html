@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div>
+    <h1>Hello, {{ request.user.username }}</h1>
+    {% include 'forms/apikey.html' %}
+    {% include 'profile/user_statistics.html' %}
+</div>
+
+{% endblock %}
