@@ -25,6 +25,16 @@
   margin-right: 3rem;
 }
 
+
+.clickable {
+  background: #fefefe;
+}
+
+.clickable:hover {
+  background: #fafafa;
+  cursor: default;
+}
+
 /*
 * Containers
 */
@@ -215,6 +225,10 @@ p.help {
   color: #0a0a0a;
 }
 
+/*
+* Spacer
+*/
+
 .spacer {
   display: block;
   height: 3rem;
@@ -228,6 +242,10 @@ p.help {
 .spacer.small {
   height: 1rem;
 }
+
+/*
+* Buttons
+*/
 
 .button.compact {
   padding: .2rem .5rem !important;

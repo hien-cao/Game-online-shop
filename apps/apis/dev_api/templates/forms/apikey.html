@@ -1,7 +1,10 @@
 <div class="clearfix">
   <div class="grid-x">
     <label>Developer api key</label>
-    <input type="text" id="id_apikey" class="small-12" placeholder="Generate an api key to use the developer api." value="{{ request.user.profile.apikey }}" readonly>
+    <div class="input-group">
+      <input type="text" id="id_apikey" class="input-group-field" placeholder="Generate an api key to use the developer api." value="{{ request.user.profile.apikey }}" readonly>
+      <span class="input-group-label clickable" id="copy">copy</span>
+    </div>
   </div>
   <button id="generate_key" class="button small float-right">Generate a new api key</button>
 </div>
