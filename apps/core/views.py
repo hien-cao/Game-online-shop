@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 def home(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect('games')
-    return render(request, 'home.html')
+    return render(request, 'home.html', {'nopad': True})
 
 
 def terms_and_conditions(request):
