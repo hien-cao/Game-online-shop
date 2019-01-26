@@ -1,8 +1,9 @@
 (() => {
-  const btn = document.getElementById("generate_key");
+  const generateBtn = document.getElementById("generate_key");
   const input = document.getElementById("id_apikey");
+  const copyBtn = document.getElementById("copy");
 
-  const onClick = (e) => {
+  const onGenerateClick = (e) => {
     postData("/api/v1/generate")
       .then(response => response.json())
       .then(response => {
@@ -10,8 +11,15 @@
       });
   }
 
+  const onCopyClick = (e) => {
+    input.select();
+    document.execCommand("copy");
+    window.alert("Api key copied to clipboard.");
+  }
+
   const addEventListeners = () => {
-    btn.addEventListener('click', onClick);
+    generateBtn.addEventListener("click", onGenerateClick);
+    copyBtn.addEventListener("click", onCopyClick);
   }
 
   addEventListeners();
