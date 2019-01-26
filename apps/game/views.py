@@ -95,8 +95,6 @@ def games(request, *args, **kwargs):
 
 # GET: Display single game view
 # POST: Add game
-
-
 def game_details(request, game_id):
     game = get_object_or_404(Game, pk=game_id)
     if request.method == 'GET':
