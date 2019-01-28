@@ -225,6 +225,13 @@ p.help {
   color: #0a0a0a;
 }
 
+.navigation--username {
+  text-transform: capitalize !important;
+  padding: 0 !important;
+  text-decoration: underline !important;
+  display: inline-block !important;
+}
+
 /*
 * Spacer
 */
