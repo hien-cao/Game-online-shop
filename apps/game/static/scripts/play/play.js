@@ -32,7 +32,7 @@ const attachMessageListener = () => {
           const payload = {
             score: data.score,
           }
-          postData(
+          defaultFetch(
             `/games/${gameID}/save-score/`,
             payload
           )
@@ -41,7 +41,7 @@ const attachMessageListener = () => {
           break;
         case "SAVE":
           const { gameState } = data;
-          postData(
+          defaultFetch(
             `/games/${gameID}/state/`,
             gameState
           ).then(response => {
