@@ -199,7 +199,6 @@ footer > .container {
 .autosuggestion {
   display: block;
   background-color: #f6f6f6;
-  border-radius: 10px;
   padding-right: 5px;
 }
 
@@ -243,9 +242,9 @@ footer > .container {
 
 .suggestionList {
   position: absolute;
-  margin-top: 2px;
+  margin-top: 5px;
   font-size: .8rem;
-  border-radius: 10px;
+  border-radius: 5px;
   background: #f6f6f6;
   color: #8a8a8a;
   z-index: 1;
@@ -255,10 +254,11 @@ footer > .container {
   padding: 5px;
 }
 
- .autosuggestion-active {
-      background-color: #dddddd; 
-      border-radius: 10px;
-    }
+.autosuggestion-active {
+  color: #fefefe;
+  background-color: #455a64; 
+  border-radius: 5px;
+}
 
 
 /*

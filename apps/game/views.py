@@ -287,6 +287,8 @@ def search(request):
                 context['latest'] = lastest_games
             else:
                 context['query'] = query
+            # Preserve the search input
+            context['value'] = request.GET
         return render(request, 'games/games.html', context)
     return HttpResponse(status=404)
 
