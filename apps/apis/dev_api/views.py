@@ -35,7 +35,9 @@ def games(request, *args, **kwargs):
         return kwargs['error_response']
     query_set = Game.objects.filter(created_by=get_profile(request))
     return {
-        "content": list(query_set.values()),
+        "content": list(
+            query_set.values('id', 'name', 'price')
+        ),
         "count": len(query_set),
         "message": "Success!"
     }
