@@ -3,9 +3,11 @@
 
 {% block content %}
 <div>
-    <h1>Hello, {{ request.user.username }}</h1>
-    {% include 'forms/apikey.html' %}
-    {% include 'profile/user_statistics.html' %}
+  <h1>Hello, <span class="capitalized">{{ request.user.username }}</span></h1>
+    {% if request.user.profile.is_developer %}
+      {% include 'forms/apikey.html' %}
+      {% include 'profile/user_statistics.html' %}
+    {% endif %}
 </div>
 {% endblock %}
 
