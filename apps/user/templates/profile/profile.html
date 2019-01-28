@@ -3,11 +3,22 @@
 
 {% block content %}
 <div>
-  <h1>Hello, <span class="capitalized">{{ request.user.username }}</span></h1>
-    {% if request.user.profile.is_developer %}
-      {% include 'forms/apikey.html' %}
-      {% include 'profile/user_statistics.html' %}
-    {% endif %}
+  <h1 class="h4">Hello, <span class="capitalized">{{ request.user.username }}</span></h1>
+  <div class="grid-x">
+    <div class="small-3">Email</div>
+    <div class="small-9">{{ request.user.email }}</div>
+  </div>
+  <h2 class="h5">Developer settings</h2>
+  {% if request.user.profile.is_developer %}
+    {% include 'forms/apikey.html' %}
+    {% include 'profile/user_statistics.html' %}
+  {% else %}
+    <p>
+      It seems that you are not registered as a developer.
+      After becoming one you can upload and sell games you've created.
+    </p>
+    <button class="button">Become a developer</button>
+  {% endif %}
 </div>
 {% endblock %}
 
