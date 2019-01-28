@@ -22,15 +22,7 @@
           {% endif %}
         </ul>
       </div>
-      <div class="top-bar-right">
-        <ul class="menu">
-          {% if user.is_authenticated %}
-          {% include 'navigation/signed_in_right.html' %}
-          {% else %}
-          {% include 'navigation/signed_out_right.html' %}
-          {% endif %}
-        </ul>
-      </div>
+      {% include 'navigation/right.html' %}
     </div>
   </div>
 </div>

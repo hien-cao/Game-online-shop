@@ -1,0 +1,10 @@
+<div class="top-bar-right">
+  <ul class="menu">
+    {% if user.is_authenticated %}
+      <li><a title="Sign out" href="{% url 'signout' %}">Sign out</a></li>
+    {% else %}
+      <li><a title="Sign in" href="{% url 'signin' %}">Sign in</a></li>
+      <li><a title="Register as a member" href="{% url 'signup' %}">Register</a></li>
+    {% endif %}
+  </ul>
+</div>
