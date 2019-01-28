@@ -6,6 +6,29 @@
 @version = 1
 @apiUrl = {{rootUrl}}/api/v{{version}}
 
-GET {{apiUrl}}/dev/
+GET {{apiUrl}}/games/
 content-type: application/json
 Accept: application/json
+X-DEV-API-KEY: 6d07d77d-f2a1-4511-aff0-d965372a143f
+
+###
+
+GET {{apiUrl}}/games/19
+content-type: application/json
+Accept: application/json
+X-DEV-API-KEY: 6d07d77d-f2a1-4511-aff0-d965372a143f
+
+###
+
+GET {{apiUrl}}/my-reviews/
+content-type: application/json
+Accept: application/json
+X-DEV-API-KEY: 6d07d77d-f2a1-4511-aff0-d965372a143f
+
+###
+
+GET {{apiUrl}}/game-reviews/
+content-type: application/json
+Accept: application/json
+X-DEV-API-KEY: 6d07d77d-f2a1-4511-aff0-d965372a143f
+

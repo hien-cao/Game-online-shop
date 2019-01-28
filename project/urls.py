@@ -20,7 +20,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('apps.core.urls')),
     path('', include('apps.user.urls')),
-    path('games/', include('apps.game.urls'))
+    path('games/', include('apps.game.urls')),
+    path('api/v1/', include('apps.apis.dev_api.urls'))
     # path('api/', include('rest_api.urls')),
     # path('', include('webapp.urls'))
 ]
