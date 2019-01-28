@@ -17,7 +17,9 @@ def _generate(profile):
 
 
 def generate(request):
-    if request.method == 'POST' and request.user.profile.is_developer:
+    if request.method == 'POST':
+        if not request.user.profile.is_developer:
+            return HttpResponse(status=401)
         try:
             existing_key = ApiKey.objects.get(owner=request.user.profile)
             existing_key.delete()
