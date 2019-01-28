@@ -25,9 +25,4 @@
 
     return;
   }
-
-  becomeDeveloper.addEventListener("click", () =>
-    defaultFetch("/")
-  );
-
 })();

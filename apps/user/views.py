@@ -1,3 +1,4 @@
+import json
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import render, redirect
 from django.utils.encoding import force_bytes, force_text
@@ -61,9 +62,16 @@ def signout(request):
 
 @login_required
 def profile(request):
-    if request.method == 'PATCH':
-        body = json.loads(request.body.decode('utf-8'))
-        request.user.profile.update(**body)
+    # as html forms only support POST, patching is done via this method
+    if request.method == 'POST':
+        for key in request.POST:
+            if hasattr(request.user.profile, key):
+                setattr(request.user.profile, key, request.POST[key])
+
+        request.user.profile.save(update_fields=[
+            key for key in request.POST if hasattr(request.user.profile, key)
+        ])
+
     return render(request, 'profile/profile.html')
 
 
