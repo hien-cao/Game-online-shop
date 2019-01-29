@@ -212,9 +212,10 @@ def library(request, *args, **kwargs):
 def uploads(request, *args, **kwargs):
     if request.method == "GET":
         profile = request.user.profile
-        purchases = []  # initialize empty array for listing purchases
+        purchases = Purchase.objects.none()  # initialize empty queryset for listing purchases
         for game in profile.uploads.all():  # fetch purchases for each game
-            purchases += game.purchases.all()
+            purchases |= game.purchases
+        purchases = purchases.order_by('-purchased_at')
         return render(
             request,
             'games/uploads.html',
