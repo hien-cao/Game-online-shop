@@ -305,64 +305,39 @@ def search(request):
         browse = "/games/search/"
         # Path of the search from library
         library = "/games/library/search/"
+        context = {}
+        games = []
+        #  Collect the data that match the search
+        if 'search_term' in request.GET:
+            query = request.GET['search_term']
+            if not query:
+                return HttpResponseRedirect('/games' if path == browse else '/games/library')
 
-        latest_games = Game.objects.order_by('created_at')
-        if path == browse:
-            print(path)
-            context = {}
-            #  Collect the data that match the search
-            if 'search_term' in request.GET:
-                query = request.GET['search_term']
-                if query:
-                    if '#' == query[0]:
-                        tag = Tag.objects.filter(name=query)
-                        latest_games = latest_games.filter(tags__in=tag)[:5]
-                    elif "@" == query[0]:
-                        user_query = query.replace('@', '')
-                        user = User.objects.filter(username=user_query)
-                        developer = Profile.objects.filter(user__in=user, is_developer=True)
-                        latest_games = latest_games.filter(created_by__in=developer)[:5]
-                    else:
-                        latest_games = latest_games.filter(name__icontains=query)[:5]
+            if '#' == query[0]:
+                tag = Tag.objects.filter(name=query)
+                games = Game.objects.filter(tags__in=tag).order_by('created_at')[:5]
+            elif "@" == query[0]:
+                user_query = query.replace('@', '')
+                user = User.objects.filter(username=user_query)
+                developer = Profile.objects.filter(user__in=user, is_developer=True)
+                games = Game.objects.filter(created_by__in=developer).order_by('created_at')[:5]
+            else:
+                games = Game.objects.filter(name__icontains=query).order_by('created_at')[:5]
 
-                if latest_games.count() != 0:
-                    context['latest'] = latest_games
-                else:
-                    context['query'] = query
-                # Preserve the search input
-                context['value'] = request.GET
-                # Add class is-active
-                context['games'] = 'is-active'
+            context['query'] = query
+            context['latest'] = games
+            # Preserve the search input
+            context['value'] = request.GET
+            
+        if path == browse:        
+            # Add class is-active
+            context['games'] = 'is-active'
             return render(request, 'games/games.html', context)
         elif path == library and request.user.is_authenticated:
-            purchases = request.user.profile.purchases.filter(purchased_at__isnull=False)
-            context = {}
-            print(path)
-            #  Collect the data that match the search
-            if 'search_term' in request.GET:
-                query = request.GET['search_term']
-                if query:
-                    if '#' == query[0]:
-                        tag = Tag.objects.filter(name=query)
-                        game = Game.objects.filter(tags__in=tag)
-                        purchases = purchases.filter(game__in=game)
-                    elif "@" == query[0]:
-                        user_query = query.replace('@', '')
-                        user = User.objects.filter(username=user_query)
-                        profile = Profile.objects.filter(user__in=user)
-                        game = Game.objects.filter(created_by__in=profile)
-                        purchases = purchases.filter(game__in=game)
-                    else:
-                        game = Game.objects.filter(name__icontains=query)
-                        purchases = purchases.filter(game__in=game)
-
-                if latest_games.count() != 0:
-                    context['purchases'] = purchases
-                else:
-                    context['query'] = query
-                # Preserve the search input
-                context['value'] = request.GET
-                context['library'] = 'is-active'
+            purchases = request.user.profile.purchases.filter(purchased_at__isnull=False, game__in=games)
+            context['purchases'] = purchases
+            # Preserve the search input
+            context['library'] = 'is-active'
             return render(request, 'games/library.html', context)
     return HttpResponse(status=404)
 
