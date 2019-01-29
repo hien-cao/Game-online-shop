@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div>
+    <h1>Hello, {{ request.user.username }}</h1>
+    {% include 'forms/apikey.html' %}
+    {% include 'profile/user_statistics.html' %}
+</div>
+{% endblock %}
+
+{% block customjs %}
+<script src="{% static 'scripts/dev_api/generate_key.js' %}"></script>
+{% endblock customjs %}

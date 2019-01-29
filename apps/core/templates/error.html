@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="grid-x">
+  <div class="cell small-4">
+    <img src="{% static 'img/broken.svg' %}" width="80%" height="auto" />
+  </div>
+  <div class="cell small-8">
+    <h1>Oh no! Something went wrong</h1>
+    <p>
+      Please ensure that the request you made is correct. You may contact us at
+      <a href="mailto:this.is@totally-legit.email">this.is@totally-legit.email</a>
+    </p>
+  </div>
+</div>
+
+{% endblock content %}

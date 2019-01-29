@@ -9,7 +9,6 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
-from django.http import HttpResponse
 
 from .forms import SignUpForm
 from .utils.tokens import account_activation_token
@@ -17,7 +16,7 @@ from .utils.tokens import account_activation_token
 def signup(request):
     """
     Display the sign up view.
-    
+
     **Template:**
     :template:`signup.html`
     """
@@ -52,8 +51,14 @@ def signout(request):
     return redirect('home')
 
 @login_required
-def welcome(request):
-    return HttpResponse('Welcome!')
+def profile(request):
+    """
+    Display profile view.
+
+    **Template:**
+    :template:`profile.html`
+    """
+    return render(request, 'profile/profile.html')
 
 def account_activation_sent(request):
     """

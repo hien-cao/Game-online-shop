@@ -16,11 +16,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
+handler404 = 'apps.core.views.e404'
+handler500 = 'apps.core.views.e500'
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('apps.core.urls')),
     path('', include('apps.user.urls')),
-    path('games/', include('apps.game.urls'))
+    path('games/', include('apps.game.urls')),
+    path('api/v1/', include('apps.apis.dev_api.urls'))
     # path('api/', include('rest_api.urls')),
     # path('', include('webapp.urls'))
 ]
