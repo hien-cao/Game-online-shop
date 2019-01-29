@@ -42,6 +42,7 @@ def create_tags(description):
             tags.append(obj)
     return tags
 
+
 # Add/Edit game
 # TODO Change redirection to profile/settings?
 
@@ -211,12 +212,16 @@ def library(request, *args, **kwargs):
 def uploads(request, *args, **kwargs):
     if request.method == "GET":
         profile = request.user.profile
+        purchases = []  # initialize empty array for listing purchases
+        for game in profile.uploads.all():  # fetch purchases for each game
+            purchases += game.purchases.all()
         return render(
             request,
             'games/uploads.html',
             {
                 **uploads_context,
-                'my_uploads': Game.objects.filter(created_by=request.user.profile)
+                'my_uploads': profile.uploads,
+                'purchases': purchases
             }
         )
     return HttpResponse(status=404)
@@ -229,10 +234,7 @@ def play(request, game_id):
     profile = request.user.profile
     # Only allow player to play game if he has bought it
     if profile.purchases and profile.purchases.filter(game=game).count() > 0:
-        context = {
-            'profile': profile,
-            **get_play_game_context(game)
-        }
+        context = {'profile': profile, **get_play_game_context(game)}
         return render(request, 'play_game.html', context)
     # otherwise redirect to its details page
     return redirect('/games/{}'.format(game.id))

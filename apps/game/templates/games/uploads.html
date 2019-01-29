@@ -7,9 +7,17 @@
   <a class="button compact" href="{% url 'add_game' %}">Add game</a>
   {% if my_uploads %}
   <ul class="no-bullet game_list">
-    {% for game in my_uploads %}
+    {% for game in my_uploads.all %}
     {% include 'games/game_list_item.html' %}
     {% endfor %}
+    <h2 class="h5">Purchases</h2>
+    {% if purchases %}
+      {% for purchase in purchases %}
+        {{ purchase }}
+      {% endfor %}
+    {% else %}
+      No one has bought your games!
+    {% endif %}
   </ul>
   {% else %}
   <p>You haven't uploaded any games.<p>
