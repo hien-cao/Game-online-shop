@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.test import TestCase
 
 from ..game import Game
@@ -5,8 +6,8 @@ from ....review.models import Review
 
 from ....user.utils.mock_user import create_mock_user
 
+TWOPLACES = Decimal(10) ** -2
 
-fields = ["name", "description", "url", "price"]
 orig_value = {
     "name": "game_0",
     "description": "foo",
@@ -26,6 +27,7 @@ class GameTestCase(TestCase):
     no_grade, with_grade = (None, None)
 
     def setUp(self):
+        """Set up some variables used in some tests."""
         # Create object without reviews
         self.no_grade = Game.objects.create(
             name="no_grade",
@@ -49,6 +51,7 @@ class GameTestCase(TestCase):
         )
 
     def test_games_can_be_created(self):
+        """Create a game and assert."""
         game_0 = Game.objects.create(
             name=orig_value["name"],
             url=orig_value["url"],
@@ -59,17 +62,27 @@ class GameTestCase(TestCase):
         self.assertEqual(game_0.__str__(), game_0.name)
 
     def test_games_can_be_updated(self):
+        """Create a game, update fields, refresh from db and assert."""
+        # create the instance with initial values
         game_0 = Game.objects.create(
             name=orig_value["name"],
             url=orig_value["url"],
             price=orig_value["price"],
             description=orig_value["description"],
         )
-        for field in fields:
-            setattr(game_0, field, new_value[field])
-            self.assertEqual(game_0[field], new_value[field])
-            setattr(game_0, field, orig_value[field])
-            self.assertEqual(game_0[field], orig_value[field])
+        # update the values and save
+        game_0.name = new_value["name"]
+        game_0.url = new_value["url"]
+        game_0.price = new_value["price"]
+        game_0.description = new_value["description"]
+        game_0.save()
+        # Refresh the instance with the one from database
+        game_0.refresh_from_db()
+        # Assert each field
+        self.assertEqual(game_0.__str__(), new_value["name"])
+        self.assertEqual(game_0.url, new_value["url"])
+        self.assertEqual(game_0.price, Decimal(new_value["price"]).quantize(TWOPLACES))
+        self.assertEqual(game_0.description, new_value["description"])
 
     def test_games_can_have_grade(self):
         """Games that have grade can be identified"""
