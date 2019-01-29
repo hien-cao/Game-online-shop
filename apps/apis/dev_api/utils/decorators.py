@@ -1,8 +1,10 @@
 import json
 from functools import wraps
 from django.http import JsonResponse, HttpResponse
+from django.conf import settings
 
 from ..models import ApiKey
+from ....user.utils.validators import api_request_is_developer
 
 
 def json_response(fn):
@@ -34,8 +36,11 @@ def validate_request(fn):
     def decorator(request, *args, **kwargs):
         error_response = None
         # TODO: Response that only https allowed
-        # if not request.is_secure():
-        #     pass
+        if settings.ENVIRONMENT == 'production' and not request.is_secure():
+            error_response = JsonResponse(
+                {'message': 'Invalid request protocol'},
+                status=403
+            )
         if request.method != "GET":
             error_response = JsonResponse(
                 {'message': 'Invalid request method'},
@@ -64,4 +69,20 @@ def passes_test(test_fn):
                 return fn(request, *args, **kwargs)
             return JsonResponse({'message': 'Invalid request.'}, status=403)
         return _wrapped_view
+    return decorator
+
+
+def dev_api_request(fn):
+    """
+    Wrapper decorator for all most common decorators
+    in dev api requests.
+    - json_response
+    - passes_test(api_request_is_developer)
+    - validate_request
+    """
+    @json_response
+    @passes_test(api_request_is_developer)
+    @validate_request
+    def decorator(request, *args, **kwargs):
+        return fn(request, *args, **kwargs)
     return decorator
