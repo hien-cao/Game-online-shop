@@ -1,4 +1,47 @@
+{% load custom_filters %}
+
 <div>
   <h2 class="h4 uppercase grey">Statistics</h2>
-  <p>Yoyo</p>
+  <div class="grid-x">
+    <div class="small-12 grid-x">
+      <h3 class="h6 small-12 subheader">Cumulative revenue</h3>
+      <div class="small-12 medium-6">
+        <p class="stat">{{ game.price|multiply:game.purchases.count }} <span class="f_tiny">€</span></p>
+      </div>
+      <h3 class="h6 small-12 subheader">Purchases</h3>
+      <div class="small-12 medium-6">
+        <ul class="no-bullet">
+          <li class="stat">
+            {{ game.purchases.count }} <span class="f_tiny">in total</span>
+          </li>
+          <li class="stat">
+            {{ purchases.year }} <span class="f_tiny">this year</span>
+          </li>
+          <li class="stat">
+            {{ purchases.month }} <span class="f_tiny">this month</span>
+          </li>
+        </ul>
+      </div>
+      <div class="small-12 medium-6 large-3">
+        <p title="purchases per day" class="stat">{{ purchases.pd }} <span class="f_tiny">ppd</span></p>
+      </div>
+      <h3 class="h6 small-12 subheader">Reviews</h3>
+      <div class="small-12 medium-6">
+        <ul class="no-bullet">
+          <li class="stat">
+            {{ game.reviews.count }} <span class="f_tiny">in total</span>
+          </li>
+          <li class="stat">
+            {{ reviews.year }} <span class="f_tiny">this year</span>
+          </li>
+          <li class="stat">
+            {{ reviews.month }} <span class="f_tiny">this month</span>
+          </li>
+        </ul>
+      </div>
+      <div class="small-12 medium-6 large-3">
+        <p title="reviews per day" class="stat">{{ reviews.pd }} <span class="f_tiny">rph</span></p>
+      </div>
+    </div>
+  </div>
 </div>

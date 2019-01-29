@@ -3,7 +3,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.forms.models import model_to_dict
 
 from .models import ApiKey
-from .utils.decorators import validate_request, json_response
+from .utils.decorators import dev_api_request
 from .utils.utils import get_profile
 
 from ...game.models import Game
@@ -28,8 +28,7 @@ def generate(request):
     return HttpResponse(status=404)
 
 
-@json_response
-@validate_request
+@dev_api_request
 def games(request, *args, **kwargs):
     if kwargs['error_response']:
         return kwargs['error_response']
@@ -43,8 +42,7 @@ def games(request, *args, **kwargs):
     }
 
 
-@json_response
-@validate_request
+@dev_api_request
 def game(request, *args, **kwargs):
     if kwargs['error_response']:
         return kwargs['error_response']
@@ -68,8 +66,7 @@ def game(request, *args, **kwargs):
         }
 
 
-@json_response
-@validate_request
+@dev_api_request
 def my_reviews(request, *args, **kwargs):
     if kwargs['error_response']:
         return kwargs['error_response']
@@ -81,8 +78,7 @@ def my_reviews(request, *args, **kwargs):
     }
 
 
-@json_response
-@validate_request
+@dev_api_request
 def game_reviews(request, *args, **kwargs):
     if kwargs['error_response']:
         return kwargs['error_response']
