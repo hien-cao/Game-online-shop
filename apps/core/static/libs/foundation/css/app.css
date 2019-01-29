@@ -38,3 +38,8 @@ h1, h2, h3, h4, h5, h6 {
   padding-right: 3rem;
 }
 
+.top-bar .menu li {
+  font-size: 13px;
+  font-weight: 400;
+  color: #fefefe;
+}

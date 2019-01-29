@@ -3,7 +3,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.forms.models import model_to_dict
 
 from .models import ApiKey
-from .utils.decorators import dev_api_request
+from .utils.decorators import dev_api_request, validate_request, json_response
 from .utils.utils import get_profile
 
 from ...game.models import Game
@@ -17,7 +17,9 @@ def _generate(profile):
 
 
 def generate(request):
-    if request.method == 'POST' and request.user.profile.is_developer:
+    if request.method == 'POST':
+        if not request.user.profile.is_developer:
+            return HttpResponse(status=401)
         try:
             existing_key = ApiKey.objects.get(owner=request.user.profile)
             existing_key.delete()

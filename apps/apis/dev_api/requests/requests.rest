@@ -31,4 +31,3 @@ GET {{apiUrl}}/game-reviews/
 content-type: application/json
 Accept: application/json
 X-DEV-API-KEY: 6d07d77d-f2a1-4511-aff0-d965372a143f
-

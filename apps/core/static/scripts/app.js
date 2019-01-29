@@ -6,24 +6,27 @@ window.getCookie = window.getCookie || function (name) {
 }
 
 const defaultOptions = {
-  POST: {
-    method: "POST",
-    mode: "cors",
-    cache: "no-cache",
-    credentials: "same-origin",
-    headers: {
-      "Content-Type": "application/json",
-      "X-CSRFToken": window.getCookie("csrftoken"),
-    },
-    redirect: "follow",
-    referrer: "no-referrer",
-  }
+  method: "POST",
+  mode: "cors",
+  cache: "no-cache",
+  credentials: "same-origin",
+  headers: {
+    "Content-Type": "application/json",
+    "X-CSRFToken": window.getCookie("csrftoken"),
+  },
+  redirect: "follow",
+  referrer: "no-referrer",
 }
 
-const postData = (url = "", data = {}, options = {}) => {
+const defaultFetch = (
+  url = "",
+  data = {},
+  {method = "POST", ...options} = {method: "POST"}
+) => {
   args = {
-    ...defaultOptions.POST,
+    ...defaultOptions,
     ...options,
+    method,
     body: JSON.stringify(data),
   };
   return fetch(
