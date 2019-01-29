@@ -1,7 +1,8 @@
 import json
 import base64
 import re
-from datetime import (datetime, timezone)
+import pytz
+from datetime import datetime
 
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect, get_object_or_404
@@ -106,7 +107,7 @@ def game_details(request, game_id):
         ))
         if request.user.is_authenticated:
             if game.created_by.user.id == request.user.id:
-                now = timezone.now()
+                now = datetime.now(pytz.utc)
                 developer_context = {
                     'reviews': {
                         'year': len(game.reviews.filter(
