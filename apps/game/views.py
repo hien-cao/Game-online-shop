@@ -100,7 +100,7 @@ def games(request, *args, **kwargs):
 def game_details(request, game_id):
     game = get_object_or_404(Game, pk=game_id)
     if request.method == 'GET':
-        developer_context = None
+        developer_context = {}
         purchased = bool(Purchase.objects.filter(
             game=game_id,
             created_by=request.user.id,
