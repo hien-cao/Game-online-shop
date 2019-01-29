@@ -7,6 +7,9 @@
       + Start with no prefix to search for games with the desired name
   */
 (() => {
+  // Check if the search from page browse or library
+  let check = document.querySelector('.is-active').textContent.trim();
+  
   const debounced = function (fn, delay) {
     let timeout;
     return function () {
@@ -17,16 +20,30 @@
 
   const search = debounced((event) => {   
     let url;
-    if (event.target.value[0] == '#') {
-      const term = encodeURI(event.target.value.replace('#', ''));
-      url = `/games/search/search-term?tag=${term}`;
-    } else if (event.target.value[0] == '@') {
-      const term = encodeURI(event.target.value.replace('@', ''));
-      url = `/games/search/search-term?author=${term}`;
-    } else {
-      const term = encodeURI(event.target.value);
-      url = `/games/search/search-term?name=${term}`;
+    if (check == 'Browse') {
+      if (event.target.value[0] == '#') {
+        const term = encodeURI(event.target.value.replace('#', ''));
+        url = `/games/search/search-term?tag=${term}`;
+      } else if (event.target.value[0] == '@') {
+        const term = encodeURI(event.target.value.replace('@', ''));
+        url = `/games/search/search-term?author=${term}`;
+      } else {
+        const term = encodeURI(event.target.value);
+        url = `/games/search/search-term?name=${term}`;
+      }
+    } else if (check == 'Library') {
+      if (event.target.value[0] == '#') {
+        const term = encodeURI(event.target.value.replace('#', ''));
+        url = `/games/library/search/search-term?tag=${term}`;
+      } else if (event.target.value[0] == '@') {
+        const term = encodeURI(event.target.value.replace('@', ''));
+        url = `/games/library/search/search-term?author=${term}`;
+      } else {
+        const term = encodeURI(event.target.value);
+        url = `/games/library/search/search-term?name=${term}`;
+      }
     }
+      
 
     fetch(url, {
       method: 'GET',
@@ -46,7 +63,6 @@
     let query = event.target.value;
     if (query.length >= minlength) {
       search(event);
-     
     }
   });
 

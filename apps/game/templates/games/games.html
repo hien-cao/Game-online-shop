@@ -2,7 +2,11 @@
 {% load static%}
  
 {% block content %}
+
+{% with search_url='/games/search' %}
 {% include 'search_form.html'%}
+{% endwith %}
+
 <div>
   {% if latest %}
     <h1 class="h4 subheader uppercase">Latest</h1>

@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
+{% load static%}
 
 {% block content %}
+
+{% with search_url='/games/library/search' %}
+{% include 'search_form.html' %}
+{% endwith %}
 
 <div>
   <h1 class="h4 subheader uppercase">My games</h1>
@@ -12,9 +17,15 @@
     {% endwith %}
     {% endfor %}
   </ul>
+  {% elif query %}
+  <p>No results for {{query}}</p>
   {% else %}
   <p>You haven't purchased any purchases!<p>
   {% endif %}
 </div>
 
 {% endblock content %}
+
+{% block customjs%}
+<script src="{% static 'scripts/search/search.js' %}"></script>
+{% endblock customjs%}
