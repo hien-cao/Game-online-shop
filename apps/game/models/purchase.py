@@ -36,7 +36,7 @@ class Purchase(models.Model):
     def pid(self):
         return str(self.id).replace('-', '')
 
-    def save(self):
+    def save(self, *args, **kwargs):
         # Delete previously failed (and not accepted) purchases for given user and game
         purchased = Purchase.objects.filter(
             game=self.game,
