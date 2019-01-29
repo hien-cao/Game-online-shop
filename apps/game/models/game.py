@@ -19,6 +19,7 @@ class Game(models.Model):
     created_by = models.ForeignKey(
         Profile,
         null=True,
+        related_name='uploads',
         on_delete=models.SET_NULL
     )
     tags = models.ManyToManyField(
