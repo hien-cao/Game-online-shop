@@ -160,9 +160,19 @@
       }
     }
 
+    function isNestedElement(parent, element) {
+        for (const child of parent.children) {
+          if (child == element || isNestedElement(child, element)) {
+            return true
+          }
+        }
+        return false;
+    }
     // Close all the suggestion list when someone clicks in the document except clicking on the suggestion list itself
     document.addEventListener('click', function (e) {
-      closeSuggestion(e.target);
+      if (!isNestedElement(searchForm, e.target)) {
+        clearChildren(suggestionList);
+      }
     });
   }
 })()
