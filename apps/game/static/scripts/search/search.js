@@ -7,9 +7,6 @@
       + Start with no prefix to search for games with the desired name
   */
 (() => {
-  // Check if the search from page browse or library
-  let check = document.querySelector('.is-active').textContent.trim();
-
   const debounced = function (fn, delay) {
     let timeout;
     return function () {
