@@ -58,6 +58,7 @@
   const searchterm = document.getElementById('searchterm');
   const searchBtn = document.getElementById('search_btn');
   const minlength = 2;
+  let currentFocus;
 
   // Execute a function which handle key press in the keyboard
   searchterm.addEventListener('keydown', function (evt) {
