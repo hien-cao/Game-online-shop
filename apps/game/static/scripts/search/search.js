@@ -59,6 +59,39 @@
   const searchBtn = document.getElementById('search_btn');
   const minlength = 2;
 
+  // Execute a function which handle key press in the keyboard
+  searchterm.addEventListener('keydown', function (evt) {
+    if (evt.keyCode == 40) {
+      // Increase the currentFocus as the arrow DOWN key is pressed
+      currentFocus += 1;
+    } else if (evt.keyCode == 38) {
+      // Decrease the currentFocus as the arrow UP key is pressed
+      currentFocus -= 1;
+    } else if (evt.keyCode == 13) {
+      // The ENTER key is pressed
+      evt.preventDefault();
+      if (currentFocus > -1) {
+        // Simulate a click on the active item
+        if (suggestionList) {
+          suggestionList.children[currentFocus].click();
+        }
+      } else {
+        // Submit the form
+        searchBtn.click();
+      }
+      return; // if enter was pressed, no need to invoke setAsActive.
+    }
+    if (currentFocus >= suggestionList.children.length) {
+      currentFocus = 0;
+    }
+    if (currentFocus < 0) {
+      currentFocus = suggestionList.children.length - 1;
+    }
+    // Add class active to the selected item
+    setAsActive(suggestionList.children);
+  });
+
+
   // Execute the auto suggestion
   searchterm.addEventListener('input', function (event) {
     let query = event.target.value;
@@ -68,13 +101,10 @@
   });
 
   /* Create the auto-suggestion function */
-  function autosuggestion(input, namelist) {
+  function autosuggestion(query, namelist) {
     clearChildren(suggestionList);
     /* The autosuggestion function takes two arguments, the input value and a list of possible autosuggested values */
     // Create currentFocus to define the position of suggested item to add class active and simulate a click event
-    let currentFocus;
-    // someone input a search
-    let val = input.value;
     // Close all already opened suggestions of a search
     if (!val) { return false; }
     currentFocus = -1;
@@ -100,38 +130,6 @@
         suggestionList.appendChild(suggestionContainer);
       }
     })
-
-    // Execute a function which handle key press in the keyboard
-    input.addEventListener('keydown', function (evt) {
-      if (evt.keyCode == 40) {
-        // Increase the currentFocus as the arrow DOWN key is pressed
-        currentFocus += 1;
-      } else if (evt.keyCode == 38) {
-        // Decrease the currentFocus as the arrow UP key is pressed
-        currentFocus -= 1;
-      } else if (evt.keyCode == 13) {
-        // The ENTER key is pressed
-        evt.preventDefault();
-        if (currentFocus > -1) {
-          // Simulate a click on the active item
-          if (suggestionList) {
-            suggestionList.children[currentFocus].click();
-          }
-        } else {
-          // Submit the form
-          searchBtn.click();
-        }
-        return; // if enter was pressed, no need to invoke setAsActive.
-      }
-      if (currentFocus >= suggestionList.children.length) {
-        currentFocus = 0;
-      }
-      if (currentFocus < 0) {
-        currentFocus = suggestionList.children.length - 1;
-      }
-      // Add class active to the selected item
-      setAsActive(suggestionList.children);
-    });
 
     // Create function used to clear suggestion list
     function clearChildren(element) {
