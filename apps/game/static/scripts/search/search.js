@@ -9,7 +9,7 @@
 (() => {
   // Check if the search from page browse or library
   let check = document.querySelector('.is-active').textContent.trim();
-  
+
   const debounced = function (fn, delay) {
     let timeout;
     return function () {
@@ -18,7 +18,7 @@
     };
   };
 
-  const search = debounced((event) => {   
+  const search = debounced((event) => {
     let url;
     if (check == 'Browse') {
       if (event.target.value[0] == '#') {
@@ -54,6 +54,8 @@
   }, 300);
 
   /* Define the variable */
+  const searchForm = document.getElementById('search-form');
+  const suggestionList = document.getElementById('suggestion-list');
   const searchterm = document.getElementById('searchterm');
   const searchBtn = document.getElementById('search_btn');
   const minlength = 2;
