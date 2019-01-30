@@ -9,8 +9,8 @@ class HighscoreTestCase(TestCase):
     def setUp(self):
         # create a game
         self.game = Game.objects.create(
-            name="game",
-            url="https://localhost:3000",
+            name='game',
+            url='https://localhost:3000',
             price=0,
         )
         # create a user
@@ -38,4 +38,4 @@ class HighscoreTestCase(TestCase):
             game=self.game,
             created_by=self.user.profile
         )
-        self.assertEqual(highscore.save()["message"], "update is prohibited!")
+        self.assertEqual(highscore.save()['message'], 'update is prohibited!')

@@ -1,12 +1,13 @@
 from django.utils import timezone
 from django.test import TestCase
+from django.forms.models import model_to_dict
 
 from ...models import Game, Purchase
 from ....user.utils.mock_user import create_mock_user
 
-DUMMY_PID = "abc123"
+DUMMY_PID = 'abc123'
 DUMMY_REF = 1
-DUMMY_RESULT = "success"
+DUMMY_RESULT = 'success'
 
 
 class PurchaseTestCase(TestCase):
@@ -16,7 +17,7 @@ class PurchaseTestCase(TestCase):
         self.game_purchaser = create_mock_user(1)
         # create a game to purchase
         self.game = Game.objects.create(
-            name="game_0",
+            name='game_0',
             created_by=self.game_creator.profile,
             price=1,
         )
@@ -25,6 +26,11 @@ class PurchaseTestCase(TestCase):
             game=self.game,
             created_by=self.game_purchaser.profile,
         )
+
+    def tearDown(self):
+        if self.purchase.purchased_at:
+            self.purchase.purchased_at = None
+            self.purchase.save()
 
     def test_purchase_can_be_created(self):
         """Create a purchase and assert."""
@@ -49,7 +55,7 @@ class PurchaseTestCase(TestCase):
     def test_property_pid(self):
         """See that pid property exists and does not contain '-'"""
         self.assertIsNotNone(self.purchase.pid)
-        self.assertNotIn(self.purchase.pid, "-")
+        self.assertNotIn(self.purchase.pid, '-')
 
     def test_payment_context(self):
         """See that payment context is contains all key, value pairs"""
@@ -59,7 +65,18 @@ class PurchaseTestCase(TestCase):
             self.assertIsNotNone(value)
 
     def test_activate(self):
-        pass
+        """activate() should be only allowed to be done once."""
+        query = {
+            'purchase_id': self.purchase.id,
+            'ref': DUMMY_REF,
+            'result': DUMMY_RESULT,
+            'checksum': self.purchase.get_payment_context()['checksum']
+        }
+        self.purchase.activate(query)
+        purchase_as_dict = model_to_dict(self.purchase)
+        self.assertIn('purchased_at', purchase_as_dict)
+        self.assertIn('ref', purchase_as_dict)
+        self.assertRaises(AssertionError, self.purchase.activate(query))
 
     def test_cancel(self):
         pass
