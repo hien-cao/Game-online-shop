@@ -123,19 +123,19 @@
     /* The autosuggestion function takes two arguments, the input value and a list of possible autosuggested values */
     // Create currentFocus to define the position of suggested item to add class active and simulate a click event
     // Close all already opened suggestions of a search
-    if (!val) { return false; }
+    if (!query) { return false; }
     currentFocus = -1;
     // For each item in the array, if the item is the same with the value
     // in the input, it will create a new div element for each maching item
     namelist.forEach(function (item) {
-      if (item.substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+      if (item.substr(0, query.length).toUpperCase() == query.toUpperCase()) {
         // Create a DIV element for each matching item
         const suggestionContainer = document.createElement('div');
         // Add the name to the div
         // Check if the search for category, developer or game name
-        if (val[0] == '@') {
+        if (query[0] == '@') {
           suggestionContainer.innerHTML = 'Search by developer ' + item;
-        } else if (val[0] == '#') {
+        } else if (query[0] == '#') {
           suggestionContainer.innerHTML = 'Search by category ' + item;
         } else {
           suggestionContainer.innerHTML = item;
