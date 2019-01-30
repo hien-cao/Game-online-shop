@@ -128,6 +128,12 @@
         }
         return; // if enter was pressed, no need to invoke setAsActive.
       }
+      if (currentFocus >= suggestionList.children.length) {
+        currentFocus = 0;
+      }
+      if (currentFocus < 0) {
+        currentFocus = suggestionList.children.length - 1;
+      }
       // Add class active to the selected item
       setAsActive(suggestionList.children);
     });
@@ -142,12 +148,6 @@
     function setAsActive(suggestionElements = []) {
       if (suggestionElements.length == 0) {
         return false;
-      }
-      if (currentFocus >= suggestionElements.length) {
-        currentFocus = 0;
-      }
-      if (currentFocus < 0) {
-        currentFocus = suggestionElements.length - 1;
       }
       // Removing class active on all suggestionElements
       for (let i = 0; i < suggestionElements.length; i++) {
