@@ -60,6 +60,22 @@
   const minlength = 2;
   let currentFocus;
 
+  // Create function to add active class to the item
+  function setAsActive(suggestionElements = []) {
+    if (suggestionElements.length == 0) {
+      return false;
+    }
+    // Removing class active on all suggestionElements
+    for (let i = 0; i < suggestionElements.length; i++) {
+      if (i == currentFocus) {
+        // Add class active to current focus item
+        suggestionElements[currentFocus].classList.add('suggestion-active');
+        continue;
+      }
+      suggestionElements[i].classList.remove('suggestion-active');
+    }
+  }
+
   // Execute a function which handle key press in the keyboard
   searchterm.addEventListener('keydown', function (evt) {
     if (evt.keyCode == 40) {
