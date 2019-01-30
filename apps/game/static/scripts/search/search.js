@@ -88,6 +88,8 @@
         searchBtn.click();
       }
       return; // if enter was pressed, no need to invoke setAsActive.
+    } else {
+      return;
     }
     if (currentFocus >= suggestionList.children.length) {
       currentFocus = 0;
