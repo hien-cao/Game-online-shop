@@ -93,14 +93,9 @@
         } else {
           suggestionContainer.innerHTML = item;
         }
-        // Insert a input field that will hold the current array item's value
-        suggestionContainer.innerHTML += `<input type='hidden' value='${item}'>`;
         // Execute a function when someone clicks on the item value (DIV element)
         suggestionContainer.addEventListener('click', function (e) {
-          // Insert the value for the search input field
-          input.value = e.target.getElementsByTagName('input')[0].value;
-          // Submit the form
-          searchBtn.click();
+          search(item);
         });
         suggestionList.appendChild(suggestionContainer);
       }
