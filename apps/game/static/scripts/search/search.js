@@ -43,7 +43,6 @@
         url = `/games/library/search/search-term?name=${term}`;
       }
     }
-      
 
     fetch(url, {
       method: 'GET',
@@ -70,13 +69,13 @@
 
   /* Create the auto-suggestion function */
   function autosuggestion(input, namelist) {
+    clearChildren(suggestionList);
     /* The autosuggestion function takes two arguments, the input value and a list of possible autosuggested values */
     // Create currentFocus to define the position of suggested item to add class active and simulate a click event
     let currentFocus;
     // someone input a search
     let newdiv1, newdiv2, val = input.value;
     // Close all already opened suggestions of a search
-    closeSuggestion();
     if (!val) { return false; }
     currentFocus = -1;
     // Create a DIV element containing the suggestion name
@@ -147,14 +146,10 @@
       }
     });
 
-    // Create function to close all suggestion list
-    function closeSuggestion(element) {
-      // Close suggestion list in the document except the one mentioned in the parameter
-      const suggestions = document.getElementsByClassName("suggestionList");
-      for (var i = 0; i < suggestions.length; i++) {
-        if (element != suggestions[i] && element != input) {
-          suggestions[i].parentNode.removeChild(suggestions[i]);
-        }
+    // Create function used to clear suggestion list
+    function clearChildren(element) {
+      while (element.firstChild) {
+        element.removeChild(element.firstChild)
       }
     }
     // Create function to add active class to the item
