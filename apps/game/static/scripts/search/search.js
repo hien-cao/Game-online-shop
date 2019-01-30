@@ -142,7 +142,8 @@
         }
         // Execute a function when someone clicks on the item value (DIV element)
         suggestionContainer.addEventListener('click', function (e) {
-          search(item);
+          searchterm.value = item;
+          searchBtn.click();
         });
         suggestionList.appendChild(suggestionContainer);
       }
