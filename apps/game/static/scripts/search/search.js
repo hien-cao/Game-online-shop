@@ -74,17 +74,10 @@
     // Create currentFocus to define the position of suggested item to add class active and simulate a click event
     let currentFocus;
     // someone input a search
-    let newdiv1, newdiv2, val = input.value;
+    let val = input.value;
     // Close all already opened suggestions of a search
     if (!val) { return false; }
     currentFocus = -1;
-    // Create a DIV element containing the suggestion name
-    newdiv1 = document.createElement('div');
-    newdiv1.setAttribute('id', 'autosuggestionListItem');
-    newdiv1.setAttribute('class', 'suggestionList');
-    // Append The DIV element as a child in the 'autosuggestion' container
-    // input.parentNode.appendChild(newdiv1);
-    input.parentNode.parentNode.appendChild(newdiv1);
     // For each item in the array, if the item is the same with the value
     // in the input, it will create a new div element for each maching item
     namelist.forEach(function (item) {
