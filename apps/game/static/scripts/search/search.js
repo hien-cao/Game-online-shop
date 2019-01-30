@@ -105,36 +105,31 @@
         suggestionList.appendChild(suggestionContainer);
       }
     })
-    
+
     // Execute a function which handle key press in the keyboard
     input.addEventListener('keydown', function (evt) {
-      let selectedItem = document.getElementById('autosuggestionListItem');
-      if (selectedItem) {
-        selectedItem = selectedItem.getElementsByTagName('div');
-      }
       if (evt.keyCode == 40) {
         // Increase the currentFocus as the arrow DOWN key is pressed
         currentFocus += 1;
-        // Add class active to the selected item
-        addActive(selectedItem);
       } else if (evt.keyCode == 38) {
         // Decrease the currentFocus as the arrow UP key is pressed
         currentFocus -= 1;
-        // Add class active to the selected item
-        addActive(selectedItem);
       } else if (evt.keyCode == 13) {
         // The ENTER key is pressed
         evt.preventDefault();
         if (currentFocus > -1) {
           // Simulate a click on the active item
-          if (selectedItem) {
-            selectedItem[currentFocus].click();
+          if (suggestionList) {
+            suggestionList.children[currentFocus].click();
           }
         } else {
           // Submit the form
           searchBtn.click();
         }
+        return; // if enter was pressed, no need to invoke addActive.
       }
+      // Add class active to the selected item
+      addActive(suggestionList.children);
     });
 
     // Create function used to clear suggestion list
