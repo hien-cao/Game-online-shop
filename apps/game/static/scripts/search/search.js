@@ -27,10 +27,15 @@
       query = `?name=${q}`;
     }
 
-    // read the pathname until (if exists) '/search'
-    const path = window.location.pathname.split('/search/')[0] + '/search/search-term';
+    // read the pathname until (if exists) '/search' and form path
+    const path = window.location.pathname
+      .split('/search/')[0]
+      .split('/')
+      .concat(['search', 'search-term'])
+      .filter(s => Boolean(s))
+      .join('/')
     fetch(
-      encodeURI(`${path}/${query}`),
+      encodeURI(`/${path}/${query}`),
       {method: 'GET'}
     )
       .then(response => response.json())
@@ -83,8 +88,6 @@
         searchBtn.click();
       }
       return; // if enter was pressed, no need to invoke setAsActive.
-    } else {
-      return;
     }
     if (currentFocus >= suggestionList.children.length) {
       currentFocus = 0;
