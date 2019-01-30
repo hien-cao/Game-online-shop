@@ -187,30 +187,32 @@ footer > .container {
   color: #000;
 }
 
-/* 
+/*
 * Search form
 */
 
-.search-form {
-  overflow: auto;
-  width: 100%;
+#search-form {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
-.autosuggestion {
-  display: block;
+#autosuggestion-input {
+  width: 240px;
+  min-width: 25%;
+  display: flex;
+  flex-direction: row;
   background-color: #f6f6f6;
+  border: 1px solid transparent;
   padding-right: 5px;
 }
 
-.autosuggestion:hover {
-  border: 1px solid #607d8b
+#autosuggestion-input:hover {
+  border: 1px solid #607d8b;
 }
 
-.autosuggestion-input {
-  display: flex;
-}
-
-.autosuggestion-input input{
+#autosuggestion-input input{
   margin: 0;
   outline: none;
   background-color: transparent;
@@ -218,7 +220,7 @@ footer > .container {
   border: none;
   box-shadow: none;
 }
-.autosuggestion-input input:focus {
+#autosuggestion-input-container input:focus {
   outline: none;
   background-color: transparent;
   border: none;
@@ -240,24 +242,25 @@ footer > .container {
   box-shadow: none;
 }
 
-.suggestionList {
+#suggestion-list {
+  width: 240px;
+  min-width: 25%;
   position: absolute;
+  top: 100%;
   margin-top: 5px;
   font-size: .8rem;
-  border-radius: 5px;
   background: #f6f6f6;
   color: #8a8a8a;
   z-index: 1;
 }
 
-.suggestionList div {
+#suggestion-list>div {
   padding: 5px;
 }
 
-.autosuggestion-active {
+.suggestion-active {
   color: #fefefe;
-  background-color: #455a64; 
-  border-radius: 5px;
+  background-color: #455a64;
 }
 
 
