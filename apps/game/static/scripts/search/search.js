@@ -126,10 +126,10 @@
           // Submit the form
           searchBtn.click();
         }
-        return; // if enter was pressed, no need to invoke addActive.
+        return; // if enter was pressed, no need to invoke setAsActive.
       }
       // Add class active to the selected item
-      addActive(suggestionList.children);
+      setAsActive(suggestionList.children);
     });
 
     // Create function used to clear suggestion list
@@ -139,26 +139,24 @@
       }
     }
     // Create function to add active class to the item
-    function addActive(items) {
-      if (!items) {
+    function setAsActive(suggestionElements = []) {
+      if (suggestionElements.length == 0) {
         return false;
       }
-      // Removing class active on all items
-      removeActive(items);
-      if (currentFocus >= items.length) {
+      if (currentFocus >= suggestionElements.length) {
         currentFocus = 0;
       }
       if (currentFocus < 0) {
-        currentFocus = items.length - 1;
+        currentFocus = suggestionElements.length - 1;
       }
-      // Add class active to current focus item
-      items[currentFocus].classList.add('autosuggestion-active');
-    }
-
-    // Create function to remove active class from all items
-    function removeActive(items) {
-      for (let i = 0; i < items.length; i++) {
-        items[i].classList.remove('autosuggestion-active');
+      // Removing class active on all suggestionElements
+      for (let i = 0; i < suggestionElements.length; i++) {
+        if (i == currentFocus) {
+          // Add class active to current focus item
+          suggestionElements[currentFocus].classList.add('suggestion-active');
+          continue;
+        }
+        suggestionElements[i].classList.remove('suggestion-active');
       }
     }
 
