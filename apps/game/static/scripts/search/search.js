@@ -22,29 +22,29 @@
     let url;
     if (check == 'Browse') {
       if (event.target.value[0] == '#') {
-        const term = encodeURI(event.target.value.replace('#', ''));
+        const term = event.target.value.replace('#', '');
         url = `/games/search/search-term?tag=${term}`;
       } else if (event.target.value[0] == '@') {
-        const term = encodeURI(event.target.value.replace('@', ''));
+        const term = event.target.value.replace('@', '');
         url = `/games/search/search-term?author=${term}`;
       } else {
-        const term = encodeURI(event.target.value);
+        const term = event.target.value;
         url = `/games/search/search-term?name=${term}`;
       }
     } else if (check == 'Library') {
       if (event.target.value[0] == '#') {
-        const term = encodeURI(event.target.value.replace('#', ''));
+        const term = event.target.value.replace('#', '');
         url = `/games/library/search/search-term?tag=${term}`;
       } else if (event.target.value[0] == '@') {
-        const term = encodeURI(event.target.value.replace('@', ''));
+        const term = event.target.value.replace('@', '');
         url = `/games/library/search/search-term?author=${term}`;
       } else {
-        const term = encodeURI(event.target.value);
+        const term = event.target.value;
         url = `/games/library/search/search-term?name=${term}`;
       }
     }
 
-    fetch(url, {
+    fetch(encodeURI(url), {
       method: 'GET',
     })
       .then(response => response.json())
