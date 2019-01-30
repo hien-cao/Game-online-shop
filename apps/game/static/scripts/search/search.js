@@ -83,28 +83,26 @@
     namelist.forEach(function (item) {
       if (item.substr(0, val.length).toUpperCase() == val.toUpperCase()) {
         // Create a DIV element for each matching item
-        newdiv2 = document.createElement('div');
+        const suggestionContainer = document.createElement('div');
         // Add the name to the div
         // Check if the search for category, developer or game name
         if (val[0] == '@') {
-          newdiv2.innerHTML = 'Search for developer ' + item;
+          suggestionContainer.innerHTML = 'Search by developer ' + item;
         } else if (val[0] == '#') {
-          newdiv2.innerHTML = 'Search for category ' + item;
+          suggestionContainer.innerHTML = 'Search by category ' + item;
         } else {
-          newdiv2.innerHTML = 'Search for game: ' + item;
+          suggestionContainer.innerHTML = item;
         }
         // Insert a input field that will hold the current array item's value
-        newdiv2.innerHTML += `<input type='hidden' value='${item}'>`;
+        suggestionContainer.innerHTML += `<input type='hidden' value='${item}'>`;
         // Execute a function when someone clicks on the item value (DIV element)
-        newdiv2.addEventListener('click', function (e) {
+        suggestionContainer.addEventListener('click', function (e) {
           // Insert the value for the search input field
           input.value = e.target.getElementsByTagName('input')[0].value;
-          // Close all already opened suggestions of a search
-          closeSuggestion();
           // Submit the form
           searchBtn.click();
         });
-        newdiv1.appendChild(newdiv2);
+        suggestionList.appendChild(suggestionContainer);
       }
     })
     
