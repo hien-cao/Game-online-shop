@@ -1,4 +1,4 @@
-from datetime import datetime
+from django.utils import timezone
 from django.test import TestCase
 
 from ...models import Game, Highscore, Purchase
@@ -6,8 +6,6 @@ from ....user.utils.mock_user import create_mock_user
 
 
 class HighscoreTestCase(TestCase):
-    game, purchase, user = (None, None, None)
-
     def setUp(self):
         # create a game
         self.game = Game.objects.create(
@@ -21,7 +19,7 @@ class HighscoreTestCase(TestCase):
         self.purchase = Purchase.objects.create(
             game=self.game,
             created_by=self.user.profile,
-            purchased_at=datetime.now()
+            purchased_at=timezone.now()
         )
 
     def test_highscore_can_be_created(self):
@@ -31,7 +29,7 @@ class HighscoreTestCase(TestCase):
             game=self.game,
             created_by=self.user.profile
         )
-        self.assertTrue(isinstance(highscore, Highscore))
+        self.assertIsInstance(highscore, Highscore)
 
     def test_highscore_cannot_be_updated(self):
         """Create a highscore, try save again and assert."""

@@ -23,9 +23,6 @@ new_value = {
 
 
 class GameTestCase(TestCase):
-    user_0, user_1 = (None, None)
-    no_grade, with_grade = (None, None)
-
     def setUp(self):
         """Set up some variables used in some tests."""
         # Create object without reviews
@@ -52,14 +49,14 @@ class GameTestCase(TestCase):
 
     def test_games_can_be_created(self):
         """Create a game and assert."""
-        game_0 = Game.objects.create(
+        game = Game.objects.create(
             name=orig_value["name"],
             url=orig_value["url"],
             price=orig_value["price"],
             description=orig_value["description"],
         )
-        self.assertTrue(isinstance(game_0, Game))
-        self.assertEqual(game_0.__str__(), game_0.name)
+        self.assertIsInstance(game, Game)
+        self.assertEqual(game.__str__(), game.name)
 
     def test_games_can_be_updated(self):
         """Create a game, update fields, refresh from db and assert."""
