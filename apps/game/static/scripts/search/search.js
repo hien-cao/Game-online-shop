@@ -18,37 +18,26 @@
     };
   };
 
+  // function used to query suggestions and populate suggestions list with them
   const search = debounced((event) => {
-    let url;
-    if (check == 'Browse') {
-      if (event.target.value[0] == '#') {
-        const term = event.target.value.replace('#', '');
-        url = `/games/search/search-term?tag=${term}`;
-      } else if (event.target.value[0] == '@') {
-        const term = event.target.value.replace('@', '');
-        url = `/games/search/search-term?author=${term}`;
-      } else {
-        const term = event.target.value;
-        url = `/games/search/search-term?name=${term}`;
-      }
-    } else if (check == 'Library') {
-      if (event.target.value[0] == '#') {
-        const term = event.target.value.replace('#', '');
-        url = `/games/library/search/search-term?tag=${term}`;
-      } else if (event.target.value[0] == '@') {
-        const term = event.target.value.replace('@', '');
-        url = `/games/library/search/search-term?author=${term}`;
-      } else {
-        const term = event.target.value;
-        url = `/games/library/search/search-term?name=${term}`;
-      }
+    // we'll parse the query from passed arg
+    let query, q = event.target.value;
+    if (q[0] == '#') {
+      query = `?tag=${q.substr(1)}`;
+    } else if (q[0] == '@') {
+      query = `?author=${q.substr(1)}`;
+    } else {
+      query = `?name=${q}`;
     }
 
-    fetch(encodeURI(url), {
-      method: 'GET',
-    })
+    // read the pathname until (if exists) '/search'
+    const path = window.location.pathname.split('/search/')[0] + '/search/search-term';
+    fetch(
+      encodeURI(`${path}/${query}`),
+      {method: 'GET'}
+    )
       .then(response => response.json())
-      .then(data => autosuggestion(event.target, data.results))
+      .then(data => autosuggestion(q, data.results))
       .catch(error => console.error(error))
   }, 300);
 
