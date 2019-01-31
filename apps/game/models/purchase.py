@@ -1,6 +1,6 @@
 import os
 import uuid
-from datetime import datetime
+from django.utils import timezone
 from hashlib import md5
 from django.db import models
 
@@ -36,7 +36,7 @@ class Purchase(models.Model):
     def pid(self):
         return str(self.id).replace('-', '')
 
-    def save(self):
+    def save(self, *args, **kwargs):
         # Delete previously failed (and not accepted) purchases for given user and game
         purchased = Purchase.objects.filter(
             game=self.game,
@@ -80,7 +80,7 @@ class Purchase(models.Model):
             )
             .encode("ascii")
         ).hexdigest() == query.get('checksum'):
-            purchase.purchased_at = datetime.now()
+            purchase.purchased_at = timezone.now()
             purchase.ref = query.get('ref') # update the payment reference received
             purchase.save()
         # else just does nothing and returns to payment page.

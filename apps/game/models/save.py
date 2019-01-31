@@ -3,7 +3,8 @@ import base64
 import json
 
 from ...user.models import Profile
-from ...game.models import Game
+from ...game.models import Game, Purchase
+
 
 class Save(models.Model):
     game = models.ForeignKey(
@@ -14,7 +15,7 @@ class Save(models.Model):
         Profile,
         on_delete=models.CASCADE
     )
-    content = models.BinaryField() # We store game state as base64 encoded string
+    content = models.BinaryField()  # We store game state as base64 encoded string
 
     class Meta:
         # Should only allow single save for each user per game (multiple saves were not specified)
@@ -24,3 +25,12 @@ class Save(models.Model):
     @property
     def game_state(self):
         return json.loads(base64.decodebytes(self.content).decode('utf-8'))
+
+    def save(self, *args, **kwargs):
+        """Only saves to games purchased are allowed"""
+        if Purchase.objects.filter(
+            game=self.game,
+            created_by=self.user,
+            purchased_at__isnull=False
+        ):
+            super(Purchase, self).save(*args, **kwargs)
