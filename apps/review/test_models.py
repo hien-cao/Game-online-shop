@@ -1,10 +1,12 @@
 from django.utils import timezone
 from django.test import TestCase
 
+from .models import Review
 from ..game.models import Game, Purchase
 from ..user.utils.mock_user import create_mock_user
 
 DUMMY_REF = 1
+
 
 class ReviewTestCase(TestCase):
     def setUp(self):
@@ -26,11 +28,27 @@ class ReviewTestCase(TestCase):
             ref=DUMMY_REF
         )
 
-    def tearDown(self):
-        pass
-
     def test_review_can_be_created_if_purchased(self):
-        pass
+        """A review can be created if user has purchased game"""
+        review = Review.objects.create(
+            game=self.game,
+            created_by=self.purchaser_and_reviewer.profile,
+            created_at=timezone.now(),
+            grade=5
+        )
+        self.assertIsInstance(review, Review)
 
     def test_review_cannot_be_created_if_no_purchase(self):
-        pass
+        """A review cannot be created if user has not purchased game"""
+        not_purchased_user = create_mock_user(2)
+        Review.objects.create(
+            game=self.game,
+            created_by=not_purchased_user.profile,
+            created_at=timezone.now(),
+            grade=0
+        )
+        with self.assertRaises(Review.DoesNotExist):
+            Review.objects.get(
+                game=self.game,
+                created_by=not_purchased_user.profile
+            )
