@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 
-from ..game.models import Game
+from ..game.models import Game, Purchase
 from ..user.models import Profile
 
 rn = 'reviews'
@@ -31,3 +31,12 @@ class Review(models.Model):
     content = models.TextField(
         blank=True
     )
+
+    def save(self, *args, **kwargs):
+        if Purchase.objects.filter(
+            game=self.game,
+            created_by=self.created_by,
+            purchased_at__isnull=False
+        ):
+            super(Review, self).save(*args, **kwargs)
+
