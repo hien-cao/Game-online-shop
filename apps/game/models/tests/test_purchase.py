@@ -28,7 +28,7 @@ class PurchaseTestCase(TestCase):
         )
 
     def tearDown(self):
-        if self.purchase.purchased_at:
+        if self.purchase and self.purchase.purchased_at:
             self.purchase.purchased_at = None
             self.purchase.save()
 
@@ -79,4 +79,7 @@ class PurchaseTestCase(TestCase):
         self.assertRaises(AssertionError, self.purchase.activate(query))
 
     def test_cancel(self):
-        pass
+        """cancel() should remove purchase if not already purchased."""
+        Purchase.cancel(self.purchase.id)
+        with self.assertRaises(Purchase.DoesNotExist):
+            self.purchase.refresh_from_db()
