@@ -48,9 +48,13 @@
   {% endif %}
 
   <h2 class="h5 uppercase grey">Reviews</h2>
+
+  {% if request.user.is_authenticated and purchased %}
   <p>
     <a class="button compact" href="{% url 'review' game_id=game.id %}">Write a review</a>
   </p>
+  {% endif %}
+
   {% if game.grade %}
   <ul>
     {% for review in game.reviews.all %}
