@@ -102,6 +102,8 @@ def games(request, *args, **kwargs):
             if order_by == 'created_at':
                 games = Game.objects.order_by('-{0}'.format(order_by))[(page - 1) * items:page * items]
             else:
+                # As it is not possible to filter by property,
+                # we have to get all objects and then filter...
                 all_games = Game.objects.all()
                 games = list(filter(lambda x: getattr(x, order_by), all_games))[(page - 1) * items:page * items]
             context = {
@@ -109,6 +111,8 @@ def games(request, *args, **kwargs):
                 **get_paginated_context(order_by, page, items, total_count, games)
             }
         else:
+            # Get all games because it is not possible to use
+            # properties created with python (not db).
             all_games = Game.objects.all()
             latest_games = list(filter(lambda x: x.created_at, all_games))[::-1][:5]
             popular_games = list(filter(lambda x: x.grade, all_games))[:5]
