@@ -1,7 +1,7 @@
 {% load custom_filters %}
 
 <div>
-  <h1>{{ title }}</h1>
+  <h1 class="h4 subheader uppercase">Showing {{ title }} games</h1>
   {% for item in item_list %}
   {% include 'games/game_list_item.html' with game=item %}
   {% endfor %}
