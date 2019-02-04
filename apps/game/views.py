@@ -26,10 +26,8 @@ from .contexts import (
     get_play_game_context,
     get_upsert_game_context,
     get_purchase_context,
+    get_paginated_context,
 )
-
-COUNT_PER_PAGE = 20
-ALLOWED_ORDER_BY = ['created_at']
 
 
 def parse_tags(description):
@@ -93,53 +91,33 @@ def manage_game(request, game_id=None):
     )
 
 
-def paginated_view(request, *args, **kwargs):
-    if request.method == 'GET':
-        current = 1 if not bool(request.GET.get('page')) else int(request.GET.get('page'))
-        start_index = (current - 1) * COUNT_PER_PAGE
-        end_index = start_index + COUNT_PER_PAGE
-        if start_index < 0:
-            return HttpResponse(status=404)
-        instances = Game.objects.order_by(kwargs['order_by'])[
-            start_index:end_index]
-        has_prev = start_index > 0
-        count = Game.objects.count()
-        has_next = count > end_index
-        # Always show current
-        page_range = [current]
-        if current != 1:  # More than one page, show first page as option
-            page_range.insert(0, 1)
-        if has_next:  # More than one page, show last page as option
-            page_range.append(int(count / COUNT_PER_PAGE))
-        context = {
-            'item_list': instances,
-            'has_prev': has_prev,
-            'has_next': has_next,
-            'current': current,
-            'page_range': page_range,
-        }
-        return render(request, 'games/{0}.html'.format(kwargs['template_name']), context)
-    return HttpResponse(status=404)
-
-
 # GET: Display games view
 def games(request, *args, **kwargs):
     if request.method == 'GET':
-        latest_games = Game.objects.order_by('-created_at')[:5]
-        context = {
-            **games_context,
-            'latest': latest_games,
-            'purchases': request.user.profile.purchases if request.user.is_authenticated else []
-        }
-        order_by = request.GET.get('order_by')
-        if order_by and order_by in ALLOWED_ORDER_BY:
-            return paginated_view(
-                request,
-                *args,
-                **kwargs,
-                order_by=order_by,
-                template_name=find_template_name(order_by)
-            )
+        order_by = request.GET.get('order_by') or 'name'
+        if request.GET.get('page') and hasattr(Game, order_by):
+            page = int(request.GET.get('page'))  # Convert page param to int
+            items = request.GET.get('items') or 20
+            total_count = Game.objects.count()
+            if order_by == 'created_at':
+                games = Game.objects.order_by('-{0}'.format(order_by))[(page - 1) * items:page * items]
+            else:
+                all_games = Game.objects.all()
+                games = list(filter(lambda x: getattr(x, order_by), all_games))[(page - 1) * items:page * items]
+            context = {
+                **games_context,
+                **get_paginated_context(order_by, page, items, total_count, games)
+            }
+        else:
+            all_games = Game.objects.all()
+            latest_games = list(filter(lambda x: x.created_at, all_games))[::-1][:5]
+            popular_games = list(filter(lambda x: x.grade, all_games))[:5]
+            context = {
+                **games_context,
+                'latest': latest_games,
+                'popular': popular_games,
+                'purchases': request.user.profile.purchases if request.user.is_authenticated else []
+            }
         return render(request, 'games/games.html', context)
     return HttpResponse(status=404)
 
