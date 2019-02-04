@@ -4,6 +4,7 @@ import re
 import pytz
 from datetime import datetime
 
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import (
@@ -16,6 +17,7 @@ from django.http import (
 from ..user.utils.validators import is_developer
 from .forms.game_form import GameForm
 
+from ..user.models import Profile
 from .models import Game, Purchase, Highscore, Tag, Save
 from .contexts import (
     games_context,
@@ -313,6 +315,127 @@ def save_score(request, game_id):
         return JsonResponse(save_response)
     return HttpResponse(status=404)  # other methods not supported
 
+# Autosuggestion for search query
+
+def autosuggestion_search(request):
+    if request.method == 'GET':
+        results = []
+        if request.GET.get('tag'):
+            query = request.GET.get('tag')
+            categories = Tag.objects.filter(name__icontains=query)
+            for category in categories:
+                results.append(category.name)
+        elif request.GET.get('author'):
+            query = request.GET.get('author')
+            users = User.objects.filter(username__icontains=query)
+            developers = Profile.objects.filter(user__in=users, is_developer=True)
+            for developer in developers:
+                results.append('@' + developer.user.username)
+        else:
+            query = request.GET.get('name')
+            games = Game.objects.filter(name__icontains=query)
+            for game in games:
+                results.append(game.name)
+     
+        data = json.dumps({"results": results})
+        return HttpResponse(data)
+    return HttpResponse(staus=404)
+
+# Autosuggestion for search query if the search from library page
+
+@login_required
+def autosuggestion_search_library(request):
+    if request.method == 'GET':
+        purchases = request.user.profile.purchases.filter(purchased_at__isnull=False)
+        results = []
+        if request.GET.get('tag'):
+            query = request.GET.get('tag')
+            categories = Tag.objects.filter(name__icontains=query)
+            for category in categories:
+                for purchase in purchases:
+                    if category in purchase.game.tags:
+                        results.append(category.name)
+        elif request.GET.get('author'):
+            query = request.GET.get('author')
+            users = User.objects.filter(username__icontains=query)
+            developers = Profile.objects.filter(user__in=users, is_developer=True)
+            for developer in developers:
+                for purchase in purchases:
+                    if developer == purchase.game.created_by:
+                        results.append('@' + developer.user.username)
+        else:
+            query = request.GET.get('name')
+            games = Game.objects.filter(name__icontains=query)
+            for game in games:
+                for purchase in purchases:
+                    if game == purchase.game:
+                        results.append(game.name)
+     
+        data = json.dumps({"results": list(set(results))})
+        return HttpResponse(data)
+    return HttpResponse(staus=404)
+
+# Search for the games by categories, developer, and game name
+
+def search(request):
+    if request.method == 'GET':
+        # Path of the request
+        path = request.path
+        # Path of the search from browse
+        browse = "/games/search/"
+        # Path of the search from library
+        library = "/games/library/search/"
+        context = {}
+        games = []
+        #  Collect the data that match the search
+        if 'search_term' in request.GET:
+            query = request.GET['search_term']
+            if not query:
+                return HttpResponseRedirect('/games' if path == browse else '/games/library')
+
+            if '#' == query[0]:
+                tag = Tag.objects.filter(name=query)
+                games = Game.objects.filter(tags__in=tag).order_by('created_at')[:5]
+            elif "@" == query[0]:
+                user_query = query.replace('@', '')
+                user = User.objects.filter(username=user_query)
+                developer = Profile.objects.filter(user__in=user, is_developer=True)
+                games = Game.objects.filter(created_by__in=developer).order_by('created_at')[:5]
+            else:
+                games = Game.objects.filter(name__icontains=query).order_by('created_at')[:5]
+
+            context['query'] = query
+            context['latest'] = games
+            # Preserve the search input
+            context['value'] = request.GET
+            
+        if path == browse:        
+            # Add class is-active
+            context['games'] = 'is-active'
+            return render(request, 'games/games.html', context)
+        elif path == library and request.user.is_authenticated:
+            purchases = request.user.profile.purchases.filter(purchased_at__isnull=False, game__in=games)
+            context['purchases'] = purchases
+            # Preserve the search input
+            context['library'] = 'is-active'
+            return render(request, 'games/library.html', context)
+    return HttpResponse(status=404)
+
+@login_required
+def library(request, *args, **kwargs):
+    if request.method == "GET":
+        profile = request.user.profile
+        return render(
+            request,
+            'games/library.html',
+            {
+                **library_context,
+                'allow_play': [purchase.game for purchase in profile.purchases.all()],
+                'purchases': profile.purchases.filter(purchased_at__isnull=False),
+                'profile': "profile"
+            }
+        )
+    return HttpResponse(status=404)
 
 @login_required
 def game_state(request, game_id):

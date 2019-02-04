@@ -10,10 +10,17 @@ from .views import (
     play,
     save_score,
     purchase_game,
+    search,
+    autosuggestion_search,
+    autosuggestion_search_library
 )
 
 urlpatterns = [
     path('', games, name='games'),
+    path('search/', search, name='search'),
+    path('library/search/', search, name='search'),
+    path('search/search-term/', autosuggestion_search, name='autosuggestion'),
+    path('library/search/search-term/', autosuggestion_search_library, name='autosuggestion_library'),
     path('<int:game_id>/', game_details, name='game_details'),
     path('<int:game_id>/purchase/', purchase_game, name='purchase_game'),
     path('add/', manage_game, name='add_game'),
