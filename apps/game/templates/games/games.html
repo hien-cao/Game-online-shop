@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
-
+{% load static%}
+ 
 {% block content %}
+
+{% with search_url='/games/search' %}
+{% include 'search_form.html'%}
+{% endwith %}
 
 <div>
   <h1 class="h4 subheader uppercase">Latest</h1>
@@ -18,8 +23,12 @@
     {% endif %}
 
   {% else %}
-    <p>Someone has to upload some games first!</p>
+    <p>No results for {{query}}</p>
   {% endif %}
 </div>
 
 {% endblock content %}
+
+{% block customjs%}
+<script src="{% static 'scripts/search/search.js' %}"></script>
+{% endblock customjs%}
