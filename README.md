@@ -313,7 +313,7 @@ We set out the deadlines for each task to be somewhat reasonable, so that the co
 | [Adding Game](#Adding-Game)             | 22.1.2019 | Juho     | x    | ok     |
 | [Purchasing Games](#Purchasing-Games)   | 24.1.2019 | Touko    | x    | ok     |
 | [Playing Games](#Playing-Games)         | 31.1.2019 | Juho     | x    | ok     |
-| [Searching Games](#Searching-Games)     | 31.1.2019 | Hien     | x    | -      |
+| [Searching Games](#Searching-Games)     | 31.1.2019 | Hien     | x    | ok     |
 | [Updating Game](#Updading-a-game)       | 31.1.2019 | Juho     | x    | ok     |
 | Core templates                          | 31.1.2019 | Hien     | x    | -      |
 | [Saving/Loading](#Saving/Loading)       | 7.2.2019  | Touko    | x    | ok     |
