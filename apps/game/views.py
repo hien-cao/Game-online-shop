@@ -27,6 +27,7 @@ from .contexts import (
 )
 
 COUNT_PER_PAGE = 20
+ALLOWED_ORDER_BY = ['created_at']
 
 
 def parse_tags(description):
@@ -43,6 +44,12 @@ def create_tags(description):
             obj, _ = Tag.objects.get_or_create(name=tag_name.lower())
             tags.append(obj)
     return tags
+
+
+def find_template_name(order_by):
+    if order_by == 'created_at':
+        return 'latest'
+    return None
 
 
 # Add/Edit game
@@ -113,10 +120,6 @@ def paginated_view(request, *args, **kwargs):
     return HttpResponse(status=404)
 
 
-def latest(request, *args, **kwargs):
-    return paginated_view(request, *args, **kwargs, order_by='created_at', template_name='latest')
-
-
 # GET: Display games view
 def games(request, *args, **kwargs):
     if request.method == 'GET':
@@ -126,6 +129,15 @@ def games(request, *args, **kwargs):
             'latest': latest_games,
             'purchases': request.user.profile.purchases if request.user.is_authenticated else []
         }
+        order_by = request.GET.get('order_by')
+        if order_by and order_by in ALLOWED_ORDER_BY:
+            return paginated_view(
+                request,
+                *args,
+                **kwargs,
+                order_by=order_by,
+                template_name=find_template_name(order_by)
+            )
         return render(request, 'games/games.html', context)
     return HttpResponse(status=404)
 
