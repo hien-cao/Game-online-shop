@@ -26,6 +26,8 @@ from .contexts import (
     get_purchase_context,
 )
 
+COUNT_PER_PAGE = 20
+
 
 def parse_tags(description):
     regex = re.compile(r'\B#\w+')
@@ -80,6 +82,39 @@ def manage_game(request, game_id=None):
             **get_upsert_game_context(game, form, title, url)
         }
     )
+
+
+def paginated_view(request, *args, **kwargs):
+    if request.method == 'GET':
+        current = 1 if not bool(request.GET.get('page')) else int(request.GET.get('page'))
+        start_index = (current - 1) * COUNT_PER_PAGE
+        end_index = start_index + COUNT_PER_PAGE
+        if start_index < 0:
+            return HttpResponse(status=404)
+        instances = Game.objects.order_by(kwargs['order_by'])[
+            start_index:end_index]
+        has_prev = start_index > 0
+        count = Game.objects.count()
+        has_next = count > end_index
+        # Always show current
+        page_range = [current]
+        if current != 1:  # More than one page, show first page as option
+            page_range.insert(0, 1)
+        if has_next:  # More than one page, show last page as option
+            page_range.append(int(count / COUNT_PER_PAGE))
+        context = {
+            'item_list': instances,
+            'has_prev': has_prev,
+            'has_next': has_next,
+            'current': current,
+            'page_range': page_range,
+        }
+        return render(request, 'games/{0}.html'.format(kwargs['template_name']), context)
+    return HttpResponse(status=404)
+
+
+def latest(request, *args, **kwargs):
+    return paginated_view(request, *args, **kwargs, order_by='created_at', template_name='latest')
 
 
 # GET: Display games view
