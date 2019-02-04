@@ -14,7 +14,9 @@
     <div class="capitalized grey">{{ game.created_by }}</div>
     <div class="spacer medium"></div>
     {% if request.user.is_authenticated %}
+    {% with game.grade as grade %}
     {% include 'review_circles.html' with classes="large" %}
+    {% endwith %}
     {% endif %}
   </div>
   <div class="spacer small"></div>
@@ -52,7 +54,9 @@
   {% if game.grade %}
   <ul>
     {% for review in game.reviews.all %}
+    {% with review.grade as grade %}
     {% include 'review.html' %}
+    {% endwith %}
     {% endfor %}
   </ul>
   {% else %}
