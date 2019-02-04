@@ -13,7 +13,9 @@
       {% if game in allow_play %}
         <a class="button compact" title="play" href="/games/{{game.id}}/play">Play Game</a>
       {% endif %}
+      {% with game.grade as grade %}
       {% include 'review_circles.html' with classes="small small-offset-1 medium-offset-2" %}
+      {% endwith %}
   </p>
 </li>
 {% endif %}

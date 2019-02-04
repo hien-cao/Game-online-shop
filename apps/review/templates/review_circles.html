@@ -1,12 +1,12 @@
 {% load custom_filters %}
 
-{% if game.grade %}
-<span title="Grade: {{ game.grade }}" class="review_circles {{ classes }}">
-  {% for _ in game.grade|times %}
+{% if grade %}
+<span title="Grade: {{ grade }}" class="review_circles {{ classes }}">
+  {% for _ in grade|times %}
   <i class="circle full"></i>
   {% endfor %}
 
-  {% for _ in 5|subtract:game.grade|times  %}
+  {% for _ in 5|subtract:grade|times  %}
   <i class="circle"></i>
   {% endfor %}
 </span>
