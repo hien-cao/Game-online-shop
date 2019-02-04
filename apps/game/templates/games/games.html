@@ -43,6 +43,11 @@
   </ul>
   {% include 'games/pagination.html' %}
   {% endif %}
+
+  {% if query and not latest and not popular and not items %}
+    <p>No results found with given query: <em>{{ query }}</em>.</p>
+  {% endif %}
+
 </div>
 
 {% endblock content %}
