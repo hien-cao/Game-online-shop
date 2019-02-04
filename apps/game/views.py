@@ -96,7 +96,9 @@ def games(request, *args, **kwargs):
     if request.method == 'GET':
         order_by = request.GET.get('order_by') or 'name'
         if request.GET.get('page') and hasattr(Game, order_by):
-            page = int(request.GET.get('page'))  # Convert page param to int
+            page = int(request.GET.get('page')) or 1  # Convert page param to int
+            if page <= 0:
+                return HttpResponse(status=404)
             items = request.GET.get('items') or 20
             total_count = Game.objects.count()
             if order_by == 'created_at':
