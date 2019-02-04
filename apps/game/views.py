@@ -315,8 +315,8 @@ def save_score(request, game_id):
         return JsonResponse(save_response)
     return HttpResponse(status=404)  # other methods not supported
 
-# Autosuggestion for search query
 
+# Autosuggestion for search query
 def autosuggestion_search(request):
     if request.method == 'GET':
         results = []
@@ -336,13 +336,13 @@ def autosuggestion_search(request):
             games = Game.objects.filter(name__icontains=query)
             for game in games:
                 results.append(game.name)
-     
+
         data = json.dumps({"results": results})
         return HttpResponse(data)
     return HttpResponse(staus=404)
 
-# Autosuggestion for search query if the search from library page
 
+# Autosuggestion for search query if the search from library page
 @login_required
 def autosuggestion_search_library(request):
     if request.method == 'GET':
@@ -370,13 +370,13 @@ def autosuggestion_search_library(request):
                 for purchase in purchases:
                     if game == purchase.game:
                         results.append(game.name)
-     
+
         data = json.dumps({"results": list(set(results))})
         return HttpResponse(data)
     return HttpResponse(staus=404)
 
-# Search for the games by categories, developer, and game name
 
+# Search for the games by categories, developer, and game name
 def search(request):
     if request.method == 'GET':
         # Path of the request
@@ -408,8 +408,8 @@ def search(request):
             context['latest'] = games
             # Preserve the search input
             context['value'] = request.GET
-            
-        if path == browse:        
+
+        if path == browse:
             # Add class is-active
             context['games'] = 'is-active'
             return render(request, 'games/games.html', context)
@@ -420,6 +420,7 @@ def search(request):
             context['library'] = 'is-active'
             return render(request, 'games/library.html', context)
     return HttpResponse(status=404)
+
 
 @login_required
 def library(request, *args, **kwargs):
@@ -436,6 +437,7 @@ def library(request, *args, **kwargs):
             }
         )
     return HttpResponse(status=404)
+
 
 @login_required
 def game_state(request, game_id):

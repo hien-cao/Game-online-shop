@@ -9,7 +9,7 @@
   <nav aria-label="Pagination">
     <ul class="pagination">
       {% if has_prev %}
-        <li class="pagination-previous"><a href="{% url url_type %}?page={{ current|subtract:1 }}" aria-label="Previous page">Previous <span class="show-for-sr">page</span></a></li>
+        <li class="pagination-previous"><a href="{% url games %}?order_by={{ order_by }}&page={{ current|subtract:1 }}" aria-label="Previous page">Previous <span class="show-for-sr">page</span></a></li>
       {% else %}
         <li class="pagination-previous disabled">Previous <span class="show-for-sr">page</span></li>
       {% endif %}

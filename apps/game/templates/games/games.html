@@ -1,32 +1,34 @@
-{% extends 'base.html' %}
+{% extends 'games/search_base.html' %}
 {% load static%}
- 
-{% block content %}
+
+{% block search %}
 
 {% with search_url='/games/search' %}
 {% include 'search_form.html'%}
 {% endwith %}
 
+{% endblock search %}
+
+{% block content %}
 <div>
   <h1 class="h4 subheader uppercase">Latest</h1>
   {% if latest %}
-    <ul class="no-bullet game_list">
-        {% for game in latest %}
-        {% include 'games/game_list_item.html' %}
-        {% endfor %}
-    </ul>
+  <ul class="no-bullet game_list">
+    {% for game in latest %}
+    {% include 'games/game_list_item.html' %}
+    {% endfor %}
+  </ul>
 
-    {% if latest|length == 5 %}
-    <p class="text-right">
-      <a href="#">View more</a>
-    </p>
-    {% endif %}
+  {% if latest|length == 5 %}
+  <p class="text-right">
+    <a href="{% url 'games' %}?order_by=created_at">View more</a>
+  </p>
+  {% endif %}
 
   {% else %}
-    <p>No results for {{query}}</p>
+  <p>No results for {{query}}</p>
   {% endif %}
 </div>
-
 {% endblock content %}
 
 {% block customjs%}
