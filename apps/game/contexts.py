@@ -15,12 +15,6 @@ uploads_context = {
 }
 
 
-order_by_keys = {
-    'created_at': 'latest',
-    'score': 'popular'
-}
-
-
 def get_purchase_context(purchase):
     return {
         **purchase.get_payment_context(),
