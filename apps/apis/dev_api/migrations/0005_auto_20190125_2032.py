@@ -8,15 +8,10 @@ import uuid
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dev_api', '0005_auto_20190125_2030'),
+        ('dev_api', '0004_auto_20190125_2022'),
     ]
 
     operations = [
-        migrations.AlterField(
-            model_name='apikey',
-            name='key',
-            field=models.UUIDField(default=uuid.uuid4, editable=False),
-        ),
         migrations.AlterField(
             model_name='apikey',
             name='owner',

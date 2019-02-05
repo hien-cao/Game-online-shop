@@ -8,7 +8,7 @@ SOCIAL_AUTH_GITHUB_KEY = os.environ['GITHUB_KEY']
 SOCIAL_AUTH_GITHUB_SECRET = os.environ['GITHUB_SECRET']
 
 DEBUG = False
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = ['*']
 
 # Only when running in Heroku
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')

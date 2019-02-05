@@ -15,8 +15,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ApiKeys',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('key', models.CharField(default=uuid.uuid4, max_length=128, unique=True)),
+                ('key', models.CharField(default=uuid.uuid4, unique=True, editable=False, primary_key=True, serialize=False)),
             ],
         ),
     ]
