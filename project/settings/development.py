@@ -1,4 +1,4 @@
-from .base import *
+import base
 
 ENVIRONMENT = 'development'
 
