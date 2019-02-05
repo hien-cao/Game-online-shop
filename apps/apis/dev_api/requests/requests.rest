@@ -6,42 +6,44 @@
 @version = 1
 @apiUrl = {{rootUrl}}/api/v{{version}}
 
+### 
+
 GET {{apiUrl}}/games/
 content-type: application/json
 Accept: application/json
-X-DEV-API-KEY: 6d07d77d-f2a1-4511-aff0-d965372a143f
+X-DEV-API-KEY: 958dbf6c-a623-4baa-8be9-a44dd3c69bbd
 
 ###
 
-GET {{apiUrl}}/games/19/
+GET {{apiUrl}}/games/1/
 content-type: application/json
 Accept: application/json
-X-DEV-API-KEY: 6d07d77d-f2a1-4511-aff0-d965372a143f
+X-DEV-API-KEY: 958dbf6c-a623-4baa-8be9-a44dd3c69bbd
 
 ###
 
-GET {{apiUrl}}/game-statistics/19/
+GET {{apiUrl}}/game-statistics/1/
 content-type: application/json
 Accept: application/json
-X-DEV-API-KEY: 6d07d77d-f2a1-4511-aff0-d965372a143f
+X-DEV-API-KEY: 958dbf6c-a623-4baa-8be9-a44dd3c69bbd
 
 ###
 
 GET {{apiUrl}}/my-reviews/
 content-type: application/json
 Accept: application/json
-X-DEV-API-KEY: 6d07d77d-f2a1-4511-aff0-d965372a143f
+X-DEV-API-KEY: 958dbf6c-a623-4baa-8be9-a44dd3c69bbd
 
 ###
 
 GET {{apiUrl}}/game-reviews/
 content-type: application/json
 Accept: application/json
-X-DEV-API-KEY: 6d07d77d-f2a1-4511-aff0-d965372a143f
+X-DEV-API-KEY: 958dbf6c-a623-4baa-8be9-a44dd3c69bbd
 
 ###
 
-GET {{apiUrl}}/game-reviews/12/
+GET {{apiUrl}}/game-reviews/1/
 content-type: application/json
 Accept: application/json
-X-DEV-API-KEY: 6d07d77d-f2a1-4511-aff0-d965372a143f
+X-DEV-API-KEY: 958dbf6c-a623-4baa-8be9-a44dd3c69bbd
