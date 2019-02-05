@@ -97,16 +97,19 @@ def games(request, *args, **kwargs):
         order_by = request.GET.get('order_by') or 'name'
         if request.GET.get('page') and hasattr(Game, order_by):
             try:  # Try to convert page param to int
-                page = max(1, int(request.GET.get('page')) or 1)
+                page = max(1, int(request.GET.get('page')))
             except ValueError:
                 page = 1
             items = request.GET.get('items') or 20
             total_count = Game.objects.count()
             if order_by == 'created_at':
-                games = Game.objects.order_by('-{0}'.format(order_by))[(page - 1) * items:page * items]
+                games = Game.objects.order_by(
+                    '{0}{1}'.format('-' if request.GET.get('desc') else '', order_by)
+                )[(page - 1) * items:page * items]
             else:
-                # As it is not possible to filter by property,
-                # we have to get all objects and then filter...
+                # NOTE: This method of querying is inefficient as
+                # we have to query all results from database before filtering.
+                # This is because it is not possible to filter by property.
                 all_games = Game.objects.all()
                 games = list(filter(lambda x: getattr(x, order_by), all_games))[(page - 1) * items:page * items]
             context = {
@@ -117,7 +120,7 @@ def games(request, *args, **kwargs):
             # Get all games because it is not possible to use
             # properties created with python (not db).
             all_games = Game.objects.all()
-            latest_games = list(filter(lambda x: x.created_at, all_games))[::-1][:5]
+            latest_games = Game.objects.order_by('-created_at')[:5]
             popular_games = list(filter(lambda x: x.grade, all_games))[:5]
             context = {
                 **games_context,
