@@ -251,7 +251,7 @@ def uploads(request, *args, **kwargs):
         profile = request.user.profile
         purchases = Purchase.objects.none()  # initialize empty queryset for listing purchases
         for game in profile.uploads.all():  # fetch purchases for each game
-            purchases |= game.purchases.all()
+            purchases |= game.purchases.filter(purchased_at__isnull=False)
         purchases = purchases.order_by('-purchased_at')
         return render(
             request,
