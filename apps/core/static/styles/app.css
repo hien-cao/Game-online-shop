@@ -183,6 +183,11 @@ footer > .container {
 .breadcrumbs_container {
   padding: 1rem 0 2rem 0;
 }
+@media (max-width: 640px) {
+  .breadcrumbs_container {
+    padding: .5rem 0;
+  }
+}
 
 /*
 * Search form
@@ -193,6 +198,20 @@ footer > .container {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+}
+
+@media (max-width: 640px) {
+  #search-form {
+    align-items: stretch;
+  }
+  #autosuggestion-input {
+    width: auto !important;
+  }
+  #suggestion-list {
+    left: 0;
+    right: 0;
+    width: auto !important;
+  }
 }
 
 #autosuggestion-input {
@@ -255,7 +274,7 @@ footer > .container {
   padding: 5px;
 }
 
-.suggestion-active {
+.suggestion-active, #suggestion-list>div:hover {
   color: #fefefe;
   background-color: #455a64;
 }
