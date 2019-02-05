@@ -10,7 +10,7 @@
 <div>
   {# Latest games #}
   {% if latest %}
-  <h1 class="h4 subheader uppercase">Latest</h1>
+  <h1 class="h4">Latest</h1>
   <ul class="no-bullet game_list">
     {% for game in latest %}
     {% include 'games/game_list_item.html' %}
@@ -23,7 +23,7 @@
 
   {# Most popular games #}
   {% if popular %}
-  <h1 class="h4 subheader uppercase">Popular</h1>
+  <h1 class="h4">Popular</h1>
   <ul class="no-bullet game_list">
     {% for game in popular %}
     {% include 'games/game_list_item.html' %}
@@ -35,7 +35,7 @@
   {% endif %}
 
   {% if items %}
-  <h1 class="h4 subheader uppercase">Games</h1>
+  <h1 class="h4">Games</h1>
   <ul class="no-bullet game_list">
     {% for game in items %}
     {% include 'games/game_list_item.html' %}
