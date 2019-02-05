@@ -1,0 +1,5 @@
+{% extends 'games/search_base.html' %}
+
+{% block content %}
+{% include 'games/game_list.html' with title='Latest' order_by='created_at' %}
+{% endblock content %}

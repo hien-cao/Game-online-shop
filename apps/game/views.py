@@ -26,6 +26,7 @@ from .contexts import (
     get_play_game_context,
     get_upsert_game_context,
     get_purchase_context,
+    get_paginated_context,
 )
 
 
@@ -43,6 +44,12 @@ def create_tags(description):
             obj, _ = Tag.objects.get_or_create(name=tag_name.lower())
             tags.append(obj)
     return tags
+
+
+def find_template_name(order_by):
+    if order_by == 'created_at':
+        return 'latest'
+    return None
 
 
 # Add/Edit game
@@ -87,12 +94,40 @@ def manage_game(request, game_id=None):
 # GET: Display games view
 def games(request, *args, **kwargs):
     if request.method == 'GET':
-        latest_games = Game.objects.order_by('-created_at')[:5]
-        context = {
-            **games_context,
-            'latest': latest_games,
-            'purchases': request.user.profile.purchases if request.user.is_authenticated else []
-        }
+        order_by = request.GET.get('order_by') or 'name'
+        if request.GET.get('page') and hasattr(Game, order_by):
+            try:  # Try to convert page param to int
+                page = max(1, int(request.GET.get('page')))
+            except ValueError:
+                page = 1
+            items = request.GET.get('items') or 20
+            total_count = Game.objects.count()
+            if order_by == 'created_at':
+                games = Game.objects.order_by(
+                    '{0}{1}'.format('-' if request.GET.get('desc') else '', order_by)
+                )[(page - 1) * items:page * items]
+            else:
+                # NOTE: This method of querying is inefficient as
+                # we have to query all results from database before filtering.
+                # This is because it is not possible to filter by property.
+                all_games = Game.objects.all()
+                games = list(filter(lambda x: getattr(x, order_by), all_games))[(page - 1) * items:page * items]
+            context = {
+                **games_context,
+                **get_paginated_context(order_by, page, items, total_count, games)
+            }
+        else:
+            # Get all games because it is not possible to use
+            # properties created with python (not db).
+            all_games = Game.objects.all()
+            latest_games = Game.objects.order_by('-created_at')[:5]
+            popular_games = list(filter(lambda x: x.grade, all_games))[:5]
+            context = {
+                **games_context,
+                'latest': latest_games,
+                'popular': popular_games,
+                'purchases': request.user.profile.purchases if request.user.is_authenticated else []
+            }
         return render(request, 'games/games.html', context)
     return HttpResponse(status=404)
 
@@ -268,8 +303,8 @@ def save_score(request, game_id):
         return JsonResponse(save_response)
     return HttpResponse(status=404)  # other methods not supported
 
-# Autosuggestion for search query
 
+# Autosuggestion for search query
 def autosuggestion_search(request):
     if request.method == 'GET':
         results = []
@@ -294,8 +329,8 @@ def autosuggestion_search(request):
         return HttpResponse(data)
     return HttpResponse(staus=404)
 
-# Autosuggestion for search query if the search from library page
 
+# Autosuggestion for search query if the search from library page
 @login_required
 def autosuggestion_search_library(request):
     if request.method == 'GET':
@@ -328,8 +363,8 @@ def autosuggestion_search_library(request):
         return HttpResponse(data)
     return HttpResponse(staus=404)
 
-# Search for the games by categories, developer, and game name
 
+# Search for the games by categories, developer, and game name
 def search(request):
     if request.method == 'GET':
         # Path of the request
@@ -374,6 +409,7 @@ def search(request):
             return render(request, 'games/library.html', context)
     return HttpResponse(status=404)
 
+
 @login_required
 def library(request, *args, **kwargs):
     if request.method == "GET":
@@ -389,6 +425,7 @@ def library(request, *args, **kwargs):
             }
         )
     return HttpResponse(status=404)
+
 
 @login_required
 def game_state(request, game_id):

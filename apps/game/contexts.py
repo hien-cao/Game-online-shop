@@ -78,3 +78,19 @@ def get_upsert_game_context(game, form, title, url):
             },
         ]
     }
+
+
+def get_paginated_context(order_by, page, items, total_count, games):
+    return {
+        'crumbs': [
+            {
+                'label': 'Browse',
+                'url': 'games',
+            },
+        ],
+        'page': page,
+        'order_by': order_by,
+        'items': games,
+        'has_next': total_count / (page * 20) > page,
+        'has_pagination': True
+    }
