@@ -12,11 +12,11 @@
   {# Latest games #}
   {% if latest %}
   <h2 class="h5">Latest</h1>
-  <ul class="no-bullet game_list">
+  <div class="no-bullet game_list">
     {% for game in latest %}
     {% include 'games/game_list_item.html' %}
     {% endfor %}
-  </ul>
+  </div>
   <p class="text-right">
     <a href="{% url 'games' %}?order_by=created_at&page=1">View more</a>
   </p>
@@ -25,22 +25,22 @@
   {# Most popular games #}
   {% if popular %}
   <h2 class="h5">Popular</h1>
-  <ul class="no-bullet game_list">
+  <div class="no-bullet game_list">
     {% for game in popular %}
     {% include 'games/game_list_item.html' %}
     {% endfor %}
-  </ul>
+  </div>
   <p class="text-right">
     <a href="{% url 'games' %}?order_by=grade&page=1">View more</a>
   </p>
   {% endif %}
 
   {% if items %}
-  <ul class="no-bullet game_list">
+  <div class="no-bullet game_list">
     {% for game in items %}
     {% include 'games/game_list_item.html' %}
     {% endfor %}
-  </ul>
+  </div>
   {% include 'games/pagination.html' %}
   {% endif %}
 

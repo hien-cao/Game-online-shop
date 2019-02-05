@@ -56,13 +56,11 @@
   {% endif %}
 
   {% if game.grade %}
-  <ul>
     {% for review in game.reviews.all %}
     {% with review.grade as grade %}
     {% include 'review.html' %}
     {% endwith %}
     {% endfor %}
-  </ul>
   {% else %}
   <p>This game has no reviews.</p>
   {% endif %}

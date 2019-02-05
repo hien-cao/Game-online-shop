@@ -71,9 +71,7 @@ def get_upsert_game_context(game, form, title, url):
                 'url': 'uploads'
             },
             {
-                'url': url,
                 'label': title,
-                'is_game_url': url == 'edit_game',
                 'game': game
             },
         ]

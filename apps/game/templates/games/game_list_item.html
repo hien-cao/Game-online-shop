@@ -1,7 +1,7 @@
 {% if game %}
-<li class="grid-x grid-padding-y">
+<div class="grid-x grid-padding-y">
   <div class="cell medium-auto">
-    <p class="small-no-margin-bottom">
+    <div>
       <a href="{% url 'game_details' game_id=game.id %}">{{game.name}}</a>
       {% if game.tags.all %}
       <br>
@@ -10,12 +10,13 @@
       {% endif %}
       {% include 'games/game_tags.html' with tags=game.tags class="f_tiny" %}
       {% endif %}
-    </p>
+    </div>
   </div>
-  <p class="cell medium-shrink text-right">
+  <div class="cell medium-shrink text-right">
       {% with game.grade as grade %}
       {% include 'review_circles.html' with classes="small" %}
       {% endwith %}
-  </p>
-</li>
+  </div>
+</div>
+<hr />
 {% endif %}

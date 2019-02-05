@@ -96,19 +96,11 @@ footer > .container {
   border: 1px solid #999999;
 }
 
-.small-no-margin-bottom, .medium-no-margin-bottom, .large-no-margin-bottom, .no-margin-bottom {
-  margin-bottom: 0;
-}
-
 /* Small devices (landscape phones, 640px and up) */
 @media (min-width: 640px) {
   .container {
     padding-right: 15px;
     padding-left: 15px;
-  }
-
-  p.small-no-margin-bottom {
-    margin-bottom: 1rem;
   }
 }
 
@@ -119,20 +111,12 @@ footer > .container {
     margin-right: auto;
     margin-left: auto;
   }
-
-  p.medium-no-margin-bottom {
-    margin-bottom: 1rem;
-  }
 }
 
 /* Large devices (desktops, 992px and up) */
 @media (min-width: 992px) {
   .container {
     width: 970px;
-  }
-
-  p.large-no-margin-bottom {
-    margin-bottom: 1rem;
   }
 }
 
@@ -346,6 +330,19 @@ p.help {
   height: 1rem;
 }
 
+@media (max-width: 640px) {
+  .spacer {
+    height: 1.5rem;
+  }
+
+  .spacer.medium {
+    height: 1rem;
+  }
+
+  .spacer.small {
+    height: .5rem;
+  }
+}
 /*
 * Buttons
 */

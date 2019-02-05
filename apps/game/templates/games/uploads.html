@@ -6,13 +6,13 @@
   <h1 class="h4">My uploads</h1>
   <a class="button compact" href="{% url 'add_game' %}">Add game</a>
   {% if my_uploads %}
-  <ul class="no-bullet game_list">
+  <div class="game_list">
     {% for game in my_uploads.all %}
     {% include 'games/game_list_item.html' %}
     {% endfor %}
     <h2 class="h5">Games sold by me</h2>
     {% include 'games/purchase_list.html' %}
-  </ul>
+  </div>
   {% else %}
   <p>You haven't uploaded any games.<p>
   {% endif %}
