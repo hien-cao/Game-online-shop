@@ -216,7 +216,7 @@ def uploads(request, *args, **kwargs):
         profile = request.user.profile
         purchases = Purchase.objects.none()  # initialize empty queryset for listing purchases
         for game in profile.uploads.all():  # fetch purchases for each game
-            purchases |= game.purchases
+            purchases |= game.purchases.all()
         purchases = purchases.order_by('-purchased_at')
         return render(
             request,
@@ -289,7 +289,7 @@ def autosuggestion_search(request):
             games = Game.objects.filter(name__icontains=query)
             for game in games:
                 results.append(game.name)
-     
+
         data = json.dumps({"results": results})
         return HttpResponse(data)
     return HttpResponse(staus=404)
@@ -323,7 +323,7 @@ def autosuggestion_search_library(request):
                 for purchase in purchases:
                     if game == purchase.game:
                         results.append(game.name)
-     
+
         data = json.dumps({"results": list(set(results))})
         return HttpResponse(data)
     return HttpResponse(staus=404)
@@ -361,8 +361,8 @@ def search(request):
             context['latest'] = games
             # Preserve the search input
             context['value'] = request.GET
-            
-        if path == browse:        
+
+        if path == browse:
             # Add class is-active
             context['games'] = 'is-active'
             return render(request, 'games/games.html', context)
