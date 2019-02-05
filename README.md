@@ -315,12 +315,12 @@ We set out the deadlines for each task to be somewhat reasonable, so that the co
 | [Playing Games](#Playing-Games)         | 31.1.2019 | Juho     | x    | ok     |
 | [Searching Games](#Searching-Games)     | 31.1.2019 | Hien     | x    | ok     |
 | [Updating Game](#Updading-a-game)       | 31.1.2019 | Juho     | x    | ok     |
-| Core templates                          | 31.1.2019 | Hien     | x    | -      |
+| Core templates                          | 31.1.2019 | Hien     | x    | ok     |
 | [Saving/Loading](#Saving/Loading)       | 7.2.2019  | Touko    | x    | ok     |
-| [Statistics](#Statistics)               | 10.2.2019 | Juho     | x    | -      |
+| [Statistics](#Statistics)               | 10.2.2019 | Juho     | x    | ok     |
 | [Reviews](#Reviews)                     | 16.2.2019 | Juho     | -    | ok     |
 | [REST API](#REST-API)                   | 16.2.2019 | Hien     | -    | -      |
 | [Highscores](#Highscores)               | 16.2.2019 | Juho     | -    | -      |
 | Custom JavaScript game                  | 24.2.2019 | Touko    | -    | ok     |
 | Social media sharing                    | 24.2.2019 | -        | -    | -      |
-| Polishing                               | 24.2.2019 | -        | -    | -      |
+| Polishing                               | 24.2.2019 | Touko    | -    | -      |
