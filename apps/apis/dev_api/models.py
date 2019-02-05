@@ -12,7 +12,6 @@ class ApiKey(models.Model):
     )
     owner = models.OneToOneField(
         Profile,
-        primary_key=True,
         on_delete=models.CASCADE,
         related_name='apikey'
     )
