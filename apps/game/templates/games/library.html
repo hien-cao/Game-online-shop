@@ -8,15 +8,15 @@
 {% endwith %}
 
 <div>
-  <h1 class="h4 subheader uppercase">My games</h1>
+  <h1 class="h4">My games</h1>
   {% if purchases %}
-  <ul class="no-bullet game_list">
+  <div class="game_list">
     {% for purchase in purchases.all %}
     {% with purchase.game as game %}
     {% include 'games/game_list_item.html' %}
     {% endwith %}
     {% endfor %}
-  </ul>
+  </div>
   {% elif query %}
   <p>No results for {{query}}</p>
   {% else %}
