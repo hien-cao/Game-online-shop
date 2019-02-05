@@ -367,5 +367,5 @@ h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
   text-transform: uppercase;
   font-weight: 200;
-  margin: 1.5rem 0 1rem;
+  margin: 1.5rem 0 2rem;
 }

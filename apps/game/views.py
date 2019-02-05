@@ -114,7 +114,11 @@ def games(request, *args, **kwargs):
                 games = list(filter(lambda x: getattr(x, order_by), all_games))[(page - 1) * items:page * items]
             context = {
                 **games_context,
-                **get_paginated_context(order_by, page, items, total_count, games)
+                **get_paginated_context(order_by, page, items, total_count, games),
+                'crumbs': [
+                    {'label': 'Games', 'url': 'games'},
+                    {'label': 'Browse'},
+                ]
             }
         else:
             # Get all games because it is not possible to use

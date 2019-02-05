@@ -84,8 +84,7 @@ def get_paginated_context(order_by, page, items, total_count, games):
     return {
         'crumbs': [
             {
-                'label': 'Browse',
-                'url': 'games',
+                'label': 'Browse'
             },
         ],
         'page': page,
