@@ -8,7 +8,7 @@ SOCIAL_AUTH_GITHUB_KEY = os.environ['GITHUB_KEY']
 SOCIAL_AUTH_GITHUB_SECRET = os.environ['GITHUB_SECRET']
 
 DEBUG = False
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost']
 
 # Only when running in Heroku
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
@@ -22,13 +22,11 @@ STATICFILES_DIRS = [
 ]
 
 if "DYNO" in os.environ:
+    import dj_database_url
 
     # Override the sqlite
-    import dj_database_url
     DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 
-
-    DEBUG = True
     # Append whitenoise middleware
     MIDDLEWARE.append('whitenoise.middleware.WhiteNoiseMiddleware')
 
