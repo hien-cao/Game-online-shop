@@ -11,7 +11,7 @@ DEBUG = False
 ALLOWED_HOSTS = ['*']
 
 # Only when running in Heroku
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 if "DYNO" in os.environ:
 
