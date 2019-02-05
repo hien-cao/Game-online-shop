@@ -10,7 +10,7 @@
   </div>
   <div class="game-header text-center">
     <div class="grey uppercase">{{ game.created_at|date:"F d, Y" }}</div>
-    <h1 class="uppercase h4">{{ game.name }}</h1>
+    <h1 class="h4">{{ game.name }}</h1>
     <div class="capitalized grey">{{ game.created_by }}</div>
     <div class="spacer medium"></div>
     {% if request.user.is_authenticated %}
@@ -27,7 +27,7 @@
   </div>
   {% endif %}
 
-  <h2 class="h5 uppercase grey">Description</h2>
+  <h2 class="h5 grey">Description</h2>
   <p>{{ game.description }}</p>
   {% if request.user.is_authenticated %}
   <div class="clearfix text-right">
@@ -47,7 +47,7 @@
   <div class="spacer"></div>
   {% endif %}
 
-  <h2 class="h5 uppercase grey">Reviews</h2>
+  <h2 class="h5 grey">Reviews</h2>
 
   {% if request.user.is_authenticated and purchased %}
   <p>
@@ -56,13 +56,11 @@
   {% endif %}
 
   {% if game.grade %}
-  <ul>
     {% for review in game.reviews.all %}
     {% with review.grade as grade %}
     {% include 'review.html' %}
     {% endwith %}
     {% endfor %}
-  </ul>
   {% else %}
   <p>This game has no reviews.</p>
   {% endif %}
