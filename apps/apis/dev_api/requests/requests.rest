@@ -13,7 +13,14 @@ X-DEV-API-KEY: 6d07d77d-f2a1-4511-aff0-d965372a143f
 
 ###
 
-GET {{apiUrl}}/games/19
+GET {{apiUrl}}/games/19/
+content-type: application/json
+Accept: application/json
+X-DEV-API-KEY: 6d07d77d-f2a1-4511-aff0-d965372a143f
+
+###
+
+GET {{apiUrl}}/game-statistics/19/
 content-type: application/json
 Accept: application/json
 X-DEV-API-KEY: 6d07d77d-f2a1-4511-aff0-d965372a143f
@@ -28,6 +35,13 @@ X-DEV-API-KEY: 6d07d77d-f2a1-4511-aff0-d965372a143f
 ###
 
 GET {{apiUrl}}/game-reviews/
+content-type: application/json
+Accept: application/json
+X-DEV-API-KEY: 6d07d77d-f2a1-4511-aff0-d965372a143f
+
+###
+
+GET {{apiUrl}}/game-reviews/12/
 content-type: application/json
 Accept: application/json
 X-DEV-API-KEY: 6d07d77d-f2a1-4511-aff0-d965372a143f
