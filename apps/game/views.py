@@ -100,7 +100,7 @@ def games(request, *args, **kwargs):
                 page = max(1, int(request.GET.get('page')))
             except ValueError:
                 page = 1
-            items = request.GET.get('items') or 20
+            items = request.GET.get('items') or 10
             total_count = Game.objects.count()
             if order_by == 'created_at':
                 games = Game.objects.order_by(
@@ -388,14 +388,23 @@ def search(request):
                 user_query = query.replace('@', '')
                 user = User.objects.filter(username=user_query)
                 developer = Profile.objects.filter(user__in=user, is_developer=True)
-                games = Game.objects.filter(created_by__in=developer).order_by('created_at')[:5]
+                games = Game.objects.filter(created_by__in=developer).order_by('-created_at')[:5]
             else:
-                games = Game.objects.filter(name__icontains=query).order_by('created_at')[:5]
+                games = Game.objects.filter(name__icontains=query).order_by('-created_at')[:5]
 
             context['query'] = query
-            context['latest'] = games
+            context['items'] = games
             # Preserve the search input
             context['value'] = request.GET
+            context['crumbs'] = [
+                {
+                    'label': 'Browse',
+                    'url': 'games',
+                },
+                {
+                    'label': 'Search'
+                }
+            ]
 
         if path == browse:
             # Add class is-active

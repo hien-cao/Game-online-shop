@@ -91,6 +91,6 @@ def get_paginated_context(order_by, page, items, total_count, games):
         'page': page,
         'order_by': order_by,
         'items': games,
-        'has_next': total_count / (page * 20) > page,
+        'has_next': total_count / (page * 10) > page,
         'has_pagination': True
     }
