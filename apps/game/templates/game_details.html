@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div>
+  <div class="clearfix">
+    <span class="label secondary float-right">
+      Price: {{ game.price }}€
+    </span>
+  </div>
+  <div class="game-header text-center">
+    <div class="grey uppercase">{{ game.created_at|date:"F d, Y" }}</div>
+    <h1 class="uppercase h4">{{ game.name }}</h1>
+    <div class="capitalized grey">{{ game.created_by }}</div>
+    <div class="spacer medium"></div>
+    {% if request.user.is_authenticated %}
+    {% with game.grade as grade %}
+    {% include 'review_circles.html' with classes="large" %}
+    {% endwith %}
+    {% endif %}
+  </div>
+  <div class="spacer small"></div>
+
+  {% if game.tags %}
+  <div class="game-tags">
+    {% include 'games/game_tags.html' %}
+  </div>
+  {% endif %}
+
+  <h2 class="h5 uppercase grey">Description</h2>
+  <p>{{ game.description }}</p>
+  {% if request.user.is_authenticated %}
+  <div class="clearfix text-right">
+    {% if game.created_by == request.user.profile %}
+    <a class="button secondary" href="{% url 'edit_game' game_id=game.id %}">Edit details</a>
+    {% endif %}
+    {% if purchased %}
+    <a class="button" href="/games/{{game.id}}/play">Play game</a>
+    {% else %}
+    <a class="button" href="/games/{{game.id}}/purchase">Purchase game</a>
+    {% endif %}
+  </div>
+  <div class="spacer medium"></div>
+
+  {% if request.user.is_authenticated and game.created_by == request.user.profile %}
+  {% include 'statistics.html' %}
+  <div class="spacer"></div>
+  {% endif %}
+
+  <h2 class="h5 uppercase grey">Reviews</h2>
+
+  {% if request.user.is_authenticated and purchased %}
+  <p>
+    <a class="button compact" href="{% url 'review' game_id=game.id %}">Write a review</a>
+  </p>
+  {% endif %}
+
+  {% if game.grade %}
+  <ul>
+    {% for review in game.reviews.all %}
+    {% with review.grade as grade %}
+    {% include 'review.html' %}
+    {% endwith %}
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>This game has no reviews.</p>
+  {% endif %}
+  {% else %}
+  <h5>Note</h5>
+  <p>Only registered users can review and play the game.</p>
+  {% endif %}
+</div>
+
+{% endblock %}

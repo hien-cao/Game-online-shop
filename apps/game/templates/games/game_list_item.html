@@ -1,0 +1,21 @@
+{% if game %}
+<li class="grid-x grid-padding-y">
+  <div class="cell medium-auto">
+    <p class="small-no-margin-bottom">
+      <a href="{% url 'game_details' game_id=game.id %}">{{game.name}}</a>
+      {% if game.tags.all %}
+      <br>
+      {% include 'games/game_tags.html' with tags=game.tags class="f_tiny" %}
+      {% endif %}
+    </p>
+  </div>
+  <p class="cell medium-shrink text-right">
+      {% if game in allow_play %}
+        <a class="button compact" title="play" href="/games/{{game.id}}/play">Play Game</a>
+      {% endif %}
+      {% with game.grade as grade %}
+      {% include 'review_circles.html' with classes="small" %}
+      {% endwith %}
+  </p>
+</li>
+{% endif %}

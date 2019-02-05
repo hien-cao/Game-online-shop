@@ -1,0 +1,10 @@
+<form action="{{ search_url }}" id="search-form" role="form" method="GET">
+  <div id="autosuggestion-input">
+    <input id="searchterm" type="text" placeholder="Search ..." autocomplete="off" name="search_term" value="{{ value.search_term }}">
+    <button type="submit" id="search_btn">
+      <i class="fas fa-search"></i>
+    </button>
+  </div>
+  <div id="suggestion-list">
+  </div>
+</form>

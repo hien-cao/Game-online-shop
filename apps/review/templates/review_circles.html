@@ -1,0 +1,16 @@
+{% load custom_filters %}
+
+{% if grade %}
+<span title="Grade: {{ grade }}" class="review_circles {{ classes }}">
+  {% for _ in grade|times %}
+  <i class="circle full"></i>
+  {% endfor %}
+
+  {% for _ in 5|subtract:grade|times  %}
+  <i class="circle"></i>
+  {% endfor %}
+</span>
+{% else %}
+<em class="grey f_tiny">No reviews.</em>
+{% endif %}
+

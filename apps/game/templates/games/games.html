@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+{% with search_url='/games/search' %}
+{% include 'search_form.html'%}
+{% endwith %}
+
+<div>
+  {# Latest games #}
+  {% if latest %}
+  <h1 class="h4 subheader uppercase">Latest</h1>
+  <ul class="no-bullet game_list">
+    {% for game in latest %}
+    {% include 'games/game_list_item.html' %}
+    {% endfor %}
+  </ul>
+  <p class="text-right">
+    <a href="{% url 'games' %}?order_by=created_at&page=1">View more</a>
+  </p>
+  {% endif %}
+
+  {# Most popular games #}
+  {% if popular %}
+  <h1 class="h4 subheader uppercase">Popular</h1>
+  <ul class="no-bullet game_list">
+    {% for game in popular %}
+    {% include 'games/game_list_item.html' %}
+    {% endfor %}
+  </ul>
+  <p class="text-right">
+    <a href="{% url 'games' %}?order_by=grade&page=1">View more</a>
+  </p>
+  {% endif %}
+
+  {% if items %}
+  <h1 class="h4 subheader uppercase">Games</h1>
+  <ul class="no-bullet game_list">
+    {% for game in items %}
+    {% include 'games/game_list_item.html' %}
+    {% endfor %}
+  </ul>
+  {% include 'games/pagination.html' %}
+  {% endif %}
+
+  {% if query and not latest and not popular and not items %}
+    <p>No results found with given query: <em>{{ query }}</em>.</p>
+  {% endif %}
+
+</div>
+
+{% endblock content %}
+
+{% block customjs%}
+<script src="{% static 'scripts/search/search.js' %}"></script>
+{% endblock customjs%}

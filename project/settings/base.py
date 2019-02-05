@@ -95,7 +95,7 @@ AUTHENTICATION_BACKENDS = (
 
 WSGI_APPLICATION = 'project.wsgi.application'
 
-LOGIN_URL = '/login'
+LOGIN_URL = '/signin'
 LOGIN_REDIRECT_URL = '/games'
 
 # Database
@@ -128,6 +128,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # AUTH_USER_MODEL = 'auth.User'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 SOCIAL_AUTH_USER_MODEL = 'auth.User'
 
 SOCIAL_AUTH_PIPELINE = (
@@ -163,9 +165,6 @@ SOCIAL_AUTH_PIPELINE = (
 
     # Create a user account if we haven't found one yet.
     'social_core.pipeline.user.create_user',
-
-    # Create a profile.
-    'apps.user.utils.models.save_profile',
 
     # Create the record that associates the social account with the user.
     'social_core.pipeline.social_auth.associate_user',

@@ -1,0 +1,9 @@
+<li>
+  <p>
+    <span>{{ review.created_by }}</span>
+  </p>
+  <p class="f_tiny no-margin-bottom">Grade: {% include 'review_circles.html' with classes="small" %}</p>
+  <p class="f_tiny"><em>{{ review.created_at|date:"F d, Y – H:i" }}</em></p>
+  <p>{{ review.content }}</p>
+  <hr>
+</li>

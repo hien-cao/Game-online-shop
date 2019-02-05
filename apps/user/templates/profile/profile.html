@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div>
+  <h1 class="h4">Hello, <span class="capitalized">{{ request.user.username }}</span></h1>
+  <div class="grid-x">
+    <div class="small-3 bolded">Email</div>
+    <div class="small-9">{{ request.user.email }}</div>
+  </div>
+  <h2 class="h5">Developer settings</h2>
+  {% if request.user.profile.is_developer %}
+    {% include 'forms/apikey.html' %}
+    {% include 'profile/user_statistics.html' %}
+  {% else %}
+    <p>
+      It seems that you are not registered as a developer.
+      After becoming one you can upload and sell games you've created.
+    </p>
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="is_developer" value=1>
+      <button id="become-developer" class="button" type="submit">Become a developer</button>
+    </form>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block customjs %}
+<script src="{% static 'scripts/profile.js' %}"></script>
+{% endblock customjs %}

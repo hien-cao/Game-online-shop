@@ -1,0 +1,341 @@
+/*
+    This file hosts all styles not related to foundation.css
+    See `static/libs/foundation/css/app.css` if you wish to modify foundation styles.
+*/
+
+/*
+* Colors:
+* dark-primary-color    : #455a64;
+* default-primary-color : #607d8b;
+* light-primary-color   : #cfd8dc;
+* text-primary-color    : #ffffff;
+* accent-color          : #607d8b;
+* primary-text-color    : #212121;
+* secondary-text-color  : #757575;
+* divider-color         : #bdbdbd;
+*/
+
+/*
+* logo
+*/
+
+.logo {
+  height: 100%;
+  padding: 3px 0 !important;
+  margin-right: 3rem;
+}
+
+
+.clickable {
+  background: #fefefe;
+}
+
+.clickable:hover {
+  background: #fafafa;
+  cursor: default;
+}
+
+/*
+* Containers
+*/
+
+#main-navigation a {
+  text-transform: uppercase;
+}
+
+footer {
+  background-color: #607d8b;
+}
+
+footer h1, footer h2, footer h3, footer h4, footer h5, footer h6, footer a {
+  color: #fefefe;
+}
+
+footer a {
+  font-weight: 300;
+}
+
+footer a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.container {
+  padding-right: 0px;
+  padding-left: 0px;
+  margin-right: 0;
+  margin-left: 0;
+}
+
+footer > .container {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.top-bar_container {
+  background-color: #455a64;
+}
+
+.view {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex-grow: 1;
+}
+
+.game-container {
+  display: flex;
+  justify-content: center;
+  margin: 3rem 0;
+}
+
+#game {
+  border: 1px solid #999999;
+}
+
+.small-no-margin-bottom, .medium-no-margin-bottom, .large-no-margin-bottom, .no-margin-bottom {
+  margin-bottom: 0;
+}
+
+/* Small devices (landscape phones, 640px and up) */
+@media (min-width: 640px) {
+  .container {
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+
+  p.small-no-margin-bottom {
+    margin-bottom: 1rem;
+  }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+  .container {
+    width: 750px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  p.medium-no-margin-bottom {
+    margin-bottom: 1rem;
+  }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+  .container {
+    width: 970px;
+  }
+
+  p.large-no-margin-bottom {
+    margin-bottom: 1rem;
+  }
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+    .container {
+        width: 1170px;
+    }
+}
+
+.game_list {
+  padding: 1em 0;
+}
+
+.review_circles {
+  white-space: nowrap;
+  user-select: none;
+}
+
+.review_circles.reversed {
+  display: block;
+  direction: rtl;
+}
+
+.review_circles > .circle {
+  display: inline-block;
+  background-color: #cccccc;
+}
+
+.review_circles > .circle.full {
+  background-color: #C376A3;
+}
+
+.review_circles > .circle.hoverable:hover, .review_circles > .circle.hoverable:hover ~ i {
+  background-color: #DEA3C6;
+}
+
+.review_circles.small > .circle {
+  padding: 5px;
+  border-radius: 50%;
+}
+
+.review_circles.large > .circle {
+  padding: 10px;
+  border-radius: 50%;
+}
+
+.breadcrumbs_container {
+  padding: 1rem 0 2rem 0;
+}
+
+/*
+* Search form
+*/
+
+#search-form {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+#autosuggestion-input {
+  width: 240px;
+  min-width: 25%;
+  display: flex;
+  flex-direction: row;
+  background-color: #f6f6f6;
+  border: 1px solid transparent;
+  padding-right: 5px;
+}
+
+#autosuggestion-input:hover {
+  border: 1px solid #607d8b;
+}
+
+#autosuggestion-input input{
+  margin: 0;
+  outline: none;
+  background-color: transparent;
+  color: #8a8a8a;
+  border: none;
+  box-shadow: none;
+}
+#autosuggestion-input-container input:focus {
+  outline: none;
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+#search_btn {
+  margin: 0;
+  text-align: center;
+  color: #8a8a8a;
+  /* cursor: pointer; */
+  font-size: 18px;
+}
+
+#search_btn:focus {
+  outline: none;
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+#suggestion-list {
+  width: 240px;
+  min-width: 25%;
+  position: absolute;
+  top: 100%;
+  margin-top: 5px;
+  font-size: .8rem;
+  background: #f6f6f6;
+  color: #8a8a8a;
+  z-index: 1;
+}
+
+#suggestion-list>div {
+  padding: 5px;
+}
+
+.suggestion-active {
+  color: #fefefe;
+  background-color: #455a64;
+}
+
+
+/*
+* Typography
+*/
+
+.capitalized {
+  text-transform: capitalize;
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+
+.f_tiny {
+  font-size: 12px;
+}
+
+.grey {
+  color: #666;
+}
+
+.game-tags {
+  margin: 1rem 0;
+  color: #666;
+  font-style: italic;
+  font-size: .8rem;
+}
+
+.game-header {
+  margin: 0 0 4rem;
+}
+.game-header>h1 {
+  margin: 1rem 0 0;
+}
+
+p.help {
+  margin-top: -0.5rem;
+  font-size: 0.8125rem;
+  font-style: italic;
+  color: #0a0a0a;
+}
+
+.navigation--username {
+  text-transform: capitalize !important;
+  padding: 0 !important;
+  text-decoration: underline !important;
+  display: inline-block !important;
+}
+
+/*
+* Spacer
+*/
+
+.spacer {
+  display: block;
+  height: 3rem;
+  clear: both;
+}
+
+.spacer.medium {
+  height: 2rem;
+}
+
+.spacer.small {
+  height: 1rem;
+}
+
+/*
+* Buttons
+*/
+
+.button.compact {
+  padding: .2rem .5rem !important;
+  margin: 0;
+}
+
+button, .button {
+  user-select: none;
+}
