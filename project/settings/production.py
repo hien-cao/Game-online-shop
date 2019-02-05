@@ -1,7 +1,6 @@
 # NOTE: os, BASE_DIR, DATABASES are defined in .base.py
 import os
-import base
-
+from .base import *
 
 ENVIRONMENT = 'production'
 
@@ -12,13 +11,13 @@ DEBUG = False
 ALLOWED_HOSTS = ['*']
 
 # Only when running in Heroku
-STATIC_ROOT = os.path.join(base.BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 if "DYNO" in os.environ:
 
     # Override the sqlite
     import dj_database_url
-    base.DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
+    DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 
     # Once service is succesfully deployed this should be False
     DEBUG = True # <== THIS NEEDS TO BE FALSE AFTER YOU GET EVERYTHING WORKING!

@@ -1,4 +1,5 @@
-import base
+import os
+from .base import *
 
 ENVIRONMENT = 'development'
 
