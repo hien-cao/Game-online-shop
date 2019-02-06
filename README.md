@@ -3,6 +3,8 @@
 CS-C3170 Course Project:
 Online JavaScript game store; a Django application.
 
+Application is [live at Heroku](https://afternoon-headland-18234.herokuapp.com/).
+
 ## Collaborators
 
 * Juho Jokela - 718554
@@ -55,30 +57,34 @@ This repository contains the source-code for an online JavaScript game store. Th
 
 A rough mockup of the visuals of the web application can be seen [here](https://app.moqups.com/juho.i.jokela@gmail.com/XX8tNXjSen/view).
 
-The project is written in Python (3+) and it utilizes the Django framework. The authentication is provided by third-party Single-Sign-On (GitHub). In addition to this, we use Bootstrap for faster templating with columns. We use JavaScript (ES6) with Redom as UI library and Parcel for final compilation to ES5.
+The live version of the application is available [here](https://afternoon-headland-18234.herokuapp.com/).
+
+The project is written in Python (3+) and it utilizes the Django framework. The authentication is provided by third-party Single-Sign-On (GitHub). In addition to this, we use Foundation for faster templating with columns. We use vanilla JavaScript (ES6), jQuery for some components provided by Foundation and Babel for final compilation to ES5.
 
 To ease the development and maintenance we have decided to split this project into five apps. These are:
 
-* Core:
+* Core
   * Common templates and resources
-* Profile
+* User
   * Anything related to users
 * Game
   * Anything related to games, purchases etc.
 * Review
-  * The social media aspect of the web application
-* REST API
+  * The community aspect of the web application
+* APIS/REST API
   * Cross-Domain /GET requests for developers to query data
 
 ### Core features
 
 #### Authentication
 
-We plan on using the model `AbstractUser` (Django default User) and the build-in Django authentication. We extend the Model with simple OneToOne-relation. We will enable developers to also play games.
+We plan on using the model `AbstractUser` (Django default User) and the build-in Django authentication. We extend the Model with simple OneToOne-relation. We will enable developers to also play games and regular users to promote themselves as developers, even if they had not done so when originally registering.
+
+User may register and login with [Django Authentication Login](https://docs.djangoproject.com/en/2.1/topics/auth/default/#how-to-log-a-user-in) or with [Third-Party Login](#third-party-login--logout).
 
 #### Purchasing Games
 
-The purchases are handled with [payments API](http://payments.webcourse.niksula.hut.fi). This is not a real banking API but it mimics some common features that such an API could have. We are not interested in the balance of the accounts, but that the transactions are safe and money gets transferred as intended (repeatability is prevented with nonce, a running number).
+The purchases are handled with [payments API](http://payments.webcourse.niksula.hut.fi/). This is not a real banking API but it mimics some common features that such an API could have. We are not interested in the balance of the accounts, but that the transactions are safe and money gets transferred as intended (uniqueness is ensured by using uuids).
 
 #### Playing Games
 
@@ -86,16 +92,16 @@ Conditions to get to play:
 
 * User must be authenticated
 * Provided link to play must be valid as we do not host the games
-* The game is listed as free or be present in Player's purchase history (games)
+* The user must have purchased the game, hence adding it to their library. This must be done even if the game was free; as it ensures better data reliability (such as amount of daily purchases).
 
 The games are shown on our website using `<iframe>`s.
-We plan on allowing users to store their play details such as score.
+Users can store their play details such as score, and game state if the game so allows.
 
 All additional information can be found below e.g. [Saving/Loading](#Saving/Loading).
 
 #### Searching Games
 
-Games can be sought by name, category and developer name. This is implemented with a single search input, with Twitter like hashtags and handles. The search box provides you with suggestions based on your current input.
+Games can be sought by name, category and developer name. This is implemented with a single search input, with Twitter like hashtags and handles. The search box provides you with suggestions based on your current input. Search is one-dimensional and only simple, single attribute, searches are currently possible. Current implementation is both efficient and easy to maintain, though rather limited.
 
 #### Adding Game
 
@@ -103,29 +109,26 @@ Conditions for adding games:
 
 * User must be authenticated (as developer)
 * The name of the game must be unique
-* The URL must be valid (simple validation with Django)
+* The URL must be unique and valid (simple validation with Django)
 
-We use a simple form for this.
+Games are added and modified with a a simple form. It is not possible to remove games as this would require us to take into account the balance of the accounts and that is something we are not interested in.
 
 #### Statistics
 
 For developers:
 
-* number of times played
-* number of purchases:
-  * purchases this week/month/year
-* cumulative revenue
+* number of purchases (all/game):
+  * purchases this month/year/total
+* cumulative revenue (all/game)
 
 For players:
 
-* total playtime
-  * playtime per game
 * purchase history
 
 #### Updating a game
 
 Same conditions as in [adding games](#Adding\ Game) apply.
-Additionally, game cannot be deleted if anyone has purchased it. Changing the cost of the game does not affect the old purchases in any way so that they are still valid (price is what it was at the hour of purchase).
+Changing the cost of the game does not affect the old purchases in any way so that they are still valid (price is what it was at the hour of purchase).
 
 #### Saving/Loading
 
@@ -141,19 +144,19 @@ Users do not have to "register" when an user tries to login and if a user with t
 
 ### Extra
 
-List of the extra features we plan on implementing (if we have extra time).
+List of the extra features implemented.
 
 #### Tests
 
-We will do Unit tests for any non-Safe methods, any method that modifies data on the server. If there is time to spare we might implement more tests, than just the crucial ones.
+We have Unit tests for the models of the applications. These tests are to ensure that the database does not get easily contaminated. We did not implement tests for any methods, not even those that do modify the data on the server. These could have been implemented if we had had more time. However, the most crucial tests, tests for models, are done.
 
 #### Reviews
 
 Who can review:
 
-* Anyone who is authenticated, even the developers
+* Anyone who is authenticated and purchased the game, the reviewer can even be the developer of the game
 
-An user can submit a review with the grade. Your and the reviews of others can be seen when viewing the details of a a game.
+An user can submit a review with the grade. Your review, and the reviews of others, can be seen when viewing the details of a game.
 
 #### REST API
 
@@ -161,7 +164,7 @@ We plan on having a small API for the developers. We will have an application th
 
 Developers can generate and remove APIKeys from their profile page.
 
-**NOTE:** Only GET methods are allowed and all responses are JSON.
+Further information about the available APIs can be seen [here](./API.md).
 
 #### Highscores
 
@@ -182,14 +185,18 @@ List of our models and their descriptions
 Extends the default Django user model.
 
 ```python
-  user = OneToOneField(User, primary_key=True, ...)
+user = models.OneToOneField(
+  User,
+  on_delete=models.CASCADE,
+  primary_key=True
+)
 ```
 
 In addition to the extended fields a profile object contains:
 
 ```python
-  is_developer = BooleanField(default=False)
-  games = ManyToManyField('Game', ..., through='Purchase')
+is_developer = models.BooleanField(default=False)
+email_confirmed = models.BooleanField(default=False)
 ```
 
 #### Game
@@ -197,13 +204,28 @@ In addition to the extended fields a profile object contains:
 Contains the basic details of the game.
 
 ```python
-  name = CharField(min_length=128, unique=True, ...)
-  description = TextField(...)
-  url = URLField(unique=True, ...)
-  price = DecimalField(default=0, max_digits=5, decimal_places=2)
-  created_at = DateField(...)
-  created_by = ForeignKey('Developer', ...)
-  tags = ManyToMany('Tag', ...)
+name = models.CharField(unique=True, max_length=128)
+description = models.TextField(blank=True)
+url = models.URLField(unique=True)
+price = models.DecimalField(
+  default=0,
+  max_digits=6,
+  decimal_places=2,
+  validators=[MinValueValidator(0)]
+)
+created_at = models.DateTimeField(auto_now_add=True)
+updated_at = models.DateTimeField(auto_now=True)
+created_by = models.ForeignKey(
+  Profile,
+  null=True,
+  related_name='uploads',
+  on_delete=models.SET_NULL
+)
+tags = models.ManyToManyField(
+  'Tag',
+  related_name='tags',
+  blank=True
+)
 ```
 
 #### Purchase
@@ -211,9 +233,20 @@ Contains the basic details of the game.
 Contains purchase information.
 
 ```python
-  purchased_at = DateField(...)
-  game = ForeignKey('Game', ...)
-  created_by = ForeignKey('User', ...)
+id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+purchased_at = models.DateTimeField(auto_now_add=False, null=True, blank=True, editable=True)
+price = models.DecimalField(max_digits=6, decimal_places=2)
+ref = models.IntegerField(null=True)
+game = models.ForeignKey(
+  Game,
+  related_name='purchases',
+  on_delete=models.CASCADE
+)
+created_by = models.ForeignKey(
+  Profile,
+  related_name='purchases',
+  on_delete=models.CASCADE
+)
 ```
 
 #### Save
@@ -221,9 +254,15 @@ Contains purchase information.
 Contains the information about the save file
 
 ```python
-  game = ForeignKey('Game', ...)
-  user = ForeignKey('User', ...)
-  content = TextField(...)
+game = models.ForeignKey(
+  Game,
+  on_delete=models.CASCADE
+)
+user = models.ForeignKey(
+  Profile,
+  on_delete=models.CASCADE
+)
+content = models.BinaryField()
 ```
 
 #### Highscore
@@ -231,9 +270,15 @@ Contains the information about the save file
 Contains the high score information
 
 ```python
-  score = IntegerField(...)
-  created_by = ForeignKey('Developer', ...)
-  game = ForeignKey('Game', ...)
+score = models.IntegerField()
+game = models.ForeignKey(
+  'Game',
+  on_delete=models.CASCADE
+)
+created_by = models.ForeignKey(
+  Profile,
+  on_delete=models.CASCADE
+)
 ```
 
 #### Review
@@ -241,13 +286,29 @@ Contains the high score information
 Contains the review information
 
 ```python
-  game = ForeignKey('Game', ...)
-  created_by = ForeignKey('Developer', ...)
-  grade = IntegerField(validators=[
-    MinValueValidator(0),
+game = models.ForeignKey(
+  Game,
+  on_delete=models.CASCADE,
+  related_name=rn
+)
+created_by = models.ForeignKey(
+  Profile,
+  on_delete=models.CASCADE,
+  related_name=rn
+)
+created_at = models.DateTimeField(
+  auto_now_add=True,
+)
+grade = models.IntegerField(
+  default=0,
+  validators=[
+    MinValueValidator(1),
     MaxValueValidator(5)
-  ])
-  content = TextField(...)
+  ]
+)
+content = models.TextField(
+  blank=True
+)
 ```
 
 #### Tag
@@ -255,7 +316,7 @@ Contains the review information
 Contains the tag name of game catagories
 
 ```python
-  name = CharField(max_length=32, unique=True)
+name = models.CharField(max_length=32, unique=True)
 ```
 
 List of model attributes
@@ -265,28 +326,27 @@ List of model attributes
 #### Core
 
 * {{ base_url }}/ – Home
-* {{ base_url }}/terms-and-conditions – Terms and Conditions
 
 #### Profile views and paths
 
 * {{ base_url }}/oauth/ – Social authentication
-* {{ base_url }}/login/ – Use internal login views
-* {{ base_url }}/logout/ – Use internal logout views
+* {{ base_url }}/signin/ – Use internal signin views
+* {{ base_url }}/signup/ – Use internal signup views
 * {{ base_url }}/profile/ – Separate profile view
-* {{ base_url }}/profile/password/ – Password view
-* {{ base_url }}/forgot-password/ – Optional
-* {{ base_url }}/reset-password/ – Optional
 
 #### Game views and paths
 
 * {{ base_url }}/games/ – Browse all games / create a new game (POST - Developer)
-* {{ base_url }}/games/libary – Browse games user has purchased
-* {{ base_url }}/games/uploads - Browse games user has uploaded
-* {{ base_url }}/games/:id – View / Update / Delete a game
+* {{ base_url }}/games/search/{{ criteria }} – Search from all games by criteria
+* {{ base_url }}/games/libary/ – Browse games user has purchased
+* {{ base_url }}/games/library/search/{{ criteria }} – Search from purchased games by criteria
+* {{ base_url }}/games/uploads/ - Browse games user has uploaded
+* {{ base_url }}/games/:id/ – View / Update a game
+* {{ base_url }}/games/:id/play/ – Play a game
 
 #### Review view and paths
 
-* {{ base_url }}/{{ target }}/review
+* {{ base_url }}/{{ target }}/review/
 
 #### REST API
 
@@ -316,9 +376,9 @@ We set out the deadlines for each task to be somewhat reasonable, so that the co
 | Core templates                          | 31.1.2019 | Hien     | x    | ok     |
 | [Saving/Loading](#Saving/Loading)       | 7.2.2019  | Touko    | x    | ok     |
 | [Statistics](#Statistics)               | 10.2.2019 | Juho     | x    | ok     |
-| [Reviews](#Reviews)                     | 16.2.2019 | Juho     | -    | ok     |
-| [REST API](#REST-API)                   | 16.2.2019 | Hien     | -    | -      |
+| [Reviews](#Reviews)                     | 16.2.2019 | Juho     | -    | -      |
+| [REST API](#REST-API)                   | 16.2.2019 | Hien     | -    | ok     |
 | [Highscores](#Highscores)               | 16.2.2019 | Juho     | -    | -      |
 | Custom JavaScript game                  | 24.2.2019 | Touko    | -    | ok     |
-| Social media sharing                    | 24.2.2019 | -        | -    | -      |
-| Polishing                               | 24.2.2019 | Touko    | -    | -      |
+| Social media sharing                    | 24.2.2019 | Touko    | -    | ok     |
+| Polishing                               | 24.2.2019 | Touko    | -    | ok     |
