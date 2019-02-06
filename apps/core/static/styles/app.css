@@ -15,6 +15,10 @@
 * divider-color         : #bdbdbd;
 */
 
+html {
+  background: #455a64;
+}
+
 /*
 * logo
 */
