@@ -16,6 +16,7 @@ Requirements:
 """
 
 import os
+from django.contrib.messages import constants as messages
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(
@@ -196,3 +197,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+
+# Alter default message tags
+
+MESSAGE_TAGS = {
+    messages.INFO: 'secondary',
+    messages.ERROR: 'alert',
+}
