@@ -4,6 +4,7 @@ import re
 import pytz
 from datetime import datetime
 
+from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect, get_object_or_404
@@ -80,6 +81,10 @@ def manage_game(request, game_id=None):
             game.tags.set(tags)
             game.save()
 
+        messages.info(
+            request,
+            'Game successfully saved.'
+        )
         return redirect('uploads')
 
     return render(
@@ -206,6 +211,10 @@ def purchase_game(request, game_id):
     # Handles the activation of purchase here
     if request.GET.get('result') == 'success':
         Purchase.activate(request.GET)
+        messages.success(
+            request,
+            'Game purchased! Click <a href="/games/{}/play/">here</a> to play'.format(game_id)
+        )
         return HttpResponseRedirect('/games/{}'.format(game_id))
     if request.GET.get('result') == 'cancel':
         return HttpResponseRedirect('/games/{}'.format(game_id))

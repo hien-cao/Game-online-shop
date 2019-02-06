@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import (
     HttpResponse,
@@ -22,6 +23,10 @@ def manage_review(request, game_id):
     if request.POST and form.is_valid():
         review = form.save()
 
+        messages.success(
+            request,
+            'Review successfully saved!'
+        )
         return redirect('game_details', game_id=game_id)
 
     return render(
