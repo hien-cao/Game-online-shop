@@ -11,23 +11,3 @@
   <p>{{ review.content }}</p>
   <hr>
 </div>
-
-<script>
-  (() => {
-    const deleteReviewBtn = document.getElementById("delete_review");
-    const gameID = "{{ game.id }}";
-    const onDeleteClick = (e) => {
-      defaultFetch(`/games/${gameID}/review/delete/`)
-        .then(response => response.json())
-        .then(response => {
-          if (response.message == "success") {
-            deleteReviewBtn.parentNode.parentNode.remove();
-          } else {
-            deleteReviewBtn.innerText = response.message;
-            deleteReviewBtn.classList.add("disabled");
-          }
-        });
-    };
-    deleteReviewBtn.addEventListener("click", onDeleteClick);
-  })();
-</script>
