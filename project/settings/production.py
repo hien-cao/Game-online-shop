@@ -12,6 +12,7 @@ ALLOWED_HOSTS = ['*']
 
 # Only when running in Heroku
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = 'https://afternoon-headland-18234.herokuapp.com'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, '..', 'apps', 'apis', 'dev_api', 'static'),
