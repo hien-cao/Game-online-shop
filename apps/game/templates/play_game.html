@@ -41,12 +41,9 @@
 <!-- Pass Django variables to JS (global scope). -->
 <script>
   "use strict";
-  const rawGameURL = "{{ game.url }}";
-  const gameID = "{{ game.id }}";
-  const gameURL = new URL("{{ game.url }}");
+  var gameID = "{{ game.id }}";
 </script>
 
-<script src="{% static 'scripts/play/message_validation.js' %}"></script>
-<script src="{% static 'scripts/play/play.js' %}"></script>
+<script src="{% static 'scripts/game.js' %}"></script>
 {% endblock customjs %}
 {% endif %}
