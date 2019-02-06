@@ -1,5 +1,14 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
+{% block meta %}
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="{{ game.name }}" />
+<meta name="twitter:description" content="{{ game.description }}" />
+<meta name="twitter:image" content="{% static 'img/logo.svg' %}" />
+{% endblock meta %}
+
 {% block content %}
 
 <div>
