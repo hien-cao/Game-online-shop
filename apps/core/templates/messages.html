@@ -1,7 +1,7 @@
 {% if messages %}
-<ul class='messages'>
+<ul class='no-bullet'>
   {% for message in messages %}
-  <li class="{{ message.tags }}">{{ message }}</li>
+  <li class="callout {{ message.tags }}">{{ message|safe }}</li>
   {% endfor %}
 </ul>
 {% endif %}

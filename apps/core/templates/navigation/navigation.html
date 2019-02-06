@@ -2,11 +2,13 @@
 
 <div class="top-bar_container">
   <div class="container">
-    <div class="title-bar" data-responsive-toggle="main-navigation" data-hide-for="medium">
-      <a class="logo" title="Home" href="{% url 'home' %}">
-        <img src="{% static 'img/logo.svg' %}" width=28 height=28 />
-      </a>
-      <button class="menu-icon" type="button" data-toggle="main-navigation"></button>
+    <div class="no-js">
+      <div class="title-bar" data-responsive-toggle="main-navigation" data-hide-for="medium">
+        <a class="logo" title="Home" href="{% url 'home' %}">
+          <img alt="logo" src="{% static 'img/logo.svg' %}" width=28 height=28 />
+        </a>
+        <button class="menu-icon" type="button" data-toggle="main-navigation"></button>
+      </div>
     </div>
 
     <div class="top-bar" id="main-navigation">
@@ -14,7 +16,7 @@
         <ul class="vertical medium-horizontal menu">
           <li class="{{ home }} logo-container">
             <a class="logo" title="Home" href="{% url 'home' %}">
-              <img src="{% static 'img/logo.svg' %}" width=28 height=28 />
+              <img alt="logo" src="{% static 'img/logo.svg' %}" width=28 height=28 />
             </a>
           </li>
           <li class="{{ games }}"> <a title="Browse games" href="{% url 'games' %}">Browse</a></li>

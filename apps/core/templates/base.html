@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <meta charset="utf-8">
@@ -27,6 +27,8 @@
         <script src=https://cdn.jsdelivr.net/npm/whatwg-fetch@3.0/dist/fetch.umd.min.js></script> -->
   <!-- Application css -->
   <link rel="stylesheet" href="{% static 'styles/app.css' %}">
+  {% block meta %}
+  {% endblock meta %}
 </head>
 
 <body>
@@ -36,6 +38,7 @@
       <div class="grid-x grid-padding-y grid-padding-x">
         <div class="cell medium-10 medium-offset-1">
           {% include 'breadcrumbs.html' %}
+          {% include 'messages.html' %}
           {% block content %}
           {% endblock content %}
         </div>

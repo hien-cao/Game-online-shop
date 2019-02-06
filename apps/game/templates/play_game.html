@@ -1,12 +1,22 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block meta %}
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="{{ game.name }}" />
+<meta name="twitter:description" content="{{ game.description }}" />
+{% endblock meta %}
+
 {% block content %}
 {% if game %}
 <div>
   <h1>{{ game.name }}</h1>
   <div class="widescreen game-container">
     <iframe id="game" src="{{ game.url }}" frameborder="0" allowfullscreen></iframe>
+  </div>
+
+  <div class="social">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
   </div>
 
   <div>
