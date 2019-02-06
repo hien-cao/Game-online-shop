@@ -37,7 +37,7 @@ const attachMessageListener = () => {
             payload
           )
             .then(response => response.json())
-            .then(console.log);
+            .then(() => alert('score submitted'));
           break;
         case "SAVE":
           const { gameState } = data;
