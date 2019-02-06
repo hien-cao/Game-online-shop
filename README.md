@@ -290,13 +290,11 @@ List of model attributes
 
 #### REST API
 
-* {{ base_url }}/api/{{ version_number }}
-
-The API will change during the project so we do not list any of the API features as of now.
+See [APIs](./API.md) for further details.
 
 ## Management, collaboration and contributing to project
 
-See [guidelines](./docs/Contribution.md) for contributing.
+See [guidelines](./CONTRIBUTING.md) for contributing.
 
 ### Order of work
 
