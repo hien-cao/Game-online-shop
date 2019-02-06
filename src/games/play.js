@@ -1,12 +1,6 @@
-import {validateMessage} from './message';
+import {validateMessage} from './messages';
 import {defaultFetch} from '../util';
-/**
- * JS for `games/:id/play`
- * Global variables in this view:
- * @var {String} rawGameURL; The full URL of the game.
- * @var {URL} gameURL; URL object that may be parsed.
- */
-
+/* global gameID */
 /**
  * Loosely validates if the message object received is correct.
  *
@@ -22,9 +16,9 @@ export const messageIsValid = (e, url) => (
  * Attach message listener for incoming messages.
  */
 export const attachMessageListener = () => {
-  const game = document.getElementById('game');
   window.addEventListener('message', (e) => {
-    if (messageIsValid(e, game.contentWindow.location.href)) {
+    const game = document.getElementById('game');
+    if (messageIsValid(e, game.contentWindow.location)) {
       const {data} = e;
 
       switch (data.messageType) {
@@ -37,10 +31,9 @@ export const attachMessageListener = () => {
               .then(() => alert('score submitted'));
           break;
         case 'SAVE':
-          const {gameState} = data;
           defaultFetch(
               `/games/${gameID}/state/`,
-              gameState
+              data.gameState
           ).then((response) => {
             if (response.ok) {
               window.alert('Game saved succesfully');

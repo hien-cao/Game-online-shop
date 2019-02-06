@@ -13,7 +13,7 @@ const defaultOptions = {
   credentials: 'same-origin',
   headers: {
     'Content-Type': 'application/json',
-    'X-CSRFToken': window.getCookie('csrftoken'),
+    'X-CSRFToken': parseCookie('csrftoken'),
   },
   redirect: 'follow',
   referrer: 'no-referrer',

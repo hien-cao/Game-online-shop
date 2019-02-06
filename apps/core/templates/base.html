@@ -22,9 +22,6 @@
   <!-- Font-Awesome fonts -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
     crossorigin="anonymous">
-  <!-- Fetch Polyfill -->
-  <!-- <script src=https://cdn.jsdelivr.net/npm/promise-polyfill@8.1/dist/polyfill.min.js></script>
-        <script src=https://cdn.jsdelivr.net/npm/whatwg-fetch@3.0/dist/fetch.umd.min.js></script> -->
   <!-- Application css -->
   <link rel="stylesheet" href="{% static 'styles/app.css' %}">
   {% block meta %}
@@ -50,7 +47,7 @@
   <!-- Load Foundation JS -->
   <script src="{% static 'libs/foundation/js/app.js' %}"></script>
   <!-- Load general JS for all pages -->
-  <script src="{% static 'scripts/app.js' %}"></script>
+  <script src="{% static 'scripts/core.js' %}"></script>
   <!-- Load custom JS for the specific page. -->
   {% block customjs %}
   {% endblock customjs %}
