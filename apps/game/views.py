@@ -160,7 +160,7 @@ def game_details(request, game_id):
                             created_at__month=now.month
                         )),
                         'pd': round(len(game.reviews.all()) / (
-                            (now - game.created_at).total_seconds() / (60 * 60 * 24)
+                            max(1,(now - game.created_at).total_seconds() / (60 * 60 * 24))
                         ), 2)
                     },
                     'purchases': {
@@ -172,7 +172,7 @@ def game_details(request, game_id):
                             purchased_at__month=now.month
                         )),
                         'pd': round(len(game.purchases.all()) / (
-                            (now - game.created_at).total_seconds() / (60 * 60 * 24)
+                            max(1,(now - game.created_at).total_seconds() / (60 * 60 * 24))
                         ), 2)
                     }
                 }
