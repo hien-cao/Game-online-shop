@@ -1,14 +1,17 @@
 module.exports = {
-  entry: './src/index.js',
+  entry: {
+    core: './src/index.js',
+    game: './src/games/play.js',
+  },
   output: {
-    filename: './static/scripts/bundle.js',
+    filename: './static/scripts/[name].js',
   },
   mode: 'production',
   module: {
     rules: [
       {
         test: /\.m?js$/,
-        exclude: 'node_modules',
+        exclude: /(node_modules)/,
         use: 'babel-loader',
       },
     ],

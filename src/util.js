@@ -24,14 +24,16 @@ export const defaultFetch = (
     data = {},
     {method = 'POST', ...options} = {method: 'POST'}
 ) => {
-  args = {
-    ...defaultOptions,
-    ...options,
-    method,
-    body: JSON.stringify(data),
-  };
   return fetch(
       encodeURI(url),
-      args,
+      {
+        ...defaultOptions,
+        ...options,
+        method,
+        body: JSON.stringify(data),
+      }
   );
 };
+
+export const nth = (n, count = 5) => count - n;
+export const pluckValue = (id) => id[id.length - 1];

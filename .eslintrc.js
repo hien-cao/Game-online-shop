@@ -1,6 +1,6 @@
 module.exports = {
   "parser": "babel-eslint",
-  "extends": ["google", "eslint:recommended"],
+  "extends": ["eslint:recommended", "google"],
   "env": {
     "browser": true,
   },
@@ -10,5 +10,6 @@ module.exports = {
   "rules": {
     "require-jsdoc": 0,
     "valid-jsdoc": 0,
+    "no-console": 0,
   }
 };
