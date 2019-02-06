@@ -1,3 +1,6 @@
+import "isomorphic-fetch";
+
+// helper function to parse document cookie
 window.getCookie = window.getCookie || function (name) {
   var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
   if (match) {

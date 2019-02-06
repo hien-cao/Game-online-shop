@@ -1,0 +1,29 @@
+{
+  "name": "wsd2018-project",
+  "version": "1.0.0",
+  "description": "CS-C3170 Course Project: Online JavaScript game store; a Django application.",
+  "main": "src/index.js",
+  "scripts": {
+    "build": "webpack",
+    "lint": "eslint src/**/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@version.aalto.fi:jokelaj9/wsd2018-project.git"
+  },
+  "author": "",
+  "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.3.1",
+    "babel-eslint": "^10.0.1",
+    "babel-loader": "^8.0.5",
+    "eslint": "^5.13.0",
+    "eslint-config-google": "^0.12.0",
+    "webpack": "^4.29.2",
+    "webpack-cli": "^3.2.3"
+  },
+  "dependencies": {
+    "isomorphic-fetch": "^2.2.1",
+    "@babel/polyfill": "^7.2.5"
+  }
+}
