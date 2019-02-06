@@ -3,6 +3,7 @@
   <div class="cell medium-auto">
     <div>
       <a href="{% url 'game_details' game_id=game.id %}">{{game.name}}</a>
+      <span class="f_tiny grey">– {{ game.price }} €</span>
       {% if game.tags.all %}
       <br>
       {% if game in allow_play %}
