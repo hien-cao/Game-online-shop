@@ -79,16 +79,16 @@ def manage_game(request, game_id=None):
             return HttpResponse(status=202)
         #  Otherwise indicate that user is not allowed to delete the game
         return HttpResponseForbidden()
-    else:
-        form = GameForm(request.POST or None, instance=game)
-        if request.POST and form.is_valid():
-            game = form.save()
 
-            # Create and attach new tags to game.
-            tags = create_tags(game.description)
-            if tags != []:
-                game.tags.set(tags)
-                game.save()
+    form = GameForm(request.POST or None, instance=game)
+    if request.POST and form.is_valid():
+        game = form.save()
+
+        # Create and attach new tags to game.
+        tags = create_tags(game.description)
+        if tags != []:
+            game.tags.set(tags)
+            game.save()
 
         return redirect('uploads')
 
