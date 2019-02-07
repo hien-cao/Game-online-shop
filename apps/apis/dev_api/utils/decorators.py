@@ -27,8 +27,7 @@ def json_response(fn):
             else:
                 return JsonResponse(data, status=200)
         except:  # noqa: E722
-            data = json.dumps(str(objects))
-        return JsonResponse(data, status=400)
+            return JsonResponse(data, status=400)
     return decorator
 
 

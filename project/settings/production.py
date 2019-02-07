@@ -12,13 +12,10 @@ ALLOWED_HOSTS = ['*']
 
 # Only when running in Heroku
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = 'https://afternoon-headland-18234.herokuapp.com/static/'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, '..', 'apps', 'apis', 'dev_api', 'static'),
     os.path.join(BASE_DIR, '..', 'apps', 'core', 'static'),
-    os.path.join(BASE_DIR, '..', 'apps', 'game', 'static'),
-    os.path.join(BASE_DIR, '..', 'apps', 'review', 'static'),
-    os.path.join(BASE_DIR, '..', 'apps', 'user', 'static')
 ]
 
 if "DYNO" in os.environ:

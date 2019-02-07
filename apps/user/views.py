@@ -33,6 +33,9 @@ def signup(request):
             user = form.save(commit=False)
             user.is_active = False
             user.save()
+            # Store the is_developer attribute from the form
+            user.profile.is_developer = form.cleaned_data['is_developer']
+            user.save()
             # Create "an email" by populating the template
             # with given arguments:
             # - use user to greet
