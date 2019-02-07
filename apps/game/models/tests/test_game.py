@@ -1,7 +1,9 @@
 from decimal import Decimal
 from django.test import TestCase
+from django.utils import timezone
 
 from ..game import Game
+from ..purchase import Purchase
 from ....review.models import Review
 
 from ....user.utils.mock_user import create_mock_user
@@ -39,6 +41,18 @@ class GameTestCase(TestCase):
             name='with_grade',
             url='https://localhost:8001/',
             price=0,
+        )
+        Purchase.objects.create(
+            created_by=self.user_1.profile,
+            game=self.with_grade,
+            purchased_at=timezone.now(),
+            price=10,
+        )
+        Purchase.objects.create(
+            created_by=self.user_0.profile,
+            game=self.with_grade,
+            purchased_at=timezone.now(),
+            price=10,
         )
         # Create mock review
         Review.objects.create(
@@ -83,6 +97,7 @@ class GameTestCase(TestCase):
 
     def test_games_can_have_grade(self):
         """Games that have grade can be identified"""
+        self.with_grade.refresh_from_db()
         self.assertEqual(self.no_grade.grade, None, msg='Grade should not have value.')
         self.assertEqual(self.with_grade.grade, 5, msg='Grade should have value.')
 
