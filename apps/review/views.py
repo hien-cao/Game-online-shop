@@ -15,7 +15,7 @@ from .forms import ReviewForm
 @login_required
 def delete_review(request, game_id):
     game = get_object_or_404(Game, pk=game_id)
-    if request.method == 'POST':
+    if request.method == 'DELETE':
         try:
             review = Review.objects.get(
                 game=game,
