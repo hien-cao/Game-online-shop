@@ -13,14 +13,30 @@ from .models import Review
 from .forms import ReviewForm
 
 @login_required
+def delete_review(request, game_id):
+    game = get_object_or_404(Game, pk=game_id)
+    if request.method == 'DELETE':
+        try:
+            review = Review.objects.get(
+                game=game,
+                created_by=request.user.profile
+            )
+            review.delete()
+            return JsonResponse({"message": "success"}, status=200)
+        except Review.DoesNotExist:
+            return JsonResponse({"message": "Review not found!"}, status=404)
+    return JsonResponse({"message": "Invalid request method!"}, status=400)
+
+@login_required
 def manage_review(request, game_id):
     game = get_object_or_404(Game, pk=game_id)
     review, _ = Review.objects.get_or_create(
         game=game,
         created_by=request.user.profile
     )
+
     form = ReviewForm(request.POST or None, instance=review)
-    if request.POST and form.is_valid():
+    if request.method == 'POST' and request.POST and form.is_valid():
         review = form.save()
 
         messages.success(

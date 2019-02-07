@@ -1,5 +1,11 @@
 <div>
-  <div>{{ review.created_by }}</div>
+  <div>
+    {{ review.created_by }}
+    {% if request.user.profile == review.created_by %}
+      <button id="delete-review" type="button" title="Delete review." class="button alert compact float-right">Delete</span>
+    {% endif %}
+  </div>
+
   <p class="f_tiny">Grade: {% include 'review_circles.html' with classes="small" %}</p>
   <p class="f_tiny"><em>{{ review.created_at|date:"F d, Y – H:i" }}</em></p>
   <p>{{ review.content }}</p>
