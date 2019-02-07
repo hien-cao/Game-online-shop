@@ -128,13 +128,13 @@ def game_statistics(request, *args, **kwargs):
         if len(game) == 0:
             raise ObjectDoesNotExist('')
         # Query for the purchases and reviews list of the game
-        purchase = game[0].purchases.filter(purchased_at__isnull=False)
+        purchases = game[0].purchases.filter(purchased_at__isnull=False)
         review = game[0].reviews
         # Create variable to contain current time
         now = datetime.now(pytz.utc)
         content = {}
         statistics = {
-            'cummulative_revenue': game[0].price * purchase.count(),
+            'cummulative_revenue': sum([purchase.price for purchase in purchases]),
             'purchases': {
                 'total_purchases': purchase.count(),
                 'current_year_purchases': len(purchase.filter(purchased_at__year=now.year)),

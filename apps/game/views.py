@@ -64,12 +64,21 @@ def manage_game(request, game_id=None):
         url = 'edit_game'
         title = 'Edit game'
         game = get_object_or_404(Game, pk=game_id)
+        # Check that user has proper access rights for the game
         if game.created_by != request.user.profile:
             return HttpResponseForbidden()
     else:
         url = 'add_game'
         title = 'Add game'
         game = Game(created_by=request.user.profile)
+
+    if request.method == 'DELETE':
+        # should only allow deletion of non-purchased games
+        if game.purchases.count() == 0:
+            game.delete()
+            return HttpResponse(status=202)
+        #  Otherwise indicate that user is not allowed to delete the game
+        return HttpResponseForbidden()
 
     form = GameForm(request.POST or None, instance=game)
     if request.POST and form.is_valid():
@@ -81,10 +90,6 @@ def manage_game(request, game_id=None):
             game.tags.set(tags)
             game.save()
 
-        messages.info(
-            request,
-            'Game successfully saved.'
-        )
         return redirect('uploads')
 
     return render(
@@ -145,6 +150,7 @@ def games(request, *args, **kwargs):
 # POST: Add game
 def game_details(request, game_id):
     game = get_object_or_404(Game, pk=game_id)
+    purchases = game.purchases.filter(purchased_at__isnull=False)
     if request.method == 'GET':
         developer_context = {}
         purchased = bool(Purchase.objects.filter(
@@ -156,6 +162,7 @@ def game_details(request, game_id):
             if game.created_by.user.id == request.user.id:
                 now = datetime.now(pytz.utc)
                 developer_context = {
+                    'cumulative_revenue': sum([purchase.price for purchase in purchases]),
                     'reviews': {
                         'year': len(game.reviews.filter(
                             created_at__year=now.year

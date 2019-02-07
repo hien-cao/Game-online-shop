@@ -38,6 +38,13 @@
   </div>
   {% endif %}
 
+  {% if request.user.is_authenticated and request.user.profile == game.created_by and not game.purchases.count %}
+  <div class="clearfix">
+    <button type="button" id="delete-game" class="button alert compact float-right">
+      Delete game
+    </button>
+  </div>
+  {% endif %}
   <h2 class="h5 grey">Description</h2>
   <p>{{ game.description }}</p>
   {% if request.user.is_authenticated %}
