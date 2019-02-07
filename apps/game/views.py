@@ -145,6 +145,7 @@ def games(request, *args, **kwargs):
 # POST: Add game
 def game_details(request, game_id):
     game = get_object_or_404(Game, pk=game_id)
+    purchases = game.purchases.filter(purchased_at__isnull=False)
     if request.method == 'GET':
         developer_context = {}
         purchased = bool(Purchase.objects.filter(
@@ -156,6 +157,7 @@ def game_details(request, game_id):
             if game.created_by.user.id == request.user.id:
                 now = datetime.now(pytz.utc)
                 developer_context = {
+                    'cumulative_revenue': sum([purchase.price for purchase in purchases]),
                     'reviews': {
                         'year': len(game.reviews.filter(
                             created_at__year=now.year

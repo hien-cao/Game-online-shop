@@ -55,7 +55,7 @@ This repository contains the source-code for an online JavaScript game store. Th
 
 A rough mockup of the visuals of the web application can be seen [here](https://app.moqups.com/juho.i.jokela@gmail.com/XX8tNXjSen/view).
 
-The project is written in Python (3+) and it utilizes the Django framework. The authentication is provided by third-party Single-Sign-On (GitHub). In addition to this, we use Bootstrap for faster templating with columns. We use JavaScript (ES6) with Redom as UI library and Parcel for final compilation to ES5.
+The project is written in Python (3+) and it utilizes the Django framework. The authentication is provided by third-party Single-Sign-On (GitHub). In addition to this, we use Foundation for faster templating with columns. We use JavaScript (ES6) with Redom as UI library and Parcel for final compilation to ES5.
 
 To ease the development and maintenance we have decided to split this project into five apps. These are:
 
