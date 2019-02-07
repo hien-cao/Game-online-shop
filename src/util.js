@@ -34,6 +34,3 @@ export const defaultFetch = (
       }
   );
 };
-
-export const nth = (n, count = 5) => count - n;
-export const pluckValue = (id) => id[id.length - 1];

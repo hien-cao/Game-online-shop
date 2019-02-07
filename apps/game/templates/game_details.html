@@ -82,3 +82,14 @@
 </div>
 
 {% endblock %}
+
+{% block customjs %}
+<!-- Pass Django variables to JS (global scope). -->
+<script>
+  "use strict";
+  var gameID = "{{ game.id }}";
+</script>
+
+<script src="{% static 'scripts/details.js' %}"></script>
+{% endblock customjs %}
+

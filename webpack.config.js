@@ -4,6 +4,7 @@ module.exports = {
   entry: {
     core: './src/index.js',
     game: './src/games/play.js',
+    details: './src/games/details.js',
     review: './src/review.js',
     search: './src/search.js',
     profile: './src/profile.js',
