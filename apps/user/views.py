@@ -1,3 +1,6 @@
+import pytz
+from datetime import datetime
+
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import render, redirect
 from django.utils.encoding import force_bytes, force_text
@@ -12,6 +15,8 @@ from django.contrib.auth.forms import UserCreationForm
 
 from .forms import SignUpForm
 from .utils.tokens import account_activation_token
+
+from ..game.models import Game
 
 
 def signup(request):
@@ -65,6 +70,13 @@ def signout(request):
 
 @login_required
 def profile(request):
+    context = {}
+    now = datetime.now(pytz.utc)
+    game_list = Game.objects.filter(created_by=request.user.profile)
+    purchased_games = request.user.profile.purchases.filter(purchased_at__isnull=False).order_by('-purchased_at')
+    # Add purchased games to the context
+    if len(purchased_games) != 0:
+        context['purchased_games'] = purchased_games
     # as html forms only support POST, patching is done via this method
     if request.method == 'POST':
         for key in request.POST:
@@ -74,8 +86,32 @@ def profile(request):
         request.user.profile.save(update_fields=[
             key for key in request.POST if hasattr(request.user.profile, key)
         ])
+    if request.user.is_authenticated:
+        # Query for the statistics data 
+        if len(game_list) != 0:
+            total_revenue = 0
+            total_purchases = 0
+            year_purchases = 0
+            month_purchases = 0
+            for game in game_list:
+                total_revenue += game.price * game.purchases.filter(purchased_at__isnull=False).count()
+                total_purchases += game.purchases.filter(purchased_at__isnull=False).count()
+                year_purchases += len(game.purchases.filter(purchased_at__year=now.year))
+                month_purchases += len(game.purchases.filter(purchased_at__year=now.year, purchased_at__month=now.month))
 
-    return render(request, 'profile/profile.html')
+            statistics = {
+                'number_of_games': len(game_list),
+                'total_revenue': total_revenue,
+                'purchase': {
+                    'total_purchases': total_purchases,
+                    'current_year_purchases': year_purchases,
+                    'current_month_purchases': month_purchases
+                }
+            }
+            context['statistics'] = statistics
+        else:
+            context['message'] = 'You have not uploaded any game'
+    return render(request, 'profile/profile.html', context)
 
 
 def account_activation_sent(request):

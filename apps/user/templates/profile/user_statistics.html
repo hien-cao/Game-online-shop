@@ -1,3 +1,32 @@
-<div>
-  Some user statistics
-</div>
+{% if statistics %}
+  <div>
+    <h2 class="h5 grey">Statistics</h2>
+    <div class="grid-x">
+      <div class="small-12 medium-6">
+        <h3 class="h6">Total number of games</h3>
+        <p class="stat">{{ statistics.number_of_games }}</p>
+        <h3 class="h6">Total revenue</h3>
+        <p class="stat">{{ statistics.total_revenue }} <span class="f_tiny">€</span></p>
+      </div>
+      <div class="small-12 medium-6">
+        <h3 class="h6">Purchases</h3>
+        <ul class="no-bullet">
+          <li class="stat">
+            {{ statistics.purchase.total_purchases }} <span class="f_tiny">in total</span>
+          </li>
+          <li class="stat">
+            {{ statistics.purchase.current_year_purchases }} <span class="f_tiny">this year</span>
+          </li>
+          <li class="stat">
+            {{ statistics.purchase.current_month_purchases }} <span class="f_tiny">this month</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+{% elif message %}
+  <h2 class="h5 grey">{{message}}</h2>
+{% endif %}
+{% include 'profile/purchases_list.html' %}
+
+
