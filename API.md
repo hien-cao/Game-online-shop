@@ -2,6 +2,8 @@
 
 ## Developer API
 
+**NOTE:** Only GET methods are allowed and all responses are JSON.
+
 Version: 1
 
 ```http
