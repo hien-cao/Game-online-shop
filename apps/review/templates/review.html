@@ -2,7 +2,7 @@
   <div>
     {{ review.created_by }}
     {% if request.user.profile == review.created_by %}
-      <button id="delete_review" type="button" title="Delete review." class="button alert compact float-right">Delete</span>
+      <button id="delete-review" type="button" title="Delete review." class="button alert compact float-right">Delete</span>
     {% endif %}
   </div>
 
