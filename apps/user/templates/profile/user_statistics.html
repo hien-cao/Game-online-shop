@@ -27,33 +27,6 @@
 {% elif message %}
   <h2 class="h5 grey">{{message}}</h2>
 {% endif %}
-{% if purchased_games %}
-<div>
-  <h2 class="h5 grey">Games purchased by me</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Game</th>
-        <th>Purchased at</th>
-        <th>Price</th>
-      </tr>
-      {# should not display user who bought the game #}
-    </thead>
-    <tbody>
-      {% for purchase in purchased_games.all %}
-      <tr>
-        <td>
-          <a title="{{purchase.game.name}}" href="/games/{{purchase.game.id}}">
-            {{purchase.game.name}}
-          </a>
-        </td>
-        <td>{{purchase.purchased_at}}</td>
-        <td>{{purchase.price}}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
-{% endif %}
+{% include 'profile/purchases_list.html' %}
 
 
