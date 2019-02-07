@@ -78,7 +78,7 @@ def manage_game(request, game_id=None):
             game.delete()
             return HttpResponse(status=202)
         #  Otherwise indicate that user is not allowed to delete the game
-            return HttpResponseForbidden()
+        return HttpResponseForbidden()
     else:
         form = GameForm(request.POST or None, instance=game)
         if request.POST and form.is_valid():
