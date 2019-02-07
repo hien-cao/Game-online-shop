@@ -33,4 +33,4 @@ class Save(models.Model):
             created_by=self.user,
             purchased_at__isnull=False
         ):
-            super(Purchase, self).save(*args, **kwargs)
+            super(Save, self).save(*args, **kwargs)
