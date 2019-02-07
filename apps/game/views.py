@@ -64,6 +64,7 @@ def manage_game(request, game_id=None):
         url = 'edit_game'
         title = 'Edit game'
         game = get_object_or_404(Game, pk=game_id)
+        # Check that user has proper access rights for the game
         if game.created_by != request.user.profile:
             return HttpResponseForbidden()
     else:
@@ -71,20 +72,24 @@ def manage_game(request, game_id=None):
         title = 'Add game'
         game = Game(created_by=request.user.profile)
 
-    form = GameForm(request.POST or None, instance=game)
-    if request.POST and form.is_valid():
-        game = form.save()
+    if request.method == 'DELETE':
+        # should only allow deletion of non-purchased games
+        if game.purchases.count() == 0:
+            game.delete()
+            return HttpResponse(status=202)
+        #  Otherwise indicate that user is not allowed to delete the game
+            return HttpResponseForbidden()
+    else:
+        form = GameForm(request.POST or None, instance=game)
+        if request.POST and form.is_valid():
+            game = form.save()
 
-        # Create and attach new tags to game.
-        tags = create_tags(game.description)
-        if tags != []:
-            game.tags.set(tags)
-            game.save()
+            # Create and attach new tags to game.
+            tags = create_tags(game.description)
+            if tags != []:
+                game.tags.set(tags)
+                game.save()
 
-        messages.info(
-            request,
-            'Game successfully saved.'
-        )
         return redirect('uploads')
 
     return render(
