@@ -94,7 +94,7 @@ def profile(request):
             year_purchases = 0
             month_purchases = 0
             for game in game_list:
-                total_revenue += game.price * game.purchases.filter(purchased_at__isnull=False).count()
+                total_revenue += sum([purchase.price for purchase in game.purchases.filter(purchased_at__isnull=False)])
                 total_purchases += game.purchases.filter(purchased_at__isnull=False).count()
                 year_purchases += len(game.purchases.filter(purchased_at__year=now.year))
                 month_purchases += len(game.purchases.filter(purchased_at__year=now.year, purchased_at__month=now.month))
