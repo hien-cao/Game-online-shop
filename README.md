@@ -59,7 +59,7 @@ A rough mockup of the visuals of the web application can be seen [here](https://
 
 The live version of the application is available [here](https://afternoon-headland-18234.herokuapp.com/).
 
-The project is written in Python (3+) and it utilizes the Django framework. The authentication is provided by third-party Single-Sign-On (GitHub). In addition to this, we use Foundation for faster templating with columns. We use vanilla JavaScript (ES6), jQuery for some components provided by Foundation and Babel for final compilation to ES5.
+The project is written in Python (3+) and it utilizes the Django framework. The authentication is provided by third-party Single-Sign-On (GitHub). In addition to this, we use Foundation 6.5.1 for faster templating with columns. We use vanilla JavaScript (ES6), jQuery for some components provided by Foundation and Babel for final compilation to ES5. Babel build is ran with a Node.js script.
 
 To ease the development and maintenance we have decided to split this project into five apps. These are:
 
@@ -111,7 +111,7 @@ Conditions for adding games:
 * The name of the game must be unique
 * The URL must be unique and valid (simple validation with Django)
 
-Games are added and modified with a a simple form. It is not possible to remove games as this would require us to take into account the balance of the accounts and that is something we are not interested in.
+Games are added and modified with a a simple form. Deletion of games is only possible if a game has not yet been purchased. Deletion is done via a simple delete button. If games were deletable, even if they had been purchased, it would require us to take into account the balance of the accounts and that is something we are not interested in.
 
 #### Statistics
 
@@ -376,9 +376,9 @@ We set out the deadlines for each task to be somewhat reasonable, so that the co
 | Core templates                          | 31.1.2019 | Hien     | x    | ok     |
 | [Saving/Loading](#Saving/Loading)       | 7.2.2019  | Touko    | x    | ok     |
 | [Statistics](#Statistics)               | 10.2.2019 | Juho     | x    | ok     |
-| [Reviews](#Reviews)                     | 16.2.2019 | Juho     | -    | -      |
+| [Reviews](#Reviews)                     | 16.2.2019 | Juho     | -    | ok     |
 | [REST API](#REST-API)                   | 16.2.2019 | Hien     | -    | ok     |
-| [Highscores](#Highscores)               | 16.2.2019 | Juho     | -    | -      |
+| [Highscores](#Highscores)               | 16.2.2019 | Juho     | -    | ok     |
 | Custom JavaScript game                  | 24.2.2019 | Touko    | -    | ok     |
 | Social media sharing                    | 24.2.2019 | Touko    | -    | ok     |
 | Polishing                               | 24.2.2019 | Touko    | -    | ok     |
