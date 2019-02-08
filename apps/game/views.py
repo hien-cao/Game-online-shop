@@ -31,6 +31,7 @@ from .contexts import (
 )
 
 
+# helper function to parse tags from game description
 def parse_tags(description):
     regex = re.compile(r'\B#\w+')
     return regex.findall(description)
@@ -46,21 +47,11 @@ def create_tags(description):
             tags.append(obj)
     return tags
 
-
-def find_template_name(order_by):
-    if order_by == 'created_at':
-        return 'latest'
-    return None
-
-
-# Add/Edit game
-# TODO Change redirection to profile/settings?
-
-
+# Add/Edit or delete game
 @login_required
 @user_passes_test(is_developer, login_url='/games/library/')
 def manage_game(request, game_id=None):
-    if game_id:
+    if game_id: # If game id provided in the path
         url = 'edit_game'
         title = 'Edit game'
         game = get_object_or_404(Game, pk=game_id)
@@ -72,7 +63,7 @@ def manage_game(request, game_id=None):
         title = 'Add game'
         game = Game(created_by=request.user.profile)
 
-    if request.method == 'DELETE':
+    if request.method == 'DELETE': # Game deletion..
         # should only allow deletion of non-purchased games
         if game.purchases.count() == 0:
             game.delete()
@@ -92,6 +83,7 @@ def manage_game(request, game_id=None):
 
         return redirect('uploads')
 
+    # ... othervise render the game updating (or adding page)
     return render(
         request,
         'upsert_game.html',
@@ -104,18 +96,22 @@ def manage_game(request, game_id=None):
 # GET: Display games view
 def games(request, *args, **kwargs):
     if request.method == 'GET':
+        # column used to sort games (alphabetical by default)
         order_by = request.GET.get('order_by') or 'name'
         if request.GET.get('page') and hasattr(Game, order_by):
             try:  # Try to convert page param to int
                 page = max(1, int(request.GET.get('page')))
-            except ValueError:
-                page = 1
-            items = request.GET.get('items') or 10
-            total_count = Game.objects.count()
-            if order_by == 'created_at':
+            except:  # noqa E722
+                page = 1  # if invalid (or no) page was provided, will default to 1
+            try:  # Try to convert items param to int
+                items = max(1, int(request.GET.get('items')))
+            except:  # noqa E722
+                items = 5  # if invalid (or no) items was provided, will default to 5
+            total_count = Game.objects.count()  # total number of games in db
+            if order_by == 'created_at' or order_by == 'name':
                 games = Game.objects.order_by(
                     '{0}{1}'.format('-' if request.GET.get('desc') else '', order_by)
-                )[(page - 1) * items:page * items]
+                )[(page - 1) * items:page * items]  # fetch pages (with given limit and offset)
             else:
                 # NOTE: This method of querying is inefficient as
                 # we have to query all results from database before filtering.
