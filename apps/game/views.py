@@ -369,7 +369,7 @@ def autosuggestion_search_library(request):
             categories = Tag.objects.filter(name__icontains=query)
             for category in categories:
                 for purchase in purchases:
-                    if category in purchase.game.tags:
+                    if category in purchase.game.tags.all():
                         results.append(category.name)
         elif request.GET.get('author'):
             query = request.GET.get('author')
