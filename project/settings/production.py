@@ -14,10 +14,6 @@ ALLOWED_HOSTS = ['*']
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = 'https://afternoon-headland-18234.herokuapp.com/static/'
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, '..', 'apps', 'core', 'static'),
-]
-
 if "DYNO" in os.environ:
     import dj_database_url
 
