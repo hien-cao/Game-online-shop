@@ -5,6 +5,16 @@ from ...user.models import Profile
 
 
 class Game(models.Model):
+    """
+    Game model.
+    - name: CharField
+    - [description]: TextField
+    - url: URLField
+    - price: DecimalField
+    - [created_at]: DateTimeField
+    - [updated_at]: DateTimeField
+    - tags: QuerySet(<Tag>)
+    """
     name = models.CharField(unique=True, max_length=128)
     description = models.TextField(blank=True)
     url = models.URLField(unique=True)
