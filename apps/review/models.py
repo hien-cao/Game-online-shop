@@ -8,7 +8,14 @@ rn = 'reviews'
 
 
 class Review(models.Model):
-    """ Model for the review of the game """
+    """
+    Review model.
+    - game: Game
+    - created_by: Profile
+    - [created_at]: DateTimeField
+    - grade: IntegerField
+    - [content]: TextField
+    """
     game = models.ForeignKey(
         Game,
         on_delete=models.CASCADE,
