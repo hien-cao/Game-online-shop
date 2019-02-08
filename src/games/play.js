@@ -1,16 +1,6 @@
 import {validateMessage} from './messages';
 import {defaultFetch} from '../util';
 /* global gameID */
-/**
- * Loosely validates if the message object received is correct.
- *
- * @param {Event} e; Message Event from child
- * @param {URL} url; URL of the game
- */
-export const messageIsValid = (e, url) => (
-  e.origin === url.origin &&
-  validateMessage(e.data)
-);
 
 /**
  * Attach message listener for incoming messages.
@@ -18,8 +8,8 @@ export const messageIsValid = (e, url) => (
 export const attachMessageListener = () => {
   window.addEventListener('message', (e) => {
     const game = document.getElementById('game');
-    if (messageIsValid(e, game.contentWindow.location)) {
-      const {data} = e;
+    const {data} = e;
+    if (validateMessage(data)) {
 
       switch (data.messageType) {
         case 'SCORE':
@@ -62,7 +52,7 @@ export const attachMessageListener = () => {
                       messageType: 'LOAD',
                       gameState,
                     },
-                    game.contentWindow.location.href
+                    '*'
                 );
               })
               .catch((e) => {
@@ -71,7 +61,7 @@ export const attachMessageListener = () => {
                       messageType: 'ERROR',
                       info: 'Gamestate could not be loaded',
                     },
-                    game.contentWindow.location.href
+                    '*'
                 );
               });
           break;
