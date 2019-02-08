@@ -53,6 +53,14 @@
 * Containers
 */
 
+.front-page_callout {
+  font-size: 1.2rem;
+}
+
+.front-page_callout a {
+  color: #C376A3;
+}
+
 #main-navigation a {
   text-transform: uppercase;
 }
