@@ -8,6 +8,7 @@ rn = 'reviews'
 
 
 class Review(models.Model):
+    """ Model for the review of the game """
     game = models.ForeignKey(
         Game,
         on_delete=models.CASCADE,
