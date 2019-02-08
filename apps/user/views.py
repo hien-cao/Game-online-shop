@@ -44,18 +44,14 @@ def signup(request):
             message = render_to_string(
                 'account_activation_email.html',
                 {
-                    'user':
-                    user,
-                    'domain':
-                    get_current_site(request).domain,
+                    'user': user,
+                    'domain': get_current_site(request).domain,
                     # encode
                     'uid':
                     force_text(urlsafe_base64_encode(force_bytes(user.pk))),
-                    'token':
-                    account_activation_token.make_token(user),
+                    'token': account_activation_token.make_token(user),
                 })
-            # Send email.
-            user.email_user(subject, message)
+            user.email_user(subject, message)  # Send email.
             return redirect('account_activation_sent')
     else:
         form = SignUpForm()
@@ -73,7 +69,9 @@ def profile(request):
     context = {}
     now = datetime.now(pytz.utc)
     game_list = Game.objects.filter(created_by=request.user.profile)
-    purchased_games = request.user.profile.purchases.filter(purchased_at__isnull=False).order_by('-purchased_at')
+    purchased_games = request.user.profile.purchases \
+        .filter(purchased_at__isnull=False) \
+        .order_by('-purchased_at')
     # Add purchased games to the context
     if len(purchased_games) != 0:
         context['purchased_games'] = purchased_games
@@ -87,13 +85,14 @@ def profile(request):
             key for key in request.POST if hasattr(request.user.profile, key)
         ])
     if request.user.is_authenticated:
-        # Query for the statistics data 
+        # Query for the statistics data
         if len(game_list) != 0:
+            # initialize variables to track developers games purchase data
             total_revenue = 0
             total_purchases = 0
             year_purchases = 0
             month_purchases = 0
-            for game in game_list:
+            for game in game_list:  # populate variables with data from each games
                 total_revenue += sum([purchase.price for purchase in game.purchases.filter(purchased_at__isnull=False)])
                 total_purchases += game.purchases.filter(purchased_at__isnull=False).count()
                 year_purchases += len(game.purchases.filter(purchased_at__year=now.year))
@@ -110,7 +109,7 @@ def profile(request):
             }
             context['statistics'] = statistics
         else:
-            context['message'] = 'You have not uploaded any game'
+            context['message'] = 'You have not uploaded any games'
     return render(request, 'profile/profile.html', context)
 
 
