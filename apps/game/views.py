@@ -448,23 +448,6 @@ def search(request):
 
 
 @login_required
-def library(request, *args, **kwargs):
-    if request.method == "GET":
-        profile = request.user.profile
-        return render(
-            request,
-            'games/library.html',
-            {
-                **library_context,
-                'allow_play': [purchase.game for purchase in profile.purchases.all()],
-                'purchases': profile.purchases.filter(purchased_at__isnull=False),
-                'profile': "profile"
-            }
-        )
-    return HttpResponse(status=404)
-
-
-@login_required
 def game_state(request, game_id):
     game = get_object_or_404(Game, pk=game_id)
     if request.method == 'GET':
