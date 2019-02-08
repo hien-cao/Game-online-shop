@@ -6,8 +6,12 @@ from django.dispatch import receiver
 
 class Profile(models.Model):
     """
-    Profile model to provide additional properties to Djangos abstract user
-    model
+    Profile model.
+
+    Provides additional properties to Djangos AbstactUser model.
+    - user: User
+    - [is_developer]: BooleanField
+    - [email_confirmed]: BooleanField
     """
     user = models.OneToOneField(
         User,

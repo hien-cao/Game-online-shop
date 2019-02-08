@@ -1,4 +1,4 @@
-from django.urls import path, re_path
+from django.urls import path
 
 # from .views.game import add_game, delete_game, GameView
 # from .views.developer import DeveloperView
