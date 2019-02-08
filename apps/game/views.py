@@ -411,7 +411,7 @@ def search(request):
 
             if '#' == query[0]:
                 tag = Tag.objects.filter(name=query)
-                games = Game.objects.filter(tags__in=tag).order_by('created_at')[:5]
+                games = Game.objects.filter(tags__in=tag).order_by('-created_at')[:5]
             elif "@" == query[0]:
                 user_query = query.replace('@', '')
                 user = User.objects.filter(username=user_query)
