@@ -16,7 +16,7 @@
                 {{purchase.game.name}}
               </a>
             </td>
-            <td>{{purchase.purchased_at}}</td>
+            <td>{{purchase.purchased_at|date:"M d, Y – H:i"}}</td>
             <td>{{purchase.price}}</td>
           </tr>
         {% endfor %}
