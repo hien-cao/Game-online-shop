@@ -32,24 +32,28 @@ def json_response(fn):
 
 
 def validate_request(fn):
+    """Decorator for minimum requirements of a valid api request."""
     def decorator(request, *args, **kwargs):
         error_response = None
-        # TODO: Response that only https allowed
+        # only https
         if settings.ENVIRONMENT == 'production' and not request.is_secure():
             error_response = JsonResponse(
                 {'message': 'Invalid request protocol'},
                 status=403
             )
+        # only GET
         if request.method != "GET":
             error_response = JsonResponse(
                 {'message': 'Invalid request method'},
                 status=403
             )
+        # must have X_DEV_API_KEY request header
         elif not request.META['HTTP_X_DEV_API_KEY']:
             error_response = JsonResponse(
                 {'message': 'Missing required header: X-DEV-API-KEY'},
                 status=403
             )
+        # X_DEV_API_KEY must be valid
         elif ApiKey.objects.filter(key=request.META['HTTP_X_DEV_API_KEY']) \
                 .count() == 0:
             error_response = JsonResponse(
@@ -61,6 +65,7 @@ def validate_request(fn):
 
 
 def passes_test(test_fn):
+    """Decorator that tests any general request validator."""
     def decorator(fn):
         @wraps(fn)
         def _wrapped_view(request, *args, **kwargs):

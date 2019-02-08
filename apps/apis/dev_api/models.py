@@ -6,6 +6,11 @@ from ...user.models import Profile
 
 
 class ApiKey(models.Model):
+    """
+    ApiKey model for the Developer API.
+    - key: UUIDField
+    - owner: Profile
+    """
     key = models.UUIDField(
         default=uuid.uuid4,
         editable=False
