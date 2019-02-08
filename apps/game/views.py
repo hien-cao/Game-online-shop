@@ -31,6 +31,7 @@ from .contexts import (
 )
 
 
+# helper function to parse tags from game description
 def parse_tags(description):
     regex = re.compile(r'\B#\w+')
     return regex.findall(description)
@@ -46,21 +47,11 @@ def create_tags(description):
             tags.append(obj)
     return tags
 
-
-def find_template_name(order_by):
-    if order_by == 'created_at':
-        return 'latest'
-    return None
-
-
-# Add/Edit game
-# TODO Change redirection to profile/settings?
-
-
+# Add/Edit or delete game
 @login_required
 @user_passes_test(is_developer, login_url='/games/library/')
 def manage_game(request, game_id=None):
-    if game_id:
+    if game_id: # If game id provided in the path
         url = 'edit_game'
         title = 'Edit game'
         game = get_object_or_404(Game, pk=game_id)
@@ -72,7 +63,7 @@ def manage_game(request, game_id=None):
         title = 'Add game'
         game = Game(created_by=request.user.profile)
 
-    if request.method == 'DELETE':
+    if request.method == 'DELETE': # Game deletion..
         # should only allow deletion of non-purchased games
         if game.purchases.count() == 0:
             game.delete()
@@ -92,6 +83,7 @@ def manage_game(request, game_id=None):
 
         return redirect('uploads')
 
+    # ... othervise render the game updating (or adding page)
     return render(
         request,
         'upsert_game.html',
@@ -104,33 +96,47 @@ def manage_game(request, game_id=None):
 # GET: Display games view
 def games(request, *args, **kwargs):
     if request.method == 'GET':
+        # column used to sort games (alphabetical by default)
         order_by = request.GET.get('order_by') or 'name'
         if request.GET.get('page') and hasattr(Game, order_by):
             try:  # Try to convert page param to int
                 page = max(1, int(request.GET.get('page')))
-            except ValueError:
+            except:  # noqa E722
+                # if invalid (or no) page was provided, will default to 1
                 page = 1
-            items = request.GET.get('items') or 10
-            total_count = Game.objects.count()
-            if order_by == 'created_at':
+            try:  # Try to convert items param to int
+                items = max(1, int(request.GET.get('items')))
+            except:  # noqa E722
+                # if invalid (or no) items was provided, will default to 5
+                items = 5
+            total_count = Game.objects.count()  # total number of games in db
+            if order_by == 'created_at' or order_by == 'name':
                 games = Game.objects.order_by(
                     '{0}{1}'.format('-' if request.GET.get('desc') else '', order_by)
-                )[(page - 1) * items:page * items]
+                )[(page - 1) * items:page * items]  # fetch pages (with given limit and offset)
             else:
                 # NOTE: This method of querying is inefficient as
                 # we have to query all results from database before filtering.
                 # This is because it is not possible to filter by property.
                 all_games = Game.objects.all()
-                games = list(filter(lambda x: getattr(x, order_by), all_games))[(page - 1) * items:page * items]
+                games = list(
+                    filter(lambda x: getattr(x, order_by), all_games)
+                )[(page - 1) * items:page * items]
             context = {
                 **games_context,
-                **get_paginated_context(order_by, page, items, total_count, games),
+                **get_paginated_context(
+                    order_by,
+                    page,
+                    items,
+                    total_count,
+                    games
+                ),
                 'crumbs': [
                     {'label': 'Games', 'url': 'games'},
                     {'label': 'Browse'},
                 ]
             }
-        else:
+        else:  # if no page provided, return the default game page
             # Get all games because it is not possible to use
             # properties created with python (not db).
             all_games = Game.objects.all()
@@ -147,7 +153,6 @@ def games(request, *args, **kwargs):
 
 
 # GET: Display single game view
-# POST: Add game
 def game_details(request, game_id):
     game = get_object_or_404(Game, pk=game_id)
     purchases = game.purchases.filter(purchased_at__isnull=False)
@@ -159,6 +164,8 @@ def game_details(request, game_id):
             purchased_at__isnull=False
         ))
         if request.user.is_authenticated:
+            # add some details to the context, if user is the developer of
+            # the requested game
             if game.created_by.user.id == request.user.id:
                 now = datetime.now(pytz.utc)
                 developer_context = {
@@ -245,7 +252,7 @@ def purchase_game(request, game_id):
     })
 
 
-# GET: Display games purchased
+# GET: Display games the user has purchased
 @login_required
 def library(request, *args, **kwargs):
     if request.method == "GET":
@@ -263,7 +270,7 @@ def library(request, *args, **kwargs):
     return HttpResponse(status=404)
 
 
-# GET: Display games uploaded
+# GET: Display games uploaded by the user
 @login_required
 @user_passes_test(is_developer)
 def uploads(request, *args, **kwargs):
@@ -285,7 +292,7 @@ def uploads(request, *args, **kwargs):
     return HttpResponse(status=404)
 
 
-# GET: Display games uploaded
+# GET: Display games uploaded by the user
 @login_required
 def play(request, game_id):
     game = get_object_or_404(Game, pk=game_id)
@@ -307,11 +314,11 @@ def save_score(request, game_id):
 
     Hence, there is no "secret keys" or any other redurdant variables
     that would try to abstract the storing of scores in such way that
-    an adversary (client) could not find a way to store whatever scores they wished.
+    an adversary (client) could not find a way to store whatever scores
+    they wished.
     """
     if request.method == 'POST':
-        body_unicode = request.body.decode('utf-8')
-        body = json.loads(body_unicode)
+        body = json.loads(request.body.decode('utf-8'))  # parse request body
         score = body['score']
         game = get_object_or_404(Game, pk=game_id)
         highscore = Highscore(
@@ -324,7 +331,8 @@ def save_score(request, game_id):
     return HttpResponse(status=404)  # other methods not supported
 
 
-# Autosuggestion for search query
+# Autosuggestion for search query, will return JSON response with the search
+# results
 def autosuggestion_search(request):
     if request.method == 'GET':
         results = []
@@ -439,23 +447,9 @@ def search(request):
     return HttpResponse(status=404)
 
 
-@login_required
-def library(request, *args, **kwargs):
-    if request.method == "GET":
-        profile = request.user.profile
-        return render(
-            request,
-            'games/library.html',
-            {
-                **library_context,
-                'allow_play': [purchase.game for purchase in profile.purchases.all()],
-                'purchases': profile.purchases.filter(purchased_at__isnull=False),
-                'profile': "profile"
-            }
-        )
-    return HttpResponse(status=404)
-
-
+# used to store / read game state (saving and loading the game)
+# will respond with 201 on succesfull save
+# will respond with game satte on load
 @login_required
 def game_state(request, game_id):
     game = get_object_or_404(Game, pk=game_id)

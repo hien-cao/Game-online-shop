@@ -6,6 +6,12 @@ from ...user.models import Profile
 
 
 class Highscore(models.Model):
+    """
+    Highscore model.
+    - score: IntegerField
+    - game: Game
+    - created_by: Profile
+    """
     score = models.IntegerField()
     game = models.ForeignKey(
         'Game',

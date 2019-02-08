@@ -1,14 +1,14 @@
 {% load custom_filters %}
 
 <nav aria-label="Pagination">
-  <ul class="pagination">
+  <div class="pagination clearfix">
     {% if page > 1 %}
-    <li class="pagination-previous"><a href="{% url 'games' %}?order_by={{ order_by }}&page={{ page|subtract:1 }}" aria-label="Previous page">
-      Previous <span class="show-for-sr">page</span></a></li>
+    <div class="pagination-previous float-left"><a href="{% url 'games' %}?order_by={{ order_by }}&page={{ page|subtract:1 }}" aria-label="Previous page">
+      Previous <span class="show-for-sr">page</span></a></div>
     {% endif %}
     {% if has_next %}
-    <li class="pagination-next"><a href="{% url 'games' %}?order_by={{ order_by }}&page={{ page|add:1 }}" aria-label="Next page">
-      Next <span class="show-for-sr">page</span></a></li>
+    <div class="pagination-next float-right"><a href="{% url 'games' %}?order_by={{ order_by }}&page={{ page|add:1 }}" aria-label="Next page">
+      Next <span class="show-for-sr">page</span></a></div>
     {% endif %}
-  </ul>
+  </div>
 </nav>

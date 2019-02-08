@@ -1,8 +1,13 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.models import User
+
 
 class SignInForm(AuthenticationForm):
+    """
+    Form for sign in.
+
+    Only allows login for users that have confirmed their email.
+    """
     def confirm_login_allowed(self, user):
         if not user.profile.email_confirmed:
             raise forms.ValidationError(

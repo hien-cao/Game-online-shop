@@ -7,6 +7,12 @@ from ...game.models import Game, Purchase
 
 
 class Save(models.Model):
+    """
+    Save model.
+    - game: Game
+    - user: Profile
+    - content: BinaryField
+    """
     game = models.ForeignKey(
         Game,
         on_delete=models.CASCADE
@@ -15,7 +21,8 @@ class Save(models.Model):
         Profile,
         on_delete=models.CASCADE
     )
-    content = models.BinaryField()  # We store game state as base64 encoded string
+    # We store game state as base64 encoded string
+    content = models.BinaryField()
 
     class Meta:
         # Should only allow single save for each user per game (multiple saves were not specified)
@@ -24,6 +31,7 @@ class Save(models.Model):
 
     @property
     def game_state(self):
+        """Get state of the game from binary as json."""
         return json.loads(base64.decodebytes(self.content).decode('utf-8'))
 
     def save(self, *args, **kwargs):
