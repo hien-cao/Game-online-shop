@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 
 
 class SignUpForm(UserCreationForm):
+    """Form for sign up."""
     email = forms.EmailField(
         max_length=256,
         help_text='Required. Please provide a valid email address.'
