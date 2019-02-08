@@ -447,6 +447,9 @@ def search(request):
     return HttpResponse(status=404)
 
 
+# used to store / read game state (saving and loading the game)
+# will respond with 201 on succesfull save
+# will respond with game satte on load
 @login_required
 def game_state(request, game_id):
     game = get_object_or_404(Game, pk=game_id)
