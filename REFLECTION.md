@@ -167,3 +167,9 @@ The superuser credentials may be used for administrative purposes
 
 * Users can review (and grade) games and read reviews made by others.
 * We wanted to provide users with some social media aspects of our own.
+
+## Navigation for authenticated users
+
+The relationships between pages is roughly presented in the following graph (for authenticated users):
+
+![relationships](./docs/structure_authenticated.png)
