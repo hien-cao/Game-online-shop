@@ -50,6 +50,7 @@ Application is [live at Heroku](https://afternoon-headland-18234.herokuapp.com/)
   - [Management, collaboration and contributing to project](#management-collaboration-and-contributing-to-project)
     - [Order of work](#order-of-work)
     - [Timetable](#timetable)
+    - [Reflection](#reflection)
 
 ## Project description
 
@@ -382,3 +383,11 @@ We set out the deadlines for each task to be somewhat reasonable, so that the co
 | Custom JavaScript game                  | 24.2.2019 | Touko    | -    | ok     |
 | Social media sharing                    | 24.2.2019 | Touko    | -    | ok     |
 | Polishing                               | 24.2.2019 | Touko    | -    | ok     |
+
+### Reflection
+
+The team worked together well. We met almost weekly and worked on many of the features as pairs, as this, by some, is most effective way of working with cognitive tasks.
+
+We did not use any time tracker for this project but our estimate was that each of us spent somewhere between 120 to 140 hours on it.
+
+See [this document](./REFLECTION.md) for a more in-depth reflection.
