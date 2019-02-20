@@ -1,5 +1,9 @@
 # Contribution
 
+**Use Merge Requests!**
+
+If, and only if, you have received verbal approval for a feature from **all other contributors**, you are allowed to skip MR.
+
 ## Git guidelines
 
 There are four (4) types of branches to be used in this project.
