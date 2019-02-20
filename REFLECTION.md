@@ -6,7 +6,8 @@
 
 ## Heroku
 
-[Live website](https://afternoon-headland-18234.herokuapp.com)
+* [Live website](https://afternoon-headland-18234.herokuapp.com)
+* [Instructions](./docs/Instructions.pdf)
 
 The superuser credentials may be used for administrative purposes
 

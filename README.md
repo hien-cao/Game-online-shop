@@ -60,6 +60,8 @@ A rough mockup of the visuals of the web application can be seen [here](https://
 
 The live version of the application is available [here](https://afternoon-headland-18234.herokuapp.com/).
 
+Instructions on how to use the service are available [here](./docs/Instructions.pdf).
+
 The project is written in Python (3+) and it utilizes the Django framework. The authentication is provided by third-party Single-Sign-On (GitHub). In addition to this, we use Foundation 6.5.1 for faster templating with columns. We use vanilla JavaScript (ES6), jQuery for some components provided by Foundation and Babel for final compilation to ES5. Babel build is ran with a Node.js script.
 
 To ease the development and maintenance we have decided to split this project into five apps. These are:
